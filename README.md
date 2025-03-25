@@ -3,20 +3,19 @@
 
 Éléménts à renseigner pour la soutenance :
 
-- [ ] Nom du projet :
-- [ ] URL de la landing page :
+- [ ] Nom du projet : Hive Jam
+- [ ] URL de la landing page : 
 - [ ] URL de l'application finale :
 - [ ] URL de connexion au back office :
 - [ ] Identifiant de connexion au backoffice :
 - [ ] Mot de passe de connexion au backoffice :
-- [ ] URL de la maquette FIGMA :
-- [ ] Description du projet :
+- [ ] URL de la maquette FIGMA : https://www.figma.com/design/C2MFquLHMwbAf3uWM1tYB7/Maquette-application-Hive-Jam?node-id=1-3&t=j3V9J1Okv2gOmB8n-1
+- [ ] Description du projet : Hive Jam est une plateforme communautaire sur laquelle n'importe qui peut créer et participer à des game jams.
 
 ## 🚀 Équipe
 
 | Étudiants    | Prénom NOM  |
 | :----------- | :---------- |
-| Étudiant 1   | à compléter |
-| Étudiant 2   | à compléter |
-| Étudiant 3   | à compléter |
-| (Étudiant 4) | à compléter |
+| Étudiant 1   | Paolo VINCENT |
+| Étudiant 2   | Elias AYMONIER |
+| Étudiant 3   | Lina BENMABROUK |
