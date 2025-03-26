@@ -1,0 +1,79 @@
+---
+import "../styles/global.css";
+
+import Logo from "../assets/svg/logo.svg";
+import Facebook from "../assets/svg/icon_facebook.svg";
+import Insta from "../assets/svg/icon_insta.svg";
+import Tiktok from "../assets/svg/icon_tiktok.svg";
+import X from "../assets/svg/icon_twitter.svg";
+
+import Contact from "../assets/svg/landing_page/icon_contact.svg";
+import Offer from "../assets/svg/landing_page/icon_tickets.svg";
+import Pourquoi from "../assets/svg/landing_page/icon_interogation.svg";
+import Fonction from "../assets/svg/landing_page/icon_fonctionalite.svg";
+import Info from "../assets/svg/landing_page/icon_info.svg";
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Landing Page</title>
+    </head>
+    <body>
+        <header
+            class="flex justify-between items-center px-5 py-2.5"
+            x-data="{open: false}"
+        >
+            <a href="/landing-page" class="z-10">
+                <Logo />
+            </a>
+            <button
+                class="flex flex-col justify-between relative h-5 z-10"
+                :aria-expended="open"
+                aria-label="Ouvrire le menu"
+                @click="open = !open"
+            >
+                <span class="bg-black h-0.5 w-7"></span>
+                <span class="bg-black h-0.5 w-7"></span>
+                <span class="bg-black h-0.5 w-7"></span>
+            </button>
+
+            <nav class="absolute inset-0 bg-white px-5 mt-30 aria-hidden:hidden" :aria-hidden="!open">
+                <div class="flex flex-col gap-7">
+                    <a href="" class="flex gap-5">
+                        <Pourquoi />
+                        Pourquoi utiliser Hive Jam
+                    </a>
+                    <span class="bg-brand-1 h-0.5 w-full"></span>
+                    <a href="" class="flex gap-5">
+                        <Offer />
+                        Offres
+                    </a>
+                    <span class="bg-brand-1 h-0.5 w-full"></span>
+                    <a href="" class="flex gap-5">
+                        <Fonction />
+                        Fonctionnalités
+                    </a>
+                    <span class="bg-brand-1 h-0.5 w-full"></span>
+                    <a href="" class="flex gap-5">
+                        <Info />
+                        À Propos
+                    </a>
+                    <span class="bg-brand-1 h-0.5 w-full"></span>
+                    <a href="" class="flex gap-5">
+                        <Contact />
+                        Contact
+                    </a>
+                </div>
+                <div class="flex justify-between px-5 absolute left-5 right-5 bottom-5">
+                    <Facebook />
+                    <Insta />
+                    <Tiktok />
+                    <X />
+                </div>
+            </nav>
+        </header>
+    </body>
+</html>
