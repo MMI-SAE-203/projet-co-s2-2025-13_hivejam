@@ -8,6 +8,9 @@ import Tiktok from "../assets/svg/icon_tiktok.svg";
 import X from "../assets/svg/icon_twitter.svg";
 
 import Hexagone from "../assets/img/landing_page/hexagon_hero.png";
+import Free from "../assets/img/abeille_free.png";
+import Premium from "../assets/img/abeille_premium.png";
+import Royal from "../assets/img/abeille_royal.png";
 
 import Contact from "../assets/svg/landing_page/icon_contact.svg";
 import Offer from "../assets/svg/landing_page/icon_tickets.svg";
@@ -142,5 +145,30 @@ import Code from "../assets/svg/landing_page/icon_code.svg";
                 <p class="self-start">et tester vos compétences</p>
             </div>
         </section>
+
+        <!-- Argent -->
+         <section class="flex flex-col gap-12.5 p-7.5 bg-drak-gray">
+            <div class="text-white flex gap-10 items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
+                    <img src={Free.src} alt="Abeille" width="100px">
+                </div>
+                <p>Crée des Jams et inviter jusqu'à 5 de vos amies</p>
+            </div>
+            <div class="text-white flex gap-10 items-center">
+                <p>Pouvoir générer des thèmes à l'infini</p>
+                <div>
+                    <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
+                    <img src={Premium.src} alt="Abeille" width="100px">
+                </div>
+            </div>
+            <div class="text-white flex gap-10 items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
+                    <img src={Royal.src} alt="Abeille" width="100px">
+                </div>
+                <p>Inviter plus de 50 personnes par Jam</p>
+            </div>
+         </section>
     </body>
 </html>

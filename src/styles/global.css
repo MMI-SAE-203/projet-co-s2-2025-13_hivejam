@@ -39,6 +39,6 @@
         @apply font-title text-lg font-medium uppercase
     } 
     body {
-        @apply font-text text-base font-medium
+        @apply font-text text-base font-medium text-dark
     }
 }
