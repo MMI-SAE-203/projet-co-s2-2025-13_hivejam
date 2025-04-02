@@ -38,9 +38,6 @@
     h4 {
         @apply font-title text-lg font-medium
     } 
-    tiny {
-        @apply font-text text-sm
-    }
     body {
         @apply font-text text-base font-medium text-dark
     }
@@ -52,5 +49,8 @@
     }
     .btn-2 {
         @apply text-white bg-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl flex gap-2.5
+    }
+    .tiny {
+        @apply font-text text-sm
     }
 }

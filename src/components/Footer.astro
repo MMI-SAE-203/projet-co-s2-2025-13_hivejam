@@ -1,0 +1,56 @@
+---
+import Logo from "../assets/svg/logo-white.svg";
+
+import Insta from "../assets/svg/icon_insta.svg";
+import Facebook from "../assets/svg/icon_facebook.svg";
+import TikTok from "../assets/svg/icon_tiktok.svg";
+import Twitter from "../assets/svg/icon_twitter.svg";
+---
+
+<footer class="px-28.75 grid grid-cols-5 grid-rows-3 raw bg-secondary-2">
+    <a href="/" class="flex items-center">
+        <Logo width={82} height={60}/>
+    </a>
+    <div class="space-y-6 col-start-2 row-start-2">
+        <h4>Navigation</h4>
+        <div class="flex flex-col gap-3 tiny">
+            <a href="/">Accueil</a>
+            <a href="/">Mes Jams</a>
+            <a href="/">Actualités</a>
+            <a href="/">Toutes les jams</a>
+            <a href="/">Forum</a>
+            <a href="/">À prpos</a>
+        </div>
+    </div>
+    <div class="space-y-6 col-start-3 row-start-2">
+        <h4>Compt</h4>
+        <div class="flex flex-col gap-3 tiny">
+            <a href="/">Gérer mon compte</a>
+            <a href="/">Grer mon abonnement</a>
+        </div>
+    </div>
+    <div class="space-y-6 col-start-4 row-start-2">
+        <h4>Mentions</h4>
+        <div class="flex flex-col gap-3 tiny">
+            <a href="/">Mentions légales</a>
+            <a href="/">Conditions générales de vente</a>
+        </div>
+    </div>
+    <div class="space-y-6 col-start-5 row-start-2">
+        <h4>Contacts</h4>
+        <div class="flex flex-col gap-3 tiny">
+            <a href="/">Formulaire de contacte</a>
+            <a href="/">Envoyer un mail</a>
+            <a href="/">Partenariats</a>
+        </div>
+    </div>
+    <div class="flex flex-col gap-7.5 justify-center items-center col-start-1 col-end-6">
+        <span class="bg-black h-0.25 w-full"></span>
+        <div class="flex  gap-36">
+            <Insta width={40} height={40}/>
+            <Facebook width={40} height={40}/>
+            <TikTok width={40} height={40}/>
+            <Twitter width={33} height={33}/>
+        </div>
+    </div>
+</footer>
