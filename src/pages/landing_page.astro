@@ -7,6 +7,8 @@ import Insta from "../assets/svg/icon_insta.svg";
 import Tiktok from "../assets/svg/icon_tiktok.svg";
 import X from "../assets/svg/icon_twitter.svg";
 
+import Hexagone from "../assets/img/landing_page/hexagon_hero.png";
+
 import Contact from "../assets/svg/landing_page/icon_contact.svg";
 import Offer from "../assets/svg/landing_page/icon_tickets.svg";
 import Pourquoi from "../assets/svg/landing_page/icon_interogation.svg";
@@ -45,11 +47,7 @@ import Info from "../assets/svg/landing_page/icon_info.svg";
             class="flex justify-between items-center px-5 py-2.5"
             x-data="{open: false}"
         >
-            <a 
-                href="/landing_page"
-                class="z-10"
-                aria-label="Logo"
-            >
+            <a href="/landing_page" class="z-10" aria-label="Logo">
                 <Logo />
             </a>
             <button
@@ -109,5 +107,17 @@ import Info from "../assets/svg/landing_page/icon_info.svg";
                 </div>
             </nav>
         </header>
+
+        <!-- Hero -->
+        <div class="relative overflow-hidden bg-[url(../assets/img/landing_page/fond_hero.png)] bg-dark bg-blend-multiply bg-cover bg-no-repeat bg-center px-5 py-10 text-white flex flex-col gap-6">
+            <h1 class="text-4xl z-10">Hive Jam</h1>
+            <p class="text-base font-normal z-10">
+                Envie de rejoindre ou de créer une Game Jam ? <br> Rejoignez une
+                communauté active, défiez vos compétences et apprenez avec Hive
+                Jam !
+            </p>
+            <a href="/login" class="text-brand-1 border-2 rounded-2xl px-2.5 py-1.25 self-end">Sign Up</a>
+            <img src={Hexagone.src} alt="Décoration en forme d'héxagone orange" class="absolute left-0 top-2.5" width="200px">
+        </div>
     </body>
 </html>
