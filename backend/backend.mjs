@@ -24,49 +24,6 @@ export async function getTeam(id) {
     }
 }
 
-export async function addGame(game) {
-    try {
-        //récupération de l'URL de l'image comme d'habitude
-        if (game.image) {
-            game.image_URL = pb.files.getURL(game, game.image);
-        }
-        //vérification du fichier web et magouille derrière
-        if (game.file_web) {
-            console.log("web file found");
-            //récupère l'URL du fichier
-            const file_web_URL = pb.files.getURL(game, game.file_web);
-
-            //transformation du fichier en blob pour JSZip
-            const response = await fetch(file_web_URL);
-            const blob = await response.blob();
-
-            //chargement du fichier dans JSZip
-            const zip = await JSZip.loadAsync(blob);
-            console.log("ZIP file loaded");
-
-            //préparation du dossier qui va être créer pour le jeu dans pb_public, solution temporaire !
-            const gameFloder = (Math.floor(Math.random() * 10000)).toString()
-
-            //loop sur les fichiers dans le zip
-            zip.forEach(async (relativePath, file) => {
-                //préparation du fichier
-                const content = await file.async('blob');
-                const fileName = relativePath;
-
-                
-            })
-
-        } else {
-            console.log("web file not found")
-        }
-        await pb.collection("GAME").create(game);
-
-    } catch (error) {
-        console.log('Une erreur en ajoutant une entrée dans la collection GAME');
-        return null;
-    }
-}
-
 export async function getGame(id) {
     try {
         let game = await pb.collection('GAME').getOne(id);
@@ -94,4 +51,18 @@ export async function allPost() {
         return null;
     }
 }
+
+//Grosses fonctions pour uploader les jeux
+export async function addGame(game) {
+    try {
+        //Création de l'entrée dans pocketbase
+        await pb.collection("GAME").create(game);
+        //Appelle la fonction pour extraire les fichiers dans 
+    } catch (error) {
+        console.log('Une erreur en ajoutant une entrée dans la collection GAME');
+        return null;
+    }
+}
+
+
 
