@@ -30,15 +30,27 @@
         @apply font-title text-5xl font-bold
     } 
     h2 {
-        @apply font-title text-3xl font-semibold
+        @apply font-title text-3xl font-semibold uppercase
     } 
     h3 {
-        @apply font-title text-2xl font-medium uppercase
+        @apply font-title text-2xl font-medium
     } 
     h4 {
-        @apply font-title text-lg font-medium uppercase
+        @apply font-title text-lg font-medium
     } 
+    tiny {
+        @apply font-text text-sm
+    }
     body {
         @apply font-text text-base font-medium text-dark
+    }
+}
+
+@layer components {
+    .btn-1 {
+        @apply border-2 text-brand-1 uppercase text-base font-bold px-5 py-1 rounded-2xl flex gap-2.5
+    }
+    .btn-2 {
+        @apply text-white bg-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl flex gap-2.5
     }
 }
