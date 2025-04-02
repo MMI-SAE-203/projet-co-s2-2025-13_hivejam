@@ -14,6 +14,10 @@ import Offer from "../assets/svg/landing_page/icon_tickets.svg";
 import Pourquoi from "../assets/svg/landing_page/icon_interogation.svg";
 import Fonction from "../assets/svg/landing_page/icon_fonctionalite.svg";
 import Info from "../assets/svg/landing_page/icon_info.svg";
+
+import Pen from "../assets/svg/landing_page/icon_pen.svg";
+import Partage from "../assets/svg/landing_page/icon_partage.svg";
+import Code from "../assets/svg/landing_page/icon_code.svg";
 ---
 
 <!doctype html>
@@ -47,27 +51,27 @@ import Info from "../assets/svg/landing_page/icon_info.svg";
             class="flex justify-between items-center px-5 py-2.5"
             x-data="{open: false}"
         >
-            <a href="/landing_page" class="z-10" aria-label="Logo">
+            <a href="/landing_page" class="z-30" aria-label="Logo">
                 <Logo />
             </a>
             <button
-                class="group relative z-20 flex h-6 w-8 flex-col justify-between *:h-[2px] *:w-full *:bg-black *:transition-all *:duration-300 *:ease"
+                class="group relative z-30 flex h-6 w-8 flex-col justify-between *:h-[2px] *:w-full *:bg-black *:transition-all *:duration-300 *:ease"
                 id="menu-btn"
                 aria-label="Menu"
                 aria-controls="menu"
                 :aria-expanded="open"
             >
                 <span
-                    class="group-aria-expanded:translate-y-[10.5px] group-aria-expanded:rotate-135"
+                    class="group-aria-expanded:translate-y-[10.5px] group-aria-expanded:rotate-225"
                 ></span>
                 <span class="group-aria-expanded:opacity-0"></span>
                 <span
-                    class="group-aria-expanded:-translate-y-[10.5px] group-aria-expanded:-rotate-135"
+                    class="group-aria-expanded:-translate-y-[10.5px] group-aria-expanded:rotate-135"
                 ></span>
             </button>
 
             <nav
-                class="visible px-5 pt-30 fixed z-10 inset-0 bg-(--color-indigo) text-base font-bold text-black opacity-100 transition-all duration-300 ease-in-out aria-hidden:invisible aria-hidden:opacity-0"
+                class="visible px-5 pt-30 fixed z-20 inset-0 bg-white text-base font-bold text-black opacity-100 transition-all duration-300 ease-in-out aria-hidden:invisible aria-hidden:opacity-0"
                 id="menu"
                 :aria-hidden="!open"
             >
@@ -119,5 +123,24 @@ import Info from "../assets/svg/landing_page/icon_info.svg";
             <a href="/login" class="text-brand-1 border-2 rounded-2xl px-2.5 py-1.25 self-end">Sign Up</a>
             <img src={Hexagone.src} alt="Décoration en forme d'héxagone orange" class="absolute left-0 top-2.5" width="200px">
         </div>
+
+        <!-- Fonctionalité -->
+        <section class="flex flex-col px-18 py-5 gap-14">
+            <div class="flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+                <Pen />
+                <h2 class="text-xl font-bold self-start">Créer</h2>  
+                <p class="self-start">votre propre Jam</p>
+            </div>
+            <div class="self-end flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+                <Partage />
+                <h2 class="text-xl font-bold self-start">Partager</h2>  
+                <p class="self-start">vos créations</p>
+            </div>
+            <div class="flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+                <Code />
+                <h2 class="text-xl font-bold self-start">Jamer</h2>  
+                <p class="self-start">et tester vos compétences</p>
+            </div>
+        </section>
     </body>
 </html>
