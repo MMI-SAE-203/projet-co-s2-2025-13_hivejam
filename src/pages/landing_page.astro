@@ -20,27 +20,59 @@ import Info from "../assets/svg/landing_page/icon_info.svg";
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Landing Page</title>
+
+        <script>
+            // On cible les éléments à modifier
+            const toggle = document.querySelector("#menu-btn");
+            const nav = document.querySelector("#menu");
+            const page = document.body;
+
+            // Vérifier si les éléments existent avant d'ajouter l'événement
+            if (toggle && nav) {
+                toggle.addEventListener("click", () => {
+                    const isOpen = toggle.ariaExpanded === "true";
+                    const isClosed = !isOpen;
+                    // Mise à jour des attributs ARIA pour accessibilité
+                    toggle.ariaExpanded = String(isClosed);
+                    nav.ariaHidden = String(isOpen);
+                    page.classList.toggle("noscroll", isClosed);
+                });
+            }
+        </script>
     </head>
     <body>
         <header
             class="flex justify-between items-center px-5 py-2.5"
             x-data="{open: false}"
         >
-            <a href="/landing-page" class="z-10">
+            <a 
+                href="/landing_page"
+                class="z-10"
+                aria-label="Logo"
+            >
                 <Logo />
             </a>
             <button
-                class="flex flex-col justify-between relative h-5 z-10"
-                :aria-expended="open"
-                aria-label="Ouvrire le menu"
-                @click="open = !open"
+                class="group relative z-20 flex h-6 w-8 flex-col justify-between *:h-[2px] *:w-full *:bg-black *:transition-all *:duration-300 *:ease"
+                id="menu-btn"
+                aria-label="Menu"
+                aria-controls="menu"
+                :aria-expanded="open"
             >
-                <span class="bg-black h-0.5 w-7"></span>
-                <span class="bg-black h-0.5 w-7"></span>
-                <span class="bg-black h-0.5 w-7"></span>
+                <span
+                    class="group-aria-expanded:translate-y-[10.5px] group-aria-expanded:rotate-135"
+                ></span>
+                <span class="group-aria-expanded:opacity-0"></span>
+                <span
+                    class="group-aria-expanded:-translate-y-[10.5px] group-aria-expanded:-rotate-135"
+                ></span>
             </button>
 
-            <nav class="absolute inset-0 bg-white px-5 mt-30 aria-hidden:hidden" :aria-hidden="!open">
+            <nav
+                class="visible px-5 pt-30 fixed z-10 inset-0 bg-(--color-indigo) text-base font-bold text-black opacity-100 transition-all duration-300 ease-in-out aria-hidden:invisible aria-hidden:opacity-0"
+                id="menu"
+                :aria-hidden="!open"
+            >
                 <div class="flex flex-col gap-7">
                     <a href="" class="flex gap-5">
                         <Pourquoi />
@@ -67,7 +99,9 @@ import Info from "../assets/svg/landing_page/icon_info.svg";
                         Contact
                     </a>
                 </div>
-                <div class="flex justify-between px-5 absolute left-5 right-5 bottom-5">
+                <div
+                    class="flex justify-between px-5 absolute left-5 right-5 bottom-5"
+                >
                     <Facebook />
                     <Insta />
                     <Tiktok />
