@@ -11,5 +11,6 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [alpinejs()]
+  integrations: [alpinejs()],
+  output: 'server',
 });

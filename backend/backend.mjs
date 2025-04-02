@@ -1,10 +1,12 @@
 //Dépendences
-const fs = require('fs');
-const path = require('path');
-const AdmZip = require('adm-zip');
-const unrar = require('node-unrar');
-const axios = require('axios');
-const fsExtra = require('fs-extra');
+import fs from 'fs';
+import path from 'path';
+import AdmZip from 'adm-zip';
+import unrarExtract from 'node-unrar';
+import axios from 'axios';
+import fsExtra from 'fs-extra';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 import Pocketbase from "pocketbase";
 const pb = new Pocketbase('http://127.0.0.1:8090')
@@ -64,11 +66,12 @@ export async function allPost() {
 export async function addGame(gameData) {
     try {
         //Création de l'entrée dans pocketbase
-        if (game != null) {
+        if (gameData != null) {
             const game = await pb.collection("GAME").create(gameData);
             //Vérifie s'il ya un fichier dans file_web
             if (game.file_web) {
-                uploadedFileURL = pb.files.getURL(game, game.file_web);
+                const uploadedFileURL = await pb.files.getURL(game, game.file_web);
+                console.log(uploadedFileURL);
                 await extractGameFile(game.id, uploadedFileURL);
             }
         } else {
@@ -76,10 +79,11 @@ export async function addGame(gameData) {
         }
         //Appelle la fonction pour extraire les fichiers dans 
     } catch (error) {
-        console.log('Une erreur en ajoutant une entrée dans la collection GAME');
+        console.error('Une erreur est survenue en ajoutant une entrée dans la collection GAME', error);
         return null;
     }
 }
+
 
 //Deuxième fonction sert à extraire les fichiers et les publier dans le dossier public
 async function extractGameFile(id, uploadedFileURL) {
@@ -88,7 +92,7 @@ async function extractGameFile(id, uploadedFileURL) {
         const filePath = await downloadFile(uploadedFileURL, id);
         //Détermine le type (zip ou rar)
         const extname = path.extname(filePath).toLowerCase();
-        const extractionDestDir = path.join(__dirname, 'public', 'games', id);
+        const extractionDestDir = path.join('public', 'games', id);
         fs.mkdirSync(extractionDestDir, { recursive: true });
 
         if (extname == '.zip') {
@@ -105,8 +109,8 @@ async function extractGameFile(id, uploadedFileURL) {
         }
 
         //Update l'entrée Pocketbase
-        await pb.collection('GAME').update(id, {"file_URL" : `/games/${id}/index.html`});
-        
+        await pb.collection('GAME').update(id, { "file_URL": `/games/${id}/index.html` });
+
     } catch (error) {
         console.error('Une erreur est survenue en essayant d extraire les fichiers du jeu');
     }
@@ -115,14 +119,15 @@ async function extractGameFile(id, uploadedFileURL) {
 //Troisième fonction télécharge le fichier depuis pocketbase
 //Fonction créée par chat auquelle j'ai pas touché
 async function downloadFile(fileUrl, gameId) {
+    console.log('downloading files')
     try {
         const response = await axios({
             method: 'get',
             url: fileUrl,
             responseType: 'stream', // Important for large files
         });
-
-        const filePath = path.join(__dirname, 'tmp', `${gameId}.zip`); // Temp file path
+        console.log(path.join('/public','tmp',`${gameId}.rar`));
+        const filePath = path.join('/public','tmp',`${gameId}.rar`); // Temp file path
         const writer = fs.createWriteStream(filePath);
 
         // Pipe the response stream to the file
