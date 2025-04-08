@@ -19,8 +19,8 @@
         /* Negative */
     --color-negative: #af2d2d;
         /* Grayscale */
-    --color-dark: #1e1e1e;
-    --color-light: #fff;
+    --color-black: #1e1e1e;
+    --color-white: #fff;
     --color-drak-gray: #464646;
     --color-light-gray: #f4f4f4;
 }
@@ -39,7 +39,7 @@
         @apply font-title text-lg font-medium
     } 
     body {
-        @apply font-text text-base font-medium text-dark
+        @apply font-text text-base font-medium text-black
     }
 }
 
