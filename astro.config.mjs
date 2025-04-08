@@ -11,6 +11,7 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  experimental: {svg: true},
-  integrations: [alpinejs()]
+  experimental: { svg: true },
+  integrations: [alpinejs()],
+  output: 'server',
 });

@@ -12,8 +12,12 @@
     "@astrojs/alpinejs": "^0.4.3",
     "@tailwindcss/vite": "^4.0.15",
     "@types/alpinejs": "^3.13.11",
+    "adm-zip": "^0.5.16",
     "alpinejs": "^3.14.9",
     "astro": "^5.5.3",
+    "axios": "^1.8.4",
+    "fs-extra": "^11.3.0",
+    "node-unrar": "^0.1.6",
     "pocketbase": "^0.25.2",
     "tailwindcss": "^4.0.15"
   }
