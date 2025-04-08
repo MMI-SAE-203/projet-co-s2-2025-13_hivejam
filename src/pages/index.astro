@@ -1,7 +1,41 @@
 ---
-import Layout from "../layouts/Layout.astro"
+import Layout from "../layouts/Layout.astro";
+
+import Jam from "../components/Card/Jam.astro";
+
+import Next from "../assets/svg/Next.svg"
+import Prev from "../assets/svg/Prev.svg"
 ---
 
 <Layout>
-	
+    <div class="p-10">
+        <section class="flex flex-col gap-10">
+            <div class="flex justify-between">
+                <h2>Mes Jams en cours</h2>
+                <div class="flex gap-2">
+                    <a href="/mes_james" class="btn-1">Voir mes jams</a>
+                    <a href="/creer" class="btn-2">Créer</a>
+                </div>
+            </div>
+
+            <div class="flex flex-col">
+                <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                    <Jam />
+                    <Jam />
+                    <Jam />
+                    <Jam />
+                    <Jam />
+                    <Jam />
+                </div>
+                <div class="flex justify-center gap-10">
+                    <div class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10">
+                        <Prev />
+                    </div>
+                    <div class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10">
+                        <Next />
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 </Layout>

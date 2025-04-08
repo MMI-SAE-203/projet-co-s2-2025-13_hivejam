@@ -30,10 +30,10 @@
         @apply font-title text-5xl font-bold
     } 
     h2 {
-        @apply font-title text-3xl font-semibold uppercase
+        @apply font-title text-3xl font-medium uppercase
     } 
     h3 {
-        @apply font-title text-2xl font-medium
+        @apply font-title text-2xl font-semibold
     } 
     h4 {
         @apply font-title text-lg font-medium
