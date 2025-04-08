@@ -3,8 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import AdmZip from 'adm-zip';
 import axios from 'axios';
-import fsExtra from 'fs-extra';
-import { fileURLToPath } from 'url';
 import path from 'path';
 
 import Pocketbase from "pocketbase";
@@ -89,7 +87,6 @@ async function extractGameFile(id, uploadedFileURL) {
     try {
         //Récupère le fichier
         const filePath = await downloadFile(uploadedFileURL, id);
-        //Détermine le type (zip ou rar)
         const extname = path.extname(filePath).toLowerCase();
         const extractionDestDir = path.join('public', 'games', id);
         fs.mkdirSync(extractionDestDir, { recursive: true });
