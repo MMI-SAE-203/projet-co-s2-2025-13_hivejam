@@ -104,7 +104,7 @@ async function extractGameFile(id, uploadedFileURL) {
         }
 
         //Update l'entrée Pocketbase
-        await pb.collection('GAME').update(id, { "file_URL": `games/${id}/index.html` });
+        await pb.collection('GAME').update(id, { "file_path": `/games/${id}/index.html` });
 
     } catch (error) {
         console.error('Une erreur est survenue en essayant d extraire les fichiers du jeu');
@@ -112,7 +112,7 @@ async function extractGameFile(id, uploadedFileURL) {
 }
 
 //Troisième fonction télécharge le fichier depuis pocketbase
-//Fonction créée par chat auquelle j'ai pas touché
+//Fonction créée par chat auquelle j'ai pas beaucoup touché
 async function downloadFile(fileUrl, gameId) {
     console.log('downloading files')
     try {
