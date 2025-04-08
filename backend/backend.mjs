@@ -2,7 +2,6 @@
 import fs from 'fs';
 import path from 'path';
 import AdmZip from 'adm-zip';
-import unrarExtract from 'node-unrar';
 import axios from 'axios';
 import fsExtra from 'fs-extra';
 import { fileURLToPath } from 'url';
@@ -99,17 +98,13 @@ async function extractGameFile(id, uploadedFileURL) {
             const zip = new AdmZip(filePath);
             zip.extractAllTo(extractionDestDir, true);
             console.log(`Fichier ZIP extrait vers : ${extractionDestDir}`);
-        } else if (extname == '.rar') {
-            const rar = unrar.extract(filePath);
-            rar.extractAll(extractionDestDir);
-            console.log(`Fichier RAR extrait vers : ${extractionDestDir}`);
         } else {
             console.error('Type de fichier non reconnu : ', extname);
             return;
         }
 
         //Update l'entrée Pocketbase
-        await pb.collection('GAME').update(id, { "file_URL": `/games/${id}/index.html` });
+        await pb.collection('GAME').update(id, { "file_URL": `games/${id}/index.html` });
 
     } catch (error) {
         console.error('Une erreur est survenue en essayant d extraire les fichiers du jeu');
@@ -126,13 +121,11 @@ async function downloadFile(fileUrl, gameId) {
             url: fileUrl,
             responseType: 'stream', // Important for large files
         });
-        console.log(path.join('/public','tmp',`${gameId}.rar`));
-        const filePath = path.join('/public','tmp',`${gameId}.rar`); // Temp file path
+        const filePath = path.join('public', 'tmp', `${gameId}.zip`); // Temp file path
+        console.log(filePath);
         const writer = fs.createWriteStream(filePath);
-
         // Pipe the response stream to the file
         response.data.pipe(writer);
-
         return new Promise((resolve, reject) => {
             writer.on('finish', () => resolve(filePath));
             writer.on('error', reject);
@@ -140,6 +133,5 @@ async function downloadFile(fileUrl, gameId) {
 
     } catch (error) {
         console.error('Error downloading the file:', error);
-        throw error;
     }
 }
