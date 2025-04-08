@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import Jam from "../components/Card/Jam/Jam.astro";
 import Jam_Mini from "../components/Card/Jam/Jam_mini.astro";
 import Post from "../components/Card/Forum/Post.astro";
+import Article_Mini from "../components/Card/Forum/Article_mini.astro";
 
 import Next from "../assets/svg/Next.svg"
 import Prev from "../assets/svg/Prev.svg"
@@ -55,7 +56,7 @@ import Prev from "../assets/svg/Prev.svg"
             </section>
         </div>
 
-        <div>
+        <div class="space-y-10">
             <section class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md">
                 <h2>Jams Populaires</h2>
                 <div class="border-b border-dark-gray">
@@ -64,6 +65,16 @@ import Prev from "../assets/svg/Prev.svg"
                     <Jam_Mini />
                 </div>
                 <a href="/toutes_les_jams" class="btn-1 self-end">Voir toutes les jams</a>
+            </section>
+
+            <section class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md">
+                <h2>Actualité</h2>
+                <div class="border-b border-dark-gray">
+                    <Article_Mini />
+                    <Article_Mini />
+                    <Article_Mini />
+                </div>
+                <a href="/actu" class="btn-1 self-end">Voir toutes l'actu</a>
             </section>
         </div>
     </div>
