@@ -21,7 +21,7 @@
         /* Grayscale */
     --color-black: #1e1e1e;
     --color-white: #fff;
-    --color-drak-gray: #464646;
+    --color-dark-gray: #464646;
     --color-light-gray: #f4f4f4;
 }
 
@@ -45,12 +45,12 @@
 
 @layer components {
     .btn-1 {
-        @apply border-2 text-brand-1 uppercase text-base font-bold px-5 py-1 rounded-2xl flex gap-2.5
+        @apply flex items-center justify-center border-2 text-brand-1 uppercase text-base font-bold px-5 py-1 rounded-2xl flex gap-2.5
     }
     .btn-2 {
-        @apply text-white bg-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl flex gap-2.5
+        @apply flex items-center justify-center text-white bg-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl flex gap-2.5
     }
     .tiny {
-        @apply font-text text-sm
+        @apply font-text text-sm font-light
     }
 }

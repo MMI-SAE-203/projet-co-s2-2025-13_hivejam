@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 
 import Jam from "../components/Card/Jam/Jam.astro";
+import Jam_Mini from "../components/Card/Jam/Jam_mini.astro";
 import Post from "../components/Card/Forum/Post.astro";
 
 import Next from "../assets/svg/Next.svg"
@@ -9,8 +10,8 @@ import Prev from "../assets/svg/Prev.svg"
 ---
 
 <Layout>
-    <div class="p-10">
-        <div class="space-y-10">
+    <div class="grid grid-cols-4 gap-3 p-10">
+        <div class="space-y-10 col-start-1 col-end-4">
             <section class="flex flex-col gap-10">
                 <div class="flex justify-between">
                     <h2>Mes Jams en cours</h2>
@@ -47,10 +48,22 @@ import Prev from "../assets/svg/Prev.svg"
                     </div>
                 </div>
 
-                <div class="border-b-1 border-black">
+                <div class="border-b-1 border-dark-gray">
                     <Post />
                     <Post />
                 </div>
+            </section>
+        </div>
+
+        <div>
+            <section class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md">
+                <h2>Jams Populaires</h2>
+                <div class="border-b border-dark-gray">
+                    <Jam_Mini />
+                    <Jam_Mini />
+                    <Jam_Mini />
+                </div>
+                <a href="/toutes_les_jams" class="btn-1 self-end">Voir toutes les jams</a>
             </section>
         </div>
     </div>
