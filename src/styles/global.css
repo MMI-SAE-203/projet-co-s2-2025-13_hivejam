@@ -45,6 +45,10 @@
     body {
         @apply font-text text-base font-medium text-black
     }
+
+    img {
+        @apply object-cover rounded-md
+    }
 }
 
 @layer components {

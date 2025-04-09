@@ -1,19 +1,24 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 
+// SVG
 import Search from "../../assets/svg/Search.svg"
+
+// Card
+import Article from "../../components/Card/Forum/Article.astro"
+import ArticleBig from "../../components/Card/Forum/Article_big.astro"
 ---
 
 <Layout>
-    <div class="flec flex-col p-10 gap-10">
-        <section class="flex justify-between">
+    <div class="space-y-12.5 p-10">
             <h1>Actualités</h1>
-            <div class="button">
-                <input type="search" placeholder="Rechercher">
-                <Search />
+        <section class="space-y-10">
+            <h2>Articles à la une</h2>
+            <div class="grid grid-cols-3 grid-rows-1 gap-6">
+                <ArticleBig />
+                <Article />
+                <Article />
             </div>
-        </section>
-        <section>
         </section>
     </div>
 </Layout>

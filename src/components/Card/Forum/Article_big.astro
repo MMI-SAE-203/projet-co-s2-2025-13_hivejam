@@ -1,0 +1,21 @@
+---
+import Book from "../../../assets/svg/Book.svg";
+
+import Placholder from "../../../assets/img/Article_placeholder.png"
+---
+
+<a href="" class="col-start-1 col-end-3 row-start-1 row-end-3">
+    <article class="flex flex-col gap-2">
+        <img src={Placholder.src} alt="">
+        <div class="space-y-2.5">
+            <h3>Titre de l'article principale</h3>
+            <div class="flex gap-2.5 items-center tiny">
+                <p class="border rounded-md px-2.5 py-1">Topic</p>
+                <p>07 Mars 25</p>
+                <span class="bg-dark-gray w-0.25 h-3"></span>
+                <Book />
+                <p>2 min</p>
+            </div>
+        </div>
+    </article>
+</a>
