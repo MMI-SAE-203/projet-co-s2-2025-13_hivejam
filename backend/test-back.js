@@ -20,5 +20,5 @@ import { getGame, getJam, getTask, getTeam, getUser, getUserTeams } from "./back
 // const records = await getTask('g9hzk4emyk9ikl7');
 // console.log(JSON.stringify(records,null,2));
 
-const records = await getUserTeams('41cz975nah4jh7n');
+const records = await getUserTeams('5r583s231sb31yb');
 console.log(JSON.stringify(records,null,2));
