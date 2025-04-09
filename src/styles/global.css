@@ -48,15 +48,19 @@
 }
 
 @layer components {
-    .btn-1 {
+    .btn-light {
         @apply flex items-center justify-center border-2  text-brand-1 uppercase text-base font-bold px-5 py-1 rounded-2xl flex gap-2.5
     }
 
-    .btn-2 {
+    .btn-full {
         @apply flex items-center justify-center text-white bg-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl flex gap-2.5
     }
 
     .tiny {
         @apply font-text text-sm font-light
-    }      
+    }
+    
+    .button {
+        @apply border-2 border-brand-1 rounded-full flex items-center px-5 text-brand-1 uppercase font-title *:placeholder:uppercase
+    }
 }
