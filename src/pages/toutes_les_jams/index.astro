@@ -1,0 +1,37 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import JamMedium from "../../components/Card/Jam/Jam_medium.astro";
+---
+
+<Layout>
+    <div class="space-y-12.5 p-10">
+        <h1>Toutes les jams</h1>
+        <section class="space-y-5">
+            <h2 class="normal-case">Trier par</h2>
+            <div class="flex gap-4">
+                <button class="btn-light cursor-pointer">
+                    Popularité
+                    <span class="border-t-2 border-r-2 border-brand-1 h-3 w-3 rotate-135 relative bottom-1 left-1"></span>
+                </button>
+                <button class="btn-light cursor-pointer">
+                    Satut
+                    <span class="border-t-2 border-r-2 border-brand-1 h-3 w-3 rotate-135 relative bottom-1 left-1"></span>
+                </button>
+            </div>
+        </section>
+        <section class="grid grid-cols-4 gap-6">
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+                <JamMedium />
+        </section>
+    </div>
+</Layout>
