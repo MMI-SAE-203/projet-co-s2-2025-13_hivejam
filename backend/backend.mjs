@@ -126,6 +126,7 @@ export async function getUserTeams(userid) {
 }
 
 //Fonction pour savoir si une jam est en cours, terminée ou à venir
+//renvoie un object repsonse avec .time un string past,present ou future et .info une phrase donnant une indication temporelle sur la jam
 function getJamStatus(jam) {
     const now = new Date();
     const start = new Date(jam.date_beginning);
@@ -197,16 +198,44 @@ export async function getRecentPost() {
 }
 
 //Fonction qui retourne les jams à venir et en cours les plus populaires
-// export async function getGame(id) {
-//     try {
-//         let game = await pb.collection('GAME').getOne(id);
-//         game.image_URL = pb.files.getURL(game, game.image);
-//         return game;
-//     } catch (error) {
-//         console.log('Une erreur est survenue en lisant des entrées dans la collection GAME');
-//         return null;
-//     }
-// }
+export async function getPopularJam() {
+    try {
+        //Récupère toutes les teams lié à des jams à venir
+        const now = Date.now();
+        let teams = await pb.collection('TEAM').getFullList({
+            expand : 'game_jam',
+            sort : 'created',
+            filter : `game_jam.date_beginning >= ${now}`
+        });
+        //Compte combien de teams sont associées à chaque jam
+        const jamTeamCount = teams.reduce((accumulator, team) => {
+            const jamID = team.expand.game_jam.id;
+            if (!accumulator[jamID]) {
+                accumulator[jamID] = 0;
+            }
+            accumulator[jamID]++;
+            return accumulator;
+        }, {});
+        //Récupère les 5 jams avec le plus de teams et le nombre de teams
+        const topJams = Object.entries(jamTeamCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([id, count]) => ({ id, count }));
+        
+        const jams = [];
+        //Récupère le jam et lui ajoute le nombre de team et l'URL de l'image d'illustration
+        for (const element of topJams) {
+            const jam = await getJam(element.id);
+            jam.team_NB = element.count;
+            jam.image_URL = pb.files.getURL(jam, jam.image);
+            jams.push(jam);
+        }
+        return jams;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant des entrées dans la collection TEAM');
+        return null;
+    }
+}
 
 
 //Grosses fonctions pour uploader les jeux, utilisée en locale, la solution finale sera différente
