@@ -1,0 +1,24 @@
+---
+import Crown from "../../../assets/svg/Crown.svg";
+
+const {...team} = Astro.props;
+console.log(team.expand?.game_jam)
+---
+
+<a href=`/mes_jams/${team.id}`>
+    <article class="border-1 border-drak-gray p-3 flex flex-col justify-between gap-2 w-80 rounded-md">
+        <div class="flex gap-2">
+            <img src={team.image_URL} alt="" class="h-24"/>
+            <div class="flex flex-col gap-2">
+                <h3>{team.expand.game_jam?.name}</h3>
+                <p class="tiny line-clamp-2">{team.expand.game_jam?.description}</p>
+            </div>
+        </div>
+        <div class="flex flex-col">
+            <p class="tiny">Terminée il y a 4 mois et 2 semaines</p>
+        </div>
+        <div class="self-end">
+            <Crown />
+        </div>
+    </article>
+</a>
