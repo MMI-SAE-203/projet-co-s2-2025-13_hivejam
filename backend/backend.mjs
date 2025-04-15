@@ -96,6 +96,7 @@ export async function getArticle(id) {
 
 //Fonction pour récupérer les teams de l'utilisateurs donc ses participations aux jams
 //renvoie un object d'array avec les key "past", "present" et "future"
+//pour accéder aux infos de la jam il faut .expand.game_jam
 export async function getUserTeams(userid) {
     try {
         let user = await pb.collection('USER').getOne(userid);
@@ -172,6 +173,24 @@ function getJamStatus(jam) {
     };
     return response;
 }
+
+//Fonction qui retourne quelques posts récents à afficher sur la homepage
+//image_URL = "" si le post ne contient pas d'image
+export async function getRecentPost() {
+    try {
+        let postsList = await pb.collection('POST').getList(1,10, {
+            sort : 'created'
+        });
+        let posts = postsList.items;
+        posts.map((post) => post.image_URL = pb.files.getURL(post, post.image));
+        return posts;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant des entrées dans la collection POST');
+        return null;
+    }
+}
+
+
 
 
 //Grosses fonctions pour uploader les jeux, utilisée en locale, la solution finale sera différente
