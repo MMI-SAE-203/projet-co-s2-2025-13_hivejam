@@ -22,7 +22,7 @@ export async function getUser(id) {
 
 export async function getTeam(id) {
     try {
-        let team = await pb.collection('TEAM').getOne(id);
+        let team = await pb.collection('TEAM').getOne(id, {expand : 'game_jam'});
         return team;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection TEAM');

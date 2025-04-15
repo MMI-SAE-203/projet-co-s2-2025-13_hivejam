@@ -5,7 +5,7 @@ const {...team} = Astro.props;
 console.log(team.expand?.game_jam)
 ---
 
-<a href=`/toutes_les_jams/${team.id}`>
+<a href=`/mes_jams/${team.id}`>
     <article class="border-1 border-drak-gray p-3 flex flex-col justify-between gap-2 w-80 rounded-md">
         <div class="flex gap-2">
             <img src={team.image_URL} alt="" class="h-24"/>
