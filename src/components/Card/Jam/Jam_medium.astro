@@ -1,24 +1,24 @@
 ---
-import User from "../../../assets/svg/user.svg";
+import Crown from "../../../assets/svg/Crown.svg";
 
-import PlaceHolder from "../../../assets/img/jam_placeholder.png";
+const {...team} = Astro.props;
+console.log(team.expand?.game_jam)
 ---
 
-<div class="border-1 border-drak-gray p-3 flex flex-col gap-2 min-w-80 rounded-md">
-    <div class="flex gap-2">
-        <img src={PlaceHolder.src} alt="" />
-        <div class="flex flex-col gap-2">
-            <h3>Nom de la Jam</h3>
-            <p class="tiny">Description de la jam</p>
+<a href=`/toutes_les_jams/${team.id}`>
+    <article class="border-1 border-drak-gray p-3 flex flex-col justify-between gap-2 w-80 rounded-md">
+        <div class="flex gap-2">
+            <img src={team.image_URL} alt="" class="h-24"/>
+            <div class="flex flex-col gap-2">
+                <h3>{team.expand.game_jam?.name}</h3>
+                <p class="tiny line-clamp-2">{team.expand.game_jam?.description}</p>
+            </div>
         </div>
-    </div>
-    <div class="flex flex-col">
-        <p class="tiny">Terminée il y a 4 mois et 2 semaines</p>
-    </div>
-    <div class="flex justify-between">
-        <div class="flex items-center gap-2">
-            <User />
-            <p>000</p>
+        <div class="flex flex-col">
+            <p class="tiny">Terminée il y a 4 mois et 2 semaines</p>
         </div>
-    </div>
-</div>
+        <div class="self-end">
+            <Crown />
+        </div>
+    </article>
+</a>
