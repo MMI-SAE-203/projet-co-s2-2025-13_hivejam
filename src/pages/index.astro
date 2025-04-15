@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-import Jam from "../components/Card/Jam/Jam.astro";
+import Team from "../components/Card/Team/Team.astro";
 import Jam_Mini from "../components/Card/Jam/Jam_mini.astro";
 import Post from "../components/Card/Forum/Post.astro";
 import Article_Mini from "../components/Card/Forum/Article_mini.astro";
@@ -29,7 +29,7 @@ console.log(userTeams?.present);
                     <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
                         {
                             userTeams?.present.map((team) => (
-                                <Jam {...team} />
+                                <Team {...team} />
                             ))
                         }
                     </div>
