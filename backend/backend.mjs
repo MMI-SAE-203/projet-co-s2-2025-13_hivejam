@@ -94,6 +94,9 @@ export async function getArticle(id) {
     }
 }
 
+
+//_______________________________________________________Fonctions spécifiques_____________________________________________
+
 //Fonction pour récupérer les teams de l'utilisateurs donc ses participations aux jams
 //renvoie un object d'array avec les key "past", "present" et "future"
 //pour accéder aux infos de la jam il faut .expand.game_jam
@@ -123,56 +126,6 @@ export async function getUserTeams(userid) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection USER');
         return null;
     }
-}
-
-//Fonction pour savoir si une jam est en cours, terminée ou à venir
-//renvoie un object repsonse avec .time un string past,present ou future et .info une phrase donnant une indication temporelle sur la jam
-function getJamStatus(jam) {
-    const now = new Date();
-    const start = new Date(jam.date_beginning);
-    const end = new Date(start.getTime() + jam.duration * 60 * 60 * 1000);
-
-    let status;
-    let timeDiff;
-    let timeInfo;
-
-    //Transforme la différence de temps en un truc lisible en mois, semaines, jours etc en fonction
-    const msToTime = (timeDiff) => {
-        const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30)); // 30 days in a month
-        const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7)); // 7 days in a week
-        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 1 day in ms
-        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-
-        if (months > 0) return `${months} mois`;
-        if (weeks > 0) return `${weeks} semaines`;
-        if (days > 0) return `${days} jours`;
-        if (hours > 0) return `${hours} heures`;
-        return `${minutes} minutes`;
-    };
-
-    if (now < start) {
-        // Si c'est dans le futur
-        status = 'future';
-        timeDiff = start - now;
-        timeInfo = `Cette jam commencera dans ${msToTime(timeDiff)}`;
-    } else if (now >= start && now <= end) {
-        // Si c'est en cours
-        status = 'present';
-        timeDiff = end - now;
-        timeInfo = `${msToTime(timeDiff)} avant la fin de cette jam`;
-    } else {
-        // Si c'est terminé
-        status = 'past';
-        timeDiff = now - end;
-        timeInfo = `Cette jam s'est terminé il y a ${msToTime(timeDiff)}`;
-    }
-
-    let response = {
-        "time": status,
-        "info": timeInfo
-    };
-    return response;
 }
 
 //Fonction qui retourne quelques posts récents à afficher sur la homepage
@@ -237,6 +190,88 @@ export async function getPopularJam() {
     }
 }
 
+//Fonction qui retourne les 5 derniers articles
+// .date pour avoir la date de publication écrite
+export async function getRecentArticle() {
+    try {
+        let articlesList = await pb.collection('ARTICLE').getList(1,5, {
+            sort : 'created'
+        });
+        let articles = articlesList.items;
+        articles.forEach(article => {
+            article.date = formatDate(article.created)
+        });
+        return articles;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant des entrées dans la collection ARTICLE');
+        return null;
+    }
+}
+
+
+
+//______________________________________________________librairie perso____________________________________________________
+
+//Fonction pour savoir si une jam est en cours, terminée ou à venir
+//renvoie un object repsonse avec .time un string past,present ou future et .info une phrase donnant une indication temporelle sur la jam
+function getJamStatus(jam) {
+    const now = new Date();
+    const start = new Date(jam.date_beginning);
+    const end = new Date(start.getTime() + jam.duration * 60 * 60 * 1000);
+
+    let status;
+    let timeDiff;
+    let timeInfo;
+
+    //Transforme la différence de temps en un truc lisible en mois, semaines, jours etc en fonction
+    const msToTime = (timeDiff) => {
+        const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30)); // 30 days in a month
+        const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7)); // 7 days in a week
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 1 day in ms
+        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+        if (months > 0) return `${months} mois`;
+        if (weeks > 0) return `${weeks} semaines`;
+        if (days > 0) return `${days} jours`;
+        if (hours > 0) return `${hours} heures`;
+        return `${minutes} minutes`;
+    };
+
+    if (now < start) {
+        // Si c'est dans le futur
+        status = 'future';
+        timeDiff = start - now;
+        timeInfo = `Cette jam commencera dans ${msToTime(timeDiff)}`;
+    } else if (now >= start && now <= end) {
+        // Si c'est en cours
+        status = 'present';
+        timeDiff = end - now;
+        timeInfo = `${msToTime(timeDiff)} avant la fin de cette jam`;
+    } else {
+        // Si c'est terminé
+        status = 'past';
+        timeDiff = now - end;
+        timeInfo = `Cette jam s'est terminé il y a ${msToTime(timeDiff)}`;
+    }
+
+    let response = {
+        "time": status,
+        "info": timeInfo
+    };
+    return response;
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { day: 'numeric', month: 'long' };
+    return date.toLocaleDateString('fr-FR', options);
+}
+
+
+
+
+//_____________________________________upload des jeux local (temporaire)________________________________________________
 
 //Grosses fonctions pour uploader les jeux, utilisée en locale, la solution finale sera différente
 //La première créer l'entrée dans Pocketbase
