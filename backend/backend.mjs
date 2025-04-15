@@ -134,7 +134,7 @@ export async function getUserTeams(userid) {
 export async function getRecentPost() {
     try {
         let postsList = await pb.collection('POST').getList(1,10, {
-            sort : 'created',
+            sort : '-created',
             expand : 'user'
         });
         let posts = postsList.items;
@@ -157,7 +157,6 @@ export async function getPopularJam() {
         const now = Date.now();
         let teams = await pb.collection('TEAM').getFullList({
             expand : 'game_jam',
-            sort : 'created',
             filter : `game_jam.date_beginning >= ${now}`
         });
         //Compte combien de teams sont associées à chaque jam
@@ -195,7 +194,7 @@ export async function getPopularJam() {
 export async function getRecentArticle() {
     try {
         let articlesList = await pb.collection('ARTICLE').getList(1,5, {
-            sort : 'created'
+            sort : '-created'
         });
         let articles = articlesList.items;
         articles.forEach(article => {
@@ -208,7 +207,22 @@ export async function getRecentArticle() {
     }
 }
 
-
+//Fonction pour récupérer tous les articles paginés
+export async function getAllArticle() {
+    try {
+        let articles = await pb.collection('ARTICLE').getFullList({
+            sort : '-created'
+        });
+        articles.forEach(article => {
+            article.date = formatDate(article.created);
+            article.image_URL = pb.files.getURL(article, article.image);
+        });
+        return articles;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant des entrées dans la collection ARTICLE');
+        return null;
+    }
+}
 
 //______________________________________________________librairie perso____________________________________________________
 
