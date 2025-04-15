@@ -176,13 +176,19 @@ function getJamStatus(jam) {
 
 //Fonction qui retourne quelques posts récents à afficher sur la homepage
 //image_URL = "" si le post ne contient pas d'image
+//pour accéder aux infos de l'utilisateur il faut .expand.user
 export async function getRecentPost() {
     try {
         let postsList = await pb.collection('POST').getList(1,10, {
-            sort : 'created'
+            sort : 'created',
+            expand : 'user'
         });
         let posts = postsList.items;
-        posts.map((post) => post.image_URL = pb.files.getURL(post, post.image));
+        posts.forEach(post => {
+            post.image_URL = pb.files.getURL(post, post.image);
+            post.comment_NB = post.comment.length;
+            post.expand.user.image_URL = pb.files.getURL(post.expand.user, post.expand.user.image);
+          });
         return posts;
     } catch (error) {
         console.log('Une erreur est survenue en lisant des entrées dans la collection POST');
@@ -190,7 +196,17 @@ export async function getRecentPost() {
     }
 }
 
-
+//Fonction qui retourne les jams à venir et en cours les plus populaires
+// export async function getGame(id) {
+//     try {
+//         let game = await pb.collection('GAME').getOne(id);
+//         game.image_URL = pb.files.getURL(game, game.image);
+//         return game;
+//     } catch (error) {
+//         console.log('Une erreur est survenue en lisant des entrées dans la collection GAME');
+//         return null;
+//     }
+// }
 
 
 //Grosses fonctions pour uploader les jeux, utilisée en locale, la solution finale sera différente
