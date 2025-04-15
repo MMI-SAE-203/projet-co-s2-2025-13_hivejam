@@ -1,0 +1,18 @@
+---
+import { userRegister } from "../../backend/login.mjs";
+
+if (Astro.request.method == "POST") {
+    const data = await Astro.request.formData();
+    console.log(data);
+    const register = await userRegister(data);
+    return Astro.redirect("/login?success=1")
+
+};
+---
+
+<form method="POST" action="/login" enctype="multipart/form-data">
+    <input type="email" name="email" id="email">
+    <input type="password" name="password" id="password">
+    <input type="password" name="passwordConfirm" id="passwordConfirm">
+    <button type="submit">Tester</button>
+</form>
