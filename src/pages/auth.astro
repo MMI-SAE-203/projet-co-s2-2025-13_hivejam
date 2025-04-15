@@ -1,0 +1,147 @@
+---
+import PocketBase from "pocketbase";
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+let user = null;
+let error = "";
+let message = "";
+
+// ⚡ Reconnexion via cookie
+const cookie = Astro.cookies.get("pb_auth");
+if (cookie?.value) {
+  try {
+    pb.authStore.save(cookie.value, null); // Recharge le token depuis le cookie
+    if (pb.authStore.isValid) {
+      user = pb.authStore.model;
+    }
+  } catch (e) {
+    pb.authStore.clear(); // Si erreur, on supprime le token
+  }
+}
+
+// ⚙️ Traitement des formulaires
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const formType = formData.get("formType");
+
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  try {
+    if (formType === "register") {
+      const name = formData.get("name");
+      await pb.collection("users").create({
+        email,
+        password,
+        passwordConfirm: password,
+        name,
+      });
+      message = "✅ Compte créé. Connectez-vous.";
+    }
+
+    if (formType === "login") {
+      const authData = await pb
+        .collection("users")
+        .authWithPassword(email, password);
+      Astro.cookies.set("pb_auth", pb.authStore.token, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "None", // Permet au cookie de fonctionner même en développement
+        secure: false,
+      });
+      return Astro.redirect("/auth");
+    }
+
+    if (formType === "logout") {
+      pb.authStore.clear();
+      Astro.cookies.delete("pb_auth");
+      return Astro.redirect("/auth");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+---
+
+<html>
+  <head>
+    <title>Auth</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+        max-width: 500px;
+        margin: auto;
+      }
+      input,
+      button {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        width: 100%;
+      }
+      form {
+        margin-bottom: 2rem;
+      }
+      .error {
+        color: red;
+      }
+      .success {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Connexion / Inscription</h1>
+
+    {error && <p class="error">{error}</p>}
+    {message && <p class="success">{message}</p>}
+
+    {
+      user ? (
+        <>
+          <p>
+            Bienvenue, <strong>{user.name || user.email}</strong> 👋
+          </p>
+          <form method="POST">
+            <input type="hidden" name="formType" value="logout" />
+            <button type="submit">Se déconnecter</button>
+          </form>
+        </>
+      ) : (
+        <>
+          <h2>Connexion</h2>
+          <form method="POST">
+            <input type="hidden" name="formType" value="login" />
+            <input name="email" type="email" placeholder="Email" required />
+            <input
+              name="password"
+              type="password"
+              placeholder="Mot de passe"
+              required
+            />
+            <button type="submit">Connexion</button>
+          </form>
+
+          <h2>Inscription</h2>
+          <form method="POST">
+            <input type="hidden" name="formType" value="register" />
+            <input name="name" type="text" placeholder="Pseudo" required />
+            <input name="email" type="email" placeholder="Email" required />
+            <input
+              name="password"
+              type="password"
+              placeholder="Mot de passe"
+              required
+            />
+            <button type="submit">Créer un compte</button>
+          </form>
+        </>
+      )
+    }
+
+    <hr />
+    <p><strong>Debug :</strong></p>
+    <pre>{JSON.stringify(user, null, 2)}</pre>
+    <p>Auth valid : {String(pb.authStore.isValid)}</p>
+  </body>
+</html>
