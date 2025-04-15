@@ -87,6 +87,7 @@ export async function getArticle(id) {
     try {
         let article = await pb.collection('ARTICLE').getOne(id);
         article.image_URL = pb.files.getURL(article, article.image);
+        article.date = formatDateFull(article.created);
         return article;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection ARTICLE');
@@ -207,11 +208,30 @@ export async function getRecentArticle() {
     }
 }
 
-//Fonction pour récupérer tous les articles paginés
+//Fonction pour récupérer tous les articles
 export async function getAllArticle() {
     try {
         let articles = await pb.collection('ARTICLE').getFullList({
             sort : '-created'
+        });
+        articles.forEach(article => {
+            article.date = formatDate(article.created);
+            article.image_URL = pb.files.getURL(article, article.image);
+        });
+        return articles;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant des entrées dans la collection ARTICLE');
+        return null;
+    }
+}
+
+//Fonction pour récupérer une liste d'article sur le même topic
+//Pour récupérer l'article en lui même simplement utiliser getArticle
+export async function getSimilarArticle(topic) {
+    try {
+        let articles = await pb.collection('ARTICLE').getFullList({
+            sort : '-created',
+            filter : `topic = "${topic}"`
         });
         articles.forEach(article => {
             article.date = formatDate(article.created);
@@ -282,6 +302,11 @@ function formatDate(dateString) {
     return date.toLocaleDateString('fr-FR', options);
 }
 
+function formatDateFull(dateString) {
+    const date = new Date(dateString);
+    const options = { day: 'numeric', month: 'long' , year:'numeric'};
+    return date.toLocaleDateString('fr-FR', options);
+}
 
 
 
