@@ -6,8 +6,12 @@ import Jam_Mini from "../components/Card/Jam/Jam_mini.astro";
 import Post from "../components/Card/Forum/Post.astro";
 import Article_Mini from "../components/Card/Forum/Article_mini.astro";
 
-import Next from "../assets/svg/Next.svg"
-import Prev from "../assets/svg/Prev.svg"
+import Next from "../assets/svg/Next.svg";
+import Prev from "../assets/svg/Prev.svg";
+
+import { getUserTeams } from "../../backend/backend.mjs";
+const userTeams = await getUserTeams("41cz975nah4jh7n");
+console.log(userTeams?.present);
 ---
 
 <Layout>
@@ -23,12 +27,11 @@ import Prev from "../assets/svg/Prev.svg"
                 </div>
                 <div class="flex flex-col">
                     <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
-                        <Jam />
-                        <Jam />
-                        <Jam />
-                        <Jam />
-                        <Jam />
-                        <Jam />
+                        {
+                            userTeams?.present.map((team) => (
+                                <Jam {...team} />
+                            ))
+                        }
                     </div>
                     <div class="flex justify-center gap-10">
                         <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
