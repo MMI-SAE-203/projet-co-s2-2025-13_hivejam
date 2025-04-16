@@ -1,4 +1,4 @@
-import { getAllArticle, getArticle, getGame, getJam, getPopularJam, getRecentArticle, getRecentPost, getSimilarArticle, getTask, getTeam, getUser, getUserTeams } from "./backend.mjs"
+import { getAllArticle, getAllJamFiltered, getArticle, getGame, getJam, getPopularJam, getRecentArticle, getRecentPost, getSimilarArticle, getTask, getTeam, getUser, getUserTeams } from "./backend.mjs"
 
 
 // const records = await getUser('5r583s231sb31yb');
@@ -38,5 +38,8 @@ import { getAllArticle, getArticle, getGame, getJam, getPopularJam, getRecentArt
 // const records = await getAllArticle();
 // console.log(JSON.stringify(records,null,2));
 
-const records = await getSimilarArticle("game jam");
+// const records = await getSimilarArticle("game jam");
+// console.log(JSON.stringify(records,null,2));
+
+const records = await getAllJamFiltered(true);
 console.log(JSON.stringify(records,null,2));

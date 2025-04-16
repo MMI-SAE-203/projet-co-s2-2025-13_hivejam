@@ -244,6 +244,70 @@ export async function getSimilarArticle(topic) {
     }
 }
 
+//Fonction pour récupérer la liste de toutes les jams triées par popularité et par status
+//Il y a deux paramètre possible pour la fonction, popular (boolean) et time ("past", "present" ou "future")
+export async function getAllJamFiltered(popular, time) {
+    try {
+        let teams = await pb.collection('TEAM').getFullList({
+            expand : 'game_jam'
+        });
+
+        //Compte combien de teams sont associées à chaque jam et les infos de timing (genre : commence dans 2 mois)
+        const jamTeamCountandInfo = teams.reduce((accumulator, team) => {
+            const jam = team.expand.game_jam;
+            const jamID = jam.id;
+            const jamStatus = getJamStatus(jam);
+            if (time) {
+                if (jamStatus.time === time) {
+                    if (!accumulator[jamID]) {
+                        accumulator[jamID] = {
+                            teamCount: 0,
+                            info: jamStatus.info
+                        };
+                    }
+                    accumulator[jamID].teamCount++;
+                }
+            } else {
+                if (!accumulator[jamID]) {
+                    accumulator[jamID] = {
+                        teamCount: 0,
+                        info: jamStatus.info
+                    };
+                }
+                accumulator[jamID].teamCount++;
+            }
+            
+            return accumulator;
+        }, {});
+
+        //Récupère les jams avec le plus de teams et le nombre de teams
+        const topJams = Object.entries(jamTeamCountandInfo)
+        .sort((a, b) =>
+            popular ? b[1].teamCount - a[1].teamCount : a[1].teamCount - b[1].teamCount
+        )
+        .map(([id, data]) => ({
+            id,
+            count: data.teamCount,
+            info: data.info
+        }));
+        
+        const jams = [];
+        //Récupère le jam et lui ajoute le nombre de team et l'URL de l'image d'illustration
+        for (const element of topJams) {
+            const jam = await getJam(element.id);
+            jam.team_NB = element.count;
+            jam.image_URL = pb.files.getURL(jam, jam.image);
+            jam.time_info = element.info;
+            jams.push(jam);
+        }
+
+        return jams;
+    } catch (error) {
+    console.log('Une erreur est survenue en lisant des entrée dans la collection TEAM');
+        return null;
+    }
+}
+
 //______________________________________________________librairie perso____________________________________________________
 
 //Fonction pour savoir si une jam est en cours, terminée ou à venir
