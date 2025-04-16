@@ -1,4 +1,6 @@
 ---
+import "../styles/global.css";
+
 import PocketBase from "pocketbase";
 const pb = new PocketBase("http://127.0.0.1:8090");
 
@@ -6,8 +8,7 @@ let error = "";
 let message = "";
 const cookies = Astro.cookies;
 
-// ⚡ Reconnexion via cookie
-// Récupération du token s’il existe
+// Donné user si connecter
 const token = cookies.get('pb_auth')?.value;
 
 if (token) {
@@ -16,13 +17,12 @@ if (token) {
 
 let user = pb.authStore.model;
 
-// Si on a un token valide mais pas encore le model
 if (!user && pb.authStore.isValid) {
   await pb.collection('users').authRefresh();
   user = pb.authStore.model;
 }
 
-// ⚙️ Traitement des formulaires
+// Récupération formulaire
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
   const formType = formData.get("formType");
@@ -51,7 +51,7 @@ if (Astro.request.method === "POST") {
         path: "/",
         httpOnly: true,
       });
-      return Astro.redirect("/auth");
+      return Astro.redirect("/");
     }
 
     if (formType === "logout") {

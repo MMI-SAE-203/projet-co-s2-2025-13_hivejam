@@ -53,7 +53,7 @@
 
 @layer components {
     .btn-light {
-        @apply flex items-center justify-center border-2  text-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl gap-2.5
+        @apply flex items-center justify-center border-2 text-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl gap-2.5
     }
 
     .btn-full {
@@ -62,5 +62,11 @@
 
     .tiny {
         @apply font-text text-sm font-light
+    }
+
+    .hexagon {
+        -webkit-mask-image: url(../assets/svg/Hexagon.svg);
+        mask-image: url(../assets/svg/Hexagon.svg);
+        @apply  h-12 w-10.5
     }
 }

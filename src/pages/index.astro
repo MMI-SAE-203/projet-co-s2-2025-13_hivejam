@@ -9,9 +9,28 @@ import Article_Mini from "../components/Card/Forum/Article_mini.astro";
 import Next from "../assets/svg/Next.svg";
 import Prev from "../assets/svg/Prev.svg";
 
+// Cécupération des donné utilisateur
+import PocketBase from "pocketbase";
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+console.log(user?.id);
+
 import { getUserTeams } from "../../backend/backend.mjs";
-const userTeams = await getUserTeams("41cz975nah4jh7n");
-console.log(userTeams?.present);
+const userTeams = await getUserTeams(user?.id);
+console.log(userTeams);
 ---
 
 <Layout>
