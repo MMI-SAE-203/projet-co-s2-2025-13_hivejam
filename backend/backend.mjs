@@ -103,7 +103,7 @@ export async function getArticle(id) {
 //pour accéder aux infos de la jam il faut .expand.game_jam
 export async function getUserTeams(userid) {
     try {
-        let user = await pb.collection('USER').getOne(userid);
+        let user = await pb.collection('USER').getOne(userid,{field : 'team'} );
         let idfilter = [];
         user.team.forEach(id => {
             let single_filter = `id = "${id}"`
@@ -308,6 +308,24 @@ export async function getSomePost(currentpage) {
         return null;
     }
 }
+
+//Fonction qui récupère quelques réponses récentes
+// export async function getRecentComment(userId) {
+//     try {
+//         let userComments = await pb.collection('COMMENT').getFullList({
+//             sort : '-created',
+//             filter : `user = '${userId}'`,
+//             expand : 'comment'
+//         })
+//         // let comments = userComments.expand.comment
+//         // return comments;
+//         console.log(userComments.expand?.comment)
+//         return userComments
+//     } catch (error) {
+//         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
+//         return null;
+//     }
+// }
 
 //______________________________________________________librairie perso____________________________________________________
 
