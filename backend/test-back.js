@@ -1,7 +1,7 @@
 import { getAllArticle, getAllJamFiltered, getArticle, getGame, getJam, getPopularJam, getPostCommentNB,  getRecentArticle, getRecentComment, getRecursiveCommentNB, getSimilarArticle, getSomePost, getTask, getTeam, getUser, getUserTeams } from "./backend.mjs"
 
 
-// const records = await getUser('5r583s231sb31yb');
+// const records = await getUser('8x7n9a6bo63hz29');
 // console.log(JSON.stringify(records,null,2));
 
 // const records = await getTeam('00n1jq1vph7w504');
@@ -23,7 +23,7 @@ import { getAllArticle, getAllJamFiltered, getArticle, getGame, getJam, getPopul
 // const records = await getArticle('ln90s6j3n842f25');
 // console.log(JSON.stringify(records,null,2));
 
-// const records = await getUserTeams('5r583s231sb31yb');
+// const records = await getUserTeams('8x7n9a6bo63hz29');
 // console.log(JSON.stringify(records,null,2));
 
 // const records = await getRecentPost();
@@ -53,5 +53,6 @@ import { getAllArticle, getAllJamFiltered, getArticle, getGame, getJam, getPopul
 // const records = await getPostCommentNB('8lms3915i3u0jsk');
 // console.log(JSON.stringify(records,null,2));
 
-const records = await getRecentComment('41cz975nah4jh7n');
-console.log(JSON.stringify(records,null,2));
+// const records = await getRecentComment('41cz975nah4jh7n');
+// console.log(JSON.stringify(records,null,2));
+// console.log(JSON.stringify(records,null,2));

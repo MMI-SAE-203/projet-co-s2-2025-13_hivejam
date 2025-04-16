@@ -11,7 +11,7 @@ const pb = new Pocketbase('http://127.0.0.1:8090')
 
 export async function getUser(id) {
     try {
-        let user = await pb.collection('USER').getOne(id);
+        let user = await pb.collection('users').getOne(id);
         user.image_URL = pb.files.getURL(user, user.image);
         return user;
     } catch (error) {
@@ -103,7 +103,7 @@ export async function getArticle(id) {
 //pour accéder aux infos de la jam il faut .expand.game_jam
 export async function getUserTeams(userid) {
     try {
-        let user = await pb.collection('USER').getOne(userid,{field : 'team'} );
+        let user = await pb.collection('users').getOne(userid,{field : 'team'} );
         let idfilter = [];
         user.team.forEach(id => {
             let single_filter = `id = "${id}"`

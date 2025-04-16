@@ -1,21 +1,62 @@
 ---
 import Logo from "../assets/svg/logo.svg";
+
+// Cécupération des donné utilisateur
+import PocketBase from "pocketbase";
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+
+user.image_URL = pb.files.getURL(user, user?.image);
 ---
 
-<header class="flex justify-between py-1.5 px-10 drop-shadow-md sticky top-0 bg-white">
+<header
+    class="flex justify-between py-1.5 px-10 drop-shadow-md sticky top-0 bg-white"
+>
     <div class="flex gap-12.5">
         <a href="/">
-            <Logo width={82} height={60}/>
+            <Logo width={82} height={60} />
         </a>
-        <div class="flex items-center gap-7.5 font-title font-semibold text-lg *:hover:text-brand-1 *:hover:-translate-y-1 *:duration-150 *:ease-in">
+        <div
+            class="flex items-center gap-7.5 font-title font-semibold text-lg *:hover:text-brand-1 *:hover:-translate-y-1 *:duration-150 *:ease-in"
+        >
             <a href="/mes_jams">Mes jams</a>
             <a href="/actu">Actualités</a>
             <a href="/toutes_les_jams">Toutes les jams</a>
             <a href="/forum">Forum</a>
         </div>
     </div>
-    <div class="flex items-center gap-2.5">
-        <a href="/login" class="btn-light">Login</a>
-        <a href="/login" class="btn-full">Sign Up</a>
-    </div>
+    {
+        user ? (
+            <div class="flex items-center gap-4">
+                <h4>{user.name}</h4>
+                    <img
+                        src={user.image_URL}
+                        alt={"photo de profile de " + user.name}
+                        class="hexagon"
+                    />
+            </div>
+        ) : (
+            <div class="flex items-center gap-2.5">
+                <a href="/auth" class="btn-light">
+                    Login
+                </a>
+                <a href="/auth" class="btn-full">
+                    Sign Up
+                </a>
+            </div>
+        )
+    }
 </header>
