@@ -75,7 +75,7 @@ export async function getGame(id) {
 
 export async function getComment(id) {
     try {
-        let comment = await pb.collection('COMMENT').getOne(id);
+        let comment = await pb.collection('COMMENT').getOne(id, {expand : 'comment'});
         return comment;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
@@ -103,7 +103,7 @@ export async function getArticle(id) {
 //pour accéder aux infos de la jam il faut .expand.game_jam
 export async function getUserTeams(userid) {
     try {
-        let user = await pb.collection('users').getOne(userid);
+        let user = await pb.collection('users').getOne(userid,{field : 'team'} );
         let idfilter = [];
         user.team.forEach(id => {
             let single_filter = `id = "${id}"`
@@ -125,28 +125,6 @@ export async function getUserTeams(userid) {
         return teams_sorted;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection USER');
-        return null;
-    }
-}
-
-//Fonction qui retourne quelques posts récents à afficher sur la homepage
-//image_URL = "" si le post ne contient pas d'image
-//pour accéder aux infos de l'utilisateur il faut .expand.user
-export async function getRecentPost() {
-    try {
-        let postsList = await pb.collection('POST').getList(1,10, {
-            sort : '-created',
-            expand : 'user'
-        });
-        let posts = postsList.items;
-        posts.forEach(post => {
-            post.image_URL = pb.files.getURL(post, post.image);
-            post.comment_NB = post.comment.length;
-            post.expand.user.image_URL = pb.files.getURL(post.expand.user, post.expand.user.image);
-          });
-        return posts;
-    } catch (error) {
-        console.log('Une erreur est survenue en lisant des entrées dans la collection POST');
         return null;
     }
 }
@@ -244,6 +222,111 @@ export async function getSimilarArticle(topic) {
     }
 }
 
+//Fonction pour récupérer la liste de toutes les jams triées par popularité et par status
+//Il y a deux paramètre possible pour la fonction, popular (boolean) et time ("past", "present" ou "future")
+export async function getAllJamFiltered(popular, time) {
+    try {
+        let teams = await pb.collection('TEAM').getFullList({
+            expand : 'game_jam'
+        });
+
+        //Compte combien de teams sont associées à chaque jam et les infos de timing (genre : commence dans 2 mois)
+        const jamTeamCountandInfo = teams.reduce((accumulator, team) => {
+            const jam = team.expand.game_jam;
+            const jamID = jam.id;
+            const jamStatus = getJamStatus(jam);
+            if (time) {
+                if (jamStatus.time === time) {
+                    if (!accumulator[jamID]) {
+                        accumulator[jamID] = {
+                            teamCount: 0,
+                            info: jamStatus.info
+                        };
+                    }
+                    accumulator[jamID].teamCount++;
+                }
+            } else {
+                if (!accumulator[jamID]) {
+                    accumulator[jamID] = {
+                        teamCount: 0,
+                        info: jamStatus.info
+                    };
+                }
+                accumulator[jamID].teamCount++;
+            }
+            
+            return accumulator;
+        }, {});
+
+        //Récupère les jams avec le plus de teams et le nombre de teams
+        const topJams = Object.entries(jamTeamCountandInfo)
+        .sort((a, b) =>
+            popular ? b[1].teamCount - a[1].teamCount : a[1].teamCount - b[1].teamCount
+        )
+        .map(([id, data]) => ({
+            id,
+            count: data.teamCount,
+            info: data.info
+        }));
+        
+        const jams = [];
+        //Récupère le jam et lui ajoute le nombre de team et l'URL de l'image d'illustration
+        for (const element of topJams) {
+            const jam = await getJam(element.id);
+            jam.team_NB = element.count;
+            jam.image_URL = pb.files.getURL(jam, jam.image);
+            jam.time_info = element.info;
+            jams.push(jam);
+        }
+
+        return jams;
+    } catch (error) {
+    console.log('Une erreur est survenue en lisant des entrée dans la collection TEAM');
+        return null;
+    }
+}
+
+//Fonction pour charger des posts par page, nécessite le paramètre currentPage qui est le numéro de la page
+//Fonction à utiliser sur la homepage et sur la page forum autant pour le chargement initial que pour charger plus de posts
+export async function getSomePost(currentpage) {
+    try {
+        let postsList = await pb.collection('POST').getList(currentpage,20, {
+            sort : '-created',
+            expand : 'user'
+        });
+        let posts = postsList.items;
+        posts.forEach(post => {
+            post.image_URL = pb.files.getURL(post, post.image);
+            post.expand.user.image_URL = pb.files.getURL(post.expand.user, post.expand.user.image);
+          });
+        for (let post of posts) {
+            post.comment_NB = await getPostCommentNB(post.id);
+        }
+        return posts;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant des entrées dans la collection POST');
+        return null;
+    }
+}
+
+//Fonction qui récupère quelques réponses récentes
+// export async function getRecentComment(userId) {
+//     try {
+//         let userComments = await pb.collection('COMMENT').getFullList({
+//             sort : '-created',
+//             filter : `user = '${userId}'`,
+//             expand : 'comment'
+//         })
+//         // let comments = userComments.expand.comment
+//         // return comments;
+//         console.log(userComments.expand?.comment)
+//         return userComments
+//     } catch (error) {
+//         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
+//         return null;
+//     }
+// }
+
 //______________________________________________________librairie perso____________________________________________________
 
 //Fonction pour savoir si une jam est en cours, terminée ou à venir
@@ -296,18 +379,56 @@ function getJamStatus(jam) {
     return response;
 }
 
+//Formatage d'une date iso en 00 mois
 function formatDate(dateString) {
     const date = new Date(dateString);
     const options = { day: 'numeric', month: 'long' };
     return date.toLocaleDateString('fr-FR', options);
 }
 
+//Formatage d'une date iso en 00 mois 0000
 function formatDateFull(dateString) {
     const date = new Date(dateString);
     const options = { day: 'numeric', month: 'long' , year:'numeric'};
     return date.toLocaleDateString('fr-FR', options);
 }
 
+//Fonction qui renvoie le nombre de commentaires d'un post via son id
+export async function getPostCommentNB(postId) {
+    let total = 0;
+
+    const post = await pb.collection('POST').getOne(postId, {
+        expand: 'comment',
+        fields: 'id,expand.comment'
+    });
+
+    const directComments = post.expand?.comment || [];
+
+    for (const comment of directComments) {
+        total += 1;
+        total += await getRecursiveCommentNB(comment.id);
+    }
+
+    return total;
+}
+
+//Fonction qui renvoie le nombre de commentaires d'un commentaires récursivement
+export async function getRecursiveCommentNB(id) {
+    let NB = 0;
+    let commentData = await getComment(id);
+
+    if (!commentData || !commentData.expand.comment) {
+        return 0;
+    }
+
+    commentData = commentData.expand.comment;
+
+    for (const comment of commentData) {
+        NB += 1; // count this comment
+        NB += await getRecursiveCommentNB(comment.id); // add nested replies
+    }
+    return NB;
+}
 
 
 //_____________________________________upload des jeux local (temporaire)________________________________________________
