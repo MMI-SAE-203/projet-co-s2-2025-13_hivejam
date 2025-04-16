@@ -17,9 +17,8 @@ let user = pb.authStore.model;
 if (!user && pb.authStore.isValid) {
     await pb.collection("users").authRefresh();
     user = pb.authStore.model;
+    user.image_URL = pb.files.getURL(user, user?.image);
 }
-
-user.image_URL = pb.files.getURL(user, user?.image);
 ---
 
 <header
@@ -60,12 +59,12 @@ user.image_URL = pb.files.getURL(user, user?.image);
             :aria-hidden="!open" 
             aria-label="Menu"
             id="menu"
-            class=" aria-hidden:hidden absolute top-20 right-10 w-35 flex flex-col gap-2 justify-between bg-dark-gray text-white p-5 rounded-md">
-                <a href="">Profile</a>
+            class=" aria-hidden:hidden absolute top-20 right-10 w-40 flex flex-col gap-2 justify-between bg-dark-gray text-white p-5 rounded-md">
+                <a href="/profile">Profile</a>
                 <span class="bg-white h-0.5 w-full"></span>
-                <a href="">Parametre</a>
+                <a href="/para">Parametre</a>
                 <span class="bg-white h-0.5 w-full"></span>
-                <a href="">Logout</a>
+                <a href="/logout">Se déconnecter</a>
             </nav>
         ) : (
             <div class="flex items-center gap-2.5">

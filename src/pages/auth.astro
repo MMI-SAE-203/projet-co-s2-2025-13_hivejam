@@ -53,13 +53,6 @@ if (Astro.request.method === "POST") {
       });
       return Astro.redirect("/");
     }
-
-    if (formType === "logout") {
-      pb.authStore.clear();
-      Astro.cookies.delete("pb_auth");
-      return Astro.redirect("/auth");
-
-    }
   } catch (e) {
     console.error(e);
   }
@@ -108,10 +101,7 @@ console.log(user?.name);
           <p>
             Bienvenue, <strong>{user.name || user.email}</strong> 👋
           </p>
-          <form method="POST">
-            <input type="hidden" name="formType" value="logout" />
-            <button type="submit">Se déconnecter</button>
-          </form>
+          
         </>
       ) : (
         <>
