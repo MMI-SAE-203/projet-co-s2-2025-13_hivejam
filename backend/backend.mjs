@@ -75,7 +75,7 @@ export async function getGame(id) {
 
 export async function getComment(id) {
     try {
-        let comment = await pb.collection('COMMENT').getOne(id);
+        let comment = await pb.collection('COMMENT').getOne(id, {expand : 'comment'});
         return comment;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
@@ -125,28 +125,6 @@ export async function getUserTeams(userid) {
         return teams_sorted;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection USER');
-        return null;
-    }
-}
-
-//Fonction qui retourne quelques posts récents à afficher sur la homepage
-//image_URL = "" si le post ne contient pas d'image
-//pour accéder aux infos de l'utilisateur il faut .expand.user
-export async function getRecentPost() {
-    try {
-        let postsList = await pb.collection('POST').getList(1,10, {
-            sort : '-created',
-            expand : 'user'
-        });
-        let posts = postsList.items;
-        posts.forEach(post => {
-            post.image_URL = pb.files.getURL(post, post.image);
-            post.comment_NB = post.comment.length;
-            post.expand.user.image_URL = pb.files.getURL(post.expand.user, post.expand.user.image);
-          });
-        return posts;
-    } catch (error) {
-        console.log('Une erreur est survenue en lisant des entrées dans la collection POST');
         return null;
     }
 }
@@ -308,6 +286,29 @@ export async function getAllJamFiltered(popular, time) {
     }
 }
 
+//Fonction pour charger des posts par page, nécessite le paramètre currentPage qui est le numéro de la page
+//Fonction à utiliser sur la homepage et sur la page forum autant pour le chargement initial que pour charger plus de posts
+export async function getSomePost(currentpage) {
+    try {
+        let postsList = await pb.collection('POST').getList(currentpage,20, {
+            sort : '-created',
+            expand : 'user'
+        });
+        let posts = postsList.items;
+        posts.forEach(post => {
+            post.image_URL = pb.files.getURL(post, post.image);
+            post.expand.user.image_URL = pb.files.getURL(post.expand.user, post.expand.user.image);
+          });
+        for (let post of posts) {
+            post.comment_NB = await getPostCommentNB(post.id);
+        }
+        return posts;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant des entrées dans la collection POST');
+        return null;
+    }
+}
+
 //______________________________________________________librairie perso____________________________________________________
 
 //Fonction pour savoir si une jam est en cours, terminée ou à venir
@@ -360,18 +361,56 @@ function getJamStatus(jam) {
     return response;
 }
 
+//Formatage d'une date iso en 00 mois
 function formatDate(dateString) {
     const date = new Date(dateString);
     const options = { day: 'numeric', month: 'long' };
     return date.toLocaleDateString('fr-FR', options);
 }
 
+//Formatage d'une date iso en 00 mois 0000
 function formatDateFull(dateString) {
     const date = new Date(dateString);
     const options = { day: 'numeric', month: 'long' , year:'numeric'};
     return date.toLocaleDateString('fr-FR', options);
 }
 
+//Fonction qui renvoie le nombre de commentaires d'un post via son id
+export async function getPostCommentNB(postId) {
+    let total = 0;
+
+    const post = await pb.collection('POST').getOne(postId, {
+        expand: 'comment',
+        fields: 'id,expand.comment'
+    });
+
+    const directComments = post.expand?.comment || [];
+
+    for (const comment of directComments) {
+        total += 1;
+        total += await getRecursiveCommentNB(comment.id);
+    }
+
+    return total;
+}
+
+//Fonction qui renvoie le nombre de commentaires d'un commentaires récursivement
+export async function getRecursiveCommentNB(id) {
+    let NB = 0;
+    let commentData = await getComment(id);
+
+    if (!commentData || !commentData.expand.comment) {
+        return 0;
+    }
+
+    commentData = commentData.expand.comment;
+
+    for (const comment of commentData) {
+        NB += 1; // count this comment
+        NB += await getRecursiveCommentNB(comment.id); // add nested replies
+    }
+    return NB;
+}
 
 
 //_____________________________________upload des jeux local (temporaire)________________________________________________
