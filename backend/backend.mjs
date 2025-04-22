@@ -111,12 +111,14 @@ export async function addJam(data, username, userid) {
         
         return {
             success: true,
-            message: "La Jam a bien été créer."
+            message: "La Jam a bien été créer.",
+            redirect: `/mes_jams/${jam.id}`
         }
     } catch (error) {
         return {
             success: false,
-            message: "Il y a eu un problème lors de la création de la jam : " + error
+            message: "Il y a eu un problème lors de la création de la jam : " + error,
+            redirect: `/creer?error}`
         }
     }
 }

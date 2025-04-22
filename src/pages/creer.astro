@@ -26,8 +26,9 @@ if (Astro.request.method == "POST") {
     const data = await Astro.request.formData();
     data.append("host", user?.id)
     console.log(data);
-    const response = await addJam(data, user?.name, user?.id)
-    return Astro.redirect("/creer?success=1")
+    const message = await addJam(data, user?.name, user?.id)
+    console.log(message);
+    return Astro.redirect(message.redirect)
 }
 ---
 
