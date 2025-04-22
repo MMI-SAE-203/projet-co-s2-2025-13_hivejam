@@ -9,7 +9,7 @@ import Article_Mini from "../components/Card/Forum/Article_mini.astro";
 import Next from "../assets/svg/Next.svg";
 import Prev from "../assets/svg/Prev.svg";
 
-// Cécupération des donné utilisateur
+// Récupération des donné utilisateur
 import PocketBase from "pocketbase";
 const pb = new PocketBase("http://127.0.0.1:8090");
 
@@ -30,7 +30,6 @@ console.log(user?.id);
 
 import { getUserTeams } from "../../backend/backend.mjs";
 const userTeams = await getUserTeams(user?.id);
-console.log(userTeams);
 ---
 
 <Layout>

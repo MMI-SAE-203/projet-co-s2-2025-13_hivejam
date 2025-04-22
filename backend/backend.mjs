@@ -22,7 +22,7 @@ export async function getUser(id) {
 
 export async function getTeam(id) {
     try {
-        let team = await pb.collection('TEAM').getOne(id, {expand : 'game_jam'});
+        let team = await pb.collection('TEAM').getOne(id, { expand: 'game_jam' });
         return team;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection TEAM');
@@ -32,7 +32,7 @@ export async function getTeam(id) {
 
 export async function getTask(id) {
     try {
-        let task = await pb.collection('TASK').getOne(id, {expand : "user"});
+        let task = await pb.collection('TASK').getOne(id, { expand: "user" });
         return task;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection TASK');
@@ -53,7 +53,7 @@ export async function getPost(id) {
 
 export async function getJam(id) {
     try {
-        let jam = await pb.collection('GAME_JAM').getOne(id, {expand: "host" && "games"});
+        let jam = await pb.collection('GAME_JAM').getOne(id, { expand: "host" && "games" });
         jam.image_URL = pb.files.getURL(jam, jam.image);
         return jam;
     } catch (error) {
@@ -75,7 +75,7 @@ export async function getGame(id) {
 
 export async function getComment(id) {
     try {
-        let comment = await pb.collection('COMMENT').getOne(id, {expand : 'comment'});
+        let comment = await pb.collection('COMMENT').getOne(id, { expand: 'comment' });
         return comment;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
@@ -95,6 +95,31 @@ export async function getArticle(id) {
     }
 }
 
+export async function addJam(data, username, userid) {
+    try {
+        const jam = await pb.collection("GAME_JAM").create(data);
+        
+        const name = "Équipe de " + username;
+        const game_jam = jam.id;
+        const team = await pb.collection("TEAM").create({
+            name,
+            game_jam
+        });
+        
+        const userRecord = await pb.collection("users").getOne(userid);
+        await pb.collection("users").update(userid, {team: [...userRecord.team, team.id]});
+        
+        return {
+            success: true,
+            message: "La Jam a bien été créer."
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors de la création de la jam : " + error
+        }
+    }
+}
 
 //_______________________________________________________Fonctions spécifiques_____________________________________________
 
@@ -103,26 +128,30 @@ export async function getArticle(id) {
 //pour accéder aux infos de la jam il faut .expand.game_jam
 export async function getUserTeams(userid) {
     try {
-        let user = await pb.collection('users').getOne(userid,{field : 'team'} );
+        let user = await pb.collection('users').getOne(userid, { field: 'team' });
         let idfilter = [];
         user.team.forEach(id => {
             let single_filter = `id = "${id}"`
             idfilter.push(single_filter);
         });
         idfilter = idfilter.join(' || ');
-        let teams = await pb.collection('TEAM').getFullList({filter : `${idfilter}`, expand: "game_jam"});
-        let teams_sorted = {
-            "past" : [],
-            "present" : [],
-            "future" : [],
+        if (idfilter) {
+            let teams = await pb.collection('TEAM').getFullList({ filter: `${idfilter}`, expand: "game_jam" });
+            let teams_sorted = {
+                "past": [],
+                "present": [],
+                "future": [],
+            }
+            teams.forEach(team => {
+                team.image_URL = pb.files.getURL(team.expand.game_jam, team.expand.game_jam.image)
+                let status = getJamStatus(team.expand.game_jam);
+                team.time_info = status.info;
+                teams_sorted[status.time].push(team);
+            });
+            return teams_sorted;
+        } else {
+            return null;
         }
-        teams.forEach(team => {
-            team.image_URL = pb.files.getURL(team.expand.game_jam, team.expand.game_jam.image)
-            let status = getJamStatus(team.expand.game_jam);
-            team.time_info = status.info;
-            teams_sorted[status.time].push(team);
-        });
-        return teams_sorted;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection USER');
         return null;
@@ -135,8 +164,8 @@ export async function getPopularJam() {
         //Récupère toutes les teams lié à des jams à venir
         const now = Date.now();
         let teams = await pb.collection('TEAM').getFullList({
-            expand : 'game_jam',
-            filter : `game_jam.date_beginning >= ${now}`
+            expand: 'game_jam',
+            filter: `game_jam.date_beginning >= ${now}`
         });
         //Compte combien de teams sont associées à chaque jam
         const jamTeamCount = teams.reduce((accumulator, team) => {
@@ -152,7 +181,7 @@ export async function getPopularJam() {
             .sort((a, b) => b[1] - a[1])
             .slice(0, 5)
             .map(([id, count]) => ({ id, count }));
-        
+
         const jams = [];
         //Récupère le jam et lui ajoute le nombre de team et l'URL de l'image d'illustration
         for (const element of topJams) {
@@ -172,8 +201,8 @@ export async function getPopularJam() {
 // .date pour avoir la date de publication écrite
 export async function getRecentArticle() {
     try {
-        let articlesList = await pb.collection('ARTICLE').getList(1,5, {
-            sort : '-created'
+        let articlesList = await pb.collection('ARTICLE').getList(1, 5, {
+            sort: '-created'
         });
         let articles = articlesList.items;
         articles.forEach(article => {
@@ -190,7 +219,7 @@ export async function getRecentArticle() {
 export async function getAllArticle() {
     try {
         let articles = await pb.collection('ARTICLE').getFullList({
-            sort : '-created'
+            sort: '-created'
         });
         articles.forEach(article => {
             article.date = formatDate(article.created);
@@ -208,8 +237,8 @@ export async function getAllArticle() {
 export async function getSimilarArticle(topic) {
     try {
         let articles = await pb.collection('ARTICLE').getFullList({
-            sort : '-created',
-            filter : `topic = "${topic}"`
+            sort: '-created',
+            filter: `topic = "${topic}"`
         });
         articles.forEach(article => {
             article.date = formatDate(article.created);
@@ -227,7 +256,7 @@ export async function getSimilarArticle(topic) {
 export async function getAllJamFiltered(popular, time) {
     try {
         let teams = await pb.collection('TEAM').getFullList({
-            expand : 'game_jam'
+            expand: 'game_jam'
         });
 
         //Compte combien de teams sont associées à chaque jam et les infos de timing (genre : commence dans 2 mois)
@@ -254,21 +283,21 @@ export async function getAllJamFiltered(popular, time) {
                 }
                 accumulator[jamID].teamCount++;
             }
-            
+
             return accumulator;
         }, {});
 
         //Récupère les jams avec le plus de teams et le nombre de teams
         const topJams = Object.entries(jamTeamCountandInfo)
-        .sort((a, b) =>
-            popular ? b[1].teamCount - a[1].teamCount : a[1].teamCount - b[1].teamCount
-        )
-        .map(([id, data]) => ({
-            id,
-            count: data.teamCount,
-            info: data.info
-        }));
-        
+            .sort((a, b) =>
+                popular ? b[1].teamCount - a[1].teamCount : a[1].teamCount - b[1].teamCount
+            )
+            .map(([id, data]) => ({
+                id,
+                count: data.teamCount,
+                info: data.info
+            }));
+
         const jams = [];
         //Récupère le jam et lui ajoute le nombre de team et l'URL de l'image d'illustration
         for (const element of topJams) {
@@ -281,7 +310,7 @@ export async function getAllJamFiltered(popular, time) {
 
         return jams;
     } catch (error) {
-    console.log('Une erreur est survenue en lisant des entrée dans la collection TEAM');
+        console.log('Une erreur est survenue en lisant des entrée dans la collection TEAM');
         return null;
     }
 }
@@ -290,15 +319,15 @@ export async function getAllJamFiltered(popular, time) {
 //Fonction à utiliser sur la homepage et sur la page forum autant pour le chargement initial que pour charger plus de posts
 export async function getSomePost(currentpage) {
     try {
-        let postsList = await pb.collection('POST').getList(currentpage,20, {
-            sort : '-created',
-            expand : 'user'
+        let postsList = await pb.collection('POST').getList(currentpage, 20, {
+            sort: '-created',
+            expand: 'user'
         });
         let posts = postsList.items;
         posts.forEach(post => {
             post.image_URL = pb.files.getURL(post, post.image);
             post.expand.user.image_URL = pb.files.getURL(post.expand.user, post.expand.user.image);
-          });
+        });
         for (let post of posts) {
             post.comment_NB = await getPostCommentNB(post.id);
         }
@@ -389,7 +418,7 @@ function formatDate(dateString) {
 //Formatage d'une date iso en 00 mois 0000
 function formatDateFull(dateString) {
     const date = new Date(dateString);
-    const options = { day: 'numeric', month: 'long' , year:'numeric'};
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
     return date.toLocaleDateString('fr-FR', options);
 }
 
