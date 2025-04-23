@@ -1,22 +1,24 @@
 ---
 import Group from "../../../assets/svg/Group.svg";
+
+const {...team} = Astro.props;
 ---
 
-<a href=``>
+<a href=`/toutes_les_jams/${team.id}`>
     <article class="border-1 border-drak-gray p-3 flex flex-col justify-between gap-2 w-80 rounded-md">
         <div class="flex gap-2">
-            <img src= alt="" class="h-24"/>
+            <img src={team.image_URL} alt="as" class="h-24"/>
             <div class="flex flex-col gap-2">
-                <h3>Nom de la Jam</h3>
-                <p class="tiny line-clamp-2">Il retse zdizjd</p>
+                <h3>{team.name}</h3>
+                <p class="tiny line-clamp-2">{team.description}</p>
             </div>
         </div>
         <div class="flex flex-col">
-            <p class="tiny">Terminée il y a 4 mois et 2 semaines</p>
+            <p class="tiny">{team.time_info}</p>
         </div>
         <div class="flex items-center gap-2 self-end">
             <Group />
-            <p>000</p>
+            <p>{team.team_NB}</p>
         </div>
     </article>
 </a>
