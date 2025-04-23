@@ -3,6 +3,24 @@ import Layout from "../../layouts/Layout.astro";
 
 import Reponses from "../../components/Card/Forum/Reponses.astro";
 import Post from "../../components/Card/Forum/Post.astro";
+
+// Cécupération des donné utilisateur
+import PocketBase from "pocketbase";
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
 ---
 
 <Layout>
@@ -17,13 +35,31 @@ import Post from "../../components/Card/Forum/Post.astro";
         </div>
 
         <div class="space-y-10">
-            <section class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md">
+            <section
+                class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md"
+            >
                 <h2>Réponses</h2>
-                <div class="border-b border-dark-gray">
-                    <Reponses />
-                    <Reponses />
-                    <Reponses />
-                </div>
+                {
+                    user ? (
+                        <div class="border-b border-dark-gray">
+                            <Reponses />
+                            <Reponses />
+                            <Reponses />
+                        </div>
+                    ) : (
+                        <div class="space-y-4 col-start-1 col-end-4 display flex flex-col justify-center items-center">
+                            <h4>Vous n'êtes pas connectez</h4>
+                            <div class="flex items-center gap-2.5">
+                                <a href="/auth" class="btn-light">
+                                    Login
+                                </a>
+                                <a href="/auth" class="btn-full">
+                                    Sign Up
+                                </a>
+                            </div>
+                        </div>
+                    )
+                }
             </section>
         </div>
     </div>

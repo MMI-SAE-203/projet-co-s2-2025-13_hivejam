@@ -3,6 +3,24 @@ import Crown from "../../../assets/svg/Crown.svg";
 
 const {...team} = Astro.props;
 console.log(team.expand?.game_jam)
+
+// Cécupération des donné utilisateur
+import PocketBase from "pocketbase";
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
 ---
 
 <a href=`/mes_jams/${team.id}`>
@@ -17,8 +35,14 @@ console.log(team.expand?.game_jam)
         <div class="flex flex-col">
             <p class="tiny">Terminée il y a 4 mois et 2 semaines</p>
         </div>
-        <div class="self-end">
-            <Crown />
-        </div>
+        {
+            team.expand.game_jam.host == user?.id ? (
+                <div class="self-end">
+                    <Crown />
+                </div>
+            ) : (
+                <div class="self-end"></div>
+            )
+        }
     </article>
 </a>

@@ -112,7 +112,7 @@ export async function addJam(data, username, userid) {
         return {
             success: true,
             message: "La Jam a bien été créer.",
-            redirect: `/mes_jams/${jam.id}`
+            redirect: `/mes_jams/${team.id}`
         }
     } catch (error) {
         return {
