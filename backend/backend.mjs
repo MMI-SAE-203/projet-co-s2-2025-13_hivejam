@@ -355,6 +355,7 @@ export async function getTeamBoard(id) {
     }
 }
 
+//Fonction pour récupérer les infos nécessaires à la page d'un jam
 export async function getJamPage(id) {
     try {
         let jam = await pb.collection('GAME_JAM').getOne(id, {expand : 'games'});
@@ -370,6 +371,9 @@ export async function getJamPage(id) {
     }
 }
 
+//Fonction pour récupérer les infos nécessaires à la page d'un jeux, pour l'instant pas jouable
+// lien de téléchargement du jeu s'il existe .file_dl_URL
+//Infos sur la team et sur la jam dans le expand
 export async function getGamePage(id) {
     try {
         let game = await pb.collection('GAME').getOne(id, {expand : 'team'});
