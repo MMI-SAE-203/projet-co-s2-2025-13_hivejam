@@ -355,7 +355,20 @@ export async function getTeamBoard(id) {
     }
 }
 
-
+export async function getJamPage(id) {
+    try {
+        let jam = await pb.collection('GAME_JAM').getOne(id, {expand : 'games'});
+        jam.image_URL = pb.files.getURL(jam, jam.image);
+        jam.time_info = getJamStatus(jam).info;
+        for (let i in jam.expand.games) {
+            jam.expand.games[i].image_URL = pb.files.getURL(jam.expand.games[i], jam.expand.games[i].image);
+        }
+        return jam
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant une entrée dans la collection GAME_JAM');
+        return null;
+    }
+}
 
 //______________________________________________________librairie perso____________________________________________________
 
