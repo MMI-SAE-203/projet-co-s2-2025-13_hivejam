@@ -42,8 +42,9 @@ export async function getTask(id) {
 
 export async function getPost(id) {
     try {
-        let post = await pb.collection('POST').getOne(id);
+        let post = await pb.collection('POST').getOne(id, {expand : 'user'});
         post.image_URL = pb.files.getURL(post, post.image);
+        post.expand.user.image_URL = pb.files.getURL(post.expand.user, post.expand.user.image);
         return post;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection POST');
@@ -75,7 +76,8 @@ export async function getGame(id) {
 
 export async function getComment(id) {
     try {
-        let comment = await pb.collection('COMMENT').getOne(id, { expand: 'comment' });
+        let comment = await pb.collection('COMMENT').getOne(id, { expand: 'user' });
+        comment.expand.user.image_URL = pb.files.getURL(comment.expand.user,comment.expand.user.image);
         return comment;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
@@ -341,22 +343,100 @@ export async function getSomePost(currentpage) {
 }
 
 //Fonction qui récupère quelques réponses récentes
-// export async function getRecentComment(userId) {
-//     try {
-//         let userComments = await pb.collection('COMMENT').getFullList({
-//             sort : '-created',
-//             filter : `user = '${userId}'`,
-//             expand : 'comment'
-//         })
-//         // let comments = userComments.expand.comment
-//         // return comments;
-//         console.log(userComments.expand?.comment)
-//         return userComments
-//     } catch (error) {
-//         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
-//         return null;
-//     }
-// }
+export async function getRecentComment(userId) {
+    try {
+        let userComments = await pb.collection('COMMENT').getFullList({
+            sort: '-created',
+            filter: `user = '${userId}'`
+        })
+        let comments = [];
+        for (let i in userComments) {
+            for (let j in userComments[i].comment) {
+                let comment = await pb.collection('COMMENT').getOne(userComments[i].comment[j], { expand: 'user' });
+                comment.expand.user.image_URL = pb.files.getURL(comment.expand.user, comment.expand.user.image);
+                comments.push(comment);
+            }
+            if (comments.length > 5) {
+                break
+            }
+        }
+        return comments
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
+        return null;
+    }
+}
+
+//Fonction pour la page d'un post, pour accéder aux commentaires c'est juste .comment, pas besoin du expand
+//Si un commentaire à lui même des commentaires alors il a un array .comment lui aussi et ça s'enchaîne en mode arbre
+export async function getPostPage(id) {
+    try {
+        let post = await getPost(id);
+        post.comment = await getCommentTree(post.comment);
+        return post;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant des entrées dans la collection POST');
+        return null;
+    }
+}
+
+//Fonction pour la page de team
+//Pour accéder aux infos de la jam .expand.game_jam.time_info par exemple
+//Pour accéder aux infos des tâches .expand.task[0].name par exemple
+//Pour accéder aux infos d'un user lié à une task .expand.task[0].expand.user.image_URL par exemple
+//c'est un peu long et dégueu mais ça passe, task est un array hein
+export async function getTeamBoard(id) {
+    try {
+        let team = await pb.collection('TEAM').getOne(id, { expand: 'game_jam' });
+        team.expand.game_jam.time_info = getJamStatus(team.expand.game_jam).info;
+
+        for (let i in team.task) {
+            team.task[i] = await pb.collection('TASK').getOne(team.task[i], { expand: 'user' });
+            for (let j in team.task[i].expand.user) {
+                team.task[i].expand.user[j].image_URL = pb.files.getURL(team.task[i].expand.user[j], team.task[i].expand.user[j].image)
+            }
+        }
+
+        return team;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant une entrée dans la collection TEAM');
+        return null;
+    }
+}
+
+//Fonction pour récupérer les infos nécessaires à la page d'un jam
+export async function getJamPage(id) {
+    try {
+        let jam = await pb.collection('GAME_JAM').getOne(id, { expand: 'games' });
+        jam.image_URL = pb.files.getURL(jam, jam.image);
+        jam.time_info = getJamStatus(jam).info;
+        for (let i in jam.expand.games) {
+            jam.expand.games[i].image_URL = pb.files.getURL(jam.expand.games[i], jam.expand.games[i].image);
+        }
+        return jam
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant une entrée dans la collection GAME_JAM');
+        return null;
+    }
+}
+
+//Fonction pour récupérer les infos nécessaires à la page d'un jeux, pour l'instant pas jouable
+// lien de téléchargement du jeu s'il existe .file_dl_URL
+//Infos sur la team et sur la jam dans le expand
+export async function getGamePage(id) {
+    try {
+        let game = await pb.collection('GAME').getOne(id, { expand: 'team' });
+        game.image_URL = pb.files.getURL(game, game.image);
+        if (game.file_dl) {
+            game.file_dl_URL = pb.files.getURL(game, game.file_dl);
+        }
+        game.expand.game_jam = await pb.collection('GAME_JAM').getOne(game.expand.team.game_jam, { fields: 'id, name, theme' })
+        return game
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant une entrée dans la collection GAME');
+        return null;
+    }
+}
 
 //______________________________________________________librairie perso____________________________________________________
 
@@ -446,7 +526,7 @@ export async function getPostCommentNB(postId) {
 //Fonction qui renvoie le nombre de commentaires d'un commentaires récursivement
 export async function getRecursiveCommentNB(id) {
     let NB = 0;
-    let commentData = await getComment(id);
+    let commentData = await pb.collection('COMMENT').getOne(id, { expand: 'comment' });;
 
     if (!commentData || !commentData.expand.comment) {
         return 0;
@@ -461,6 +541,14 @@ export async function getRecursiveCommentNB(id) {
     return NB;
 }
 
+//Fonction qui construit un arbre de commentaire à partir d'un array d'id de commentaires, récursivement
+export async function getCommentTree(comments) {
+    for (let i in comments) {
+        comments[i] = await getComment(comments[i]);
+        comments[i].comment = await getCommentTree(comments[i].comment);
+    }
+    return comments
+}
 
 //_____________________________________upload des jeux local (temporaire)________________________________________________
 
