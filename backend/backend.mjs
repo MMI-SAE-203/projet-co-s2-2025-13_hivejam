@@ -331,6 +331,32 @@ export async function getSomePost(currentpage) {
 //     }
 // }
 
+//Fonction pour la page de team
+//Pour accéder aux infos de la jam .expand.game_jam.time_info par exemple
+//Pour accéder aux infos des tâches .expand.task[0].name par exemple
+//Pour accéder aux infos d'un user lié à une task .expand.task[0].expand.user.image_URL par exemple
+//c'est un peu long et dégueu mais ça passe, task est un array hein
+export async function getTeamBoard(id) {
+    try {
+        let team = await pb.collection('TEAM').getOne(id, { expand: 'game_jam' });
+        team.expand.game_jam.time_info = getJamStatus(team.expand.game_jam).info;
+
+        for (let i in team.task) {
+            team.task[i] = await pb.collection('TASK').getOne(team.task[i], { expand: 'user' });
+            for (let j in team.task[i].expand.user) {
+                team.task[i].expand.user[j].image_URL = pb.files.getURL(team.task[i].expand.user[j], team.task[i].expand.user[j].image)
+            }
+        }
+
+        return team;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant une entrée dans la collection TEAM');
+        return null;
+    }
+}
+
+
+
 //______________________________________________________librairie perso____________________________________________________
 
 //Fonction pour savoir si une jam est en cours, terminée ou à venir
