@@ -370,6 +370,21 @@ export async function getJamPage(id) {
     }
 }
 
+export async function getGamePage(id) {
+    try {
+        let game = await pb.collection('GAME').getOne(id, {expand : 'team'});
+        game.image_URL = pb.files.getURL(game, game.image);
+        if (game.file_dl) {
+            game.file_dl_URL = pb.files.getURL(game, game.file_dl);
+        }
+        game.expand.game_jam = await pb.collection('GAME_JAM').getOne(game.expand.team.game_jam, {fields : 'id, name, theme'})
+        return game
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant une entrée dans la collection GAME');
+        return null;
+    }
+}
+
 //______________________________________________________librairie perso____________________________________________________
 
 //Fonction pour savoir si une jam est en cours, terminée ou à venir
