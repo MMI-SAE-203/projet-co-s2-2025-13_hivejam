@@ -314,22 +314,26 @@ export async function getSomePost(currentpage) {
 }
 
 //Fonction qui récupère quelques réponses récentes
-// export async function getRecentComment(userId) {
-//     try {
-//         let userComments = await pb.collection('COMMENT').getFullList({
-//             sort : '-created',
-//             filter : `user = '${userId}'`,
-//             expand : 'comment'
-//         })
-//         // let comments = userComments.expand.comment
-//         // return comments;
-//         console.log(userComments.expand?.comment)
-//         return userComments
-//     } catch (error) {
-//         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
-//         return null;
-//     }
-// }
+export async function getRecentComment(userId) {
+    try {
+        let userComments = await pb.collection('COMMENT').getFullList({
+            sort : '-created',
+            filter : `user = '${userId}'`
+        })
+        let comments = [];
+        for (let i in userComments) {
+            for (let j in userComments[i].comment) {
+                let comment = await pb.collection('COMMENT').getOne(userComments[i].comment[j], {expand : 'user'});
+                comment.expand.user.image_URL = pb.files.getURL(comment.expand.user, comment.expand.user.image);
+                comments.push(comment);
+            }
+        }
+        return comments
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
+        return null;
+    }
+}
 
 //Fonction pour la page de team
 //Pour accéder aux infos de la jam .expand.game_jam.time_info par exemple
