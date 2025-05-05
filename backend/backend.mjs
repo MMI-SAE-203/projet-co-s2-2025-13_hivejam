@@ -1,8 +1,7 @@
 //Dépendences
 import fs from 'fs';
 import path from 'path';
-import AdmZip from 'adm-zip';
-import axios from 'axios';
+import unzipper from 'unzipper';
 
 import Pocketbase from "pocketbase";
 const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
@@ -553,77 +552,97 @@ export async function getCommentTree(comments) {
 
 //____________________________________upload des jeux en ligne (test)_________________________________________________
 
-
-
-//_____________________________________upload des jeux local (temporaire)________________________________________________
-
-//Grosses fonctions pour uploader les jeux, utilisée en locale, la solution finale sera différente
-//La première créer l'entrée dans Pocketbase
 export async function addGame(gameData) {
     try {
-        //Création de l'entrée dans pocketbase
-        if (gameData != null) {
-            const game = await pb.collection("GAME").create(gameData);
-            //Vérifie s'il ya un fichier dans file_web
-            if (game.file_web) {
-                const uploadedFileURL = pb.files.getURL(game, game.file_web);
-                console.log(uploadedFileURL);
-                await extractGameFile(game.id, uploadedFileURL);
-            }
-        } else {
-            console.log('Les informations fournies sont nulles');
+        const game = await pb.collection("GAME").create(gameData);
+        if (game.file_web) {
+            const response = await fetch('https://hivejam-games.paolo-vincent.fr/extract', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    recordId: game.id,
+                    zipUrl: pb.files.getURL(game, game.file_web)
+                })
+            });
+            await pb.collection('GAME').update(game.id, { web_URL: `https://hivejam-games.paolo-vincent.fr/${game.id}/` });
+            console.log(response.text());
+            return response
         }
-        //Appelle la fonction pour extraire les fichiers dans 
     } catch (error) {
         console.error('Une erreur est survenue en ajoutant une entrée dans la collection GAME', error);
         return null;
     }
 }
-//Deuxième fonction sert à extraire les fichiers
-async function extractGameFile(id, uploadedFileURL) {
-    try {
-        //Récupère le fichier
-        const filePath = await downloadFile(uploadedFileURL, id);
-        const extname = path.extname(filePath).toLowerCase();
-        const extractionDestDir = path.join('public','games', id);
-        fs.mkdirSync(extractionDestDir, { recursive: true });
 
-        if (extname == '.zip') {
-            const zip = new AdmZip(filePath);
-            zip.extractAllTo(extractionDestDir, true);
-            console.log(`Fichier ZIP extrait vers : ${extractionDestDir}`);
-        } else {
-            console.error('Type de fichier non reconnu : ', extname);
-            return;
-        }
+//_____________________________________upload des jeux local (temporaire)________________________________________________
 
-        //Update l'entrée Pocketbase
-        await pb.collection('GAME').update(id, { "file_path": `/games/${id}/index.html` });
+//Grosses fonctions pour uploader les jeux, utilisée en locale, la solution finale sera différente
+//La première créer l'entrée dans Pocketbase
+// export async function addGame(gameData) {
+//     try {
+//         //Création de l'entrée dans pocketbase
+//         if (gameData != null) {
+//             const game = await pb.collection("GAME").create(gameData);
+//             //Vérifie s'il ya un fichier dans file_web
+//             if (game.file_web) {
+//                 const uploadedFileURL = pb.files.getURL(game, game.file_web);
+//                 console.log(uploadedFileURL);
+//                 await extractGameFile(game.id, uploadedFileURL);
+//             }
+//         } else {
+//             console.log('Les informations fournies sont nulles');
+//         }
+//         //Appelle la fonction pour extraire les fichiers dans
+//     } catch (error) {
+//         console.error('Une erreur est survenue en ajoutant une entrée dans la collection GAME', error);
+//         return null;
+//     }
+// }
+// //Deuxième fonction sert à extraire les fichiers
+// async function extractGameFile(id, uploadedFileURL) {
+//     try {
+//         //Récupère le fichier
+//         const filePath = await downloadFile(uploadedFileURL, id);
+//         const extname = path.extname(filePath).toLowerCase();
+//         const extractionDestDir = path.join('public','games', id);
+//         fs.mkdirSync(extractionDestDir, { recursive: true });
 
-    } catch (error) {
-        console.error('Une erreur est survenue en essayant d extraire les fichiers du jeu');
-    }
-}
-//Troisième fonction télécharge le fichier depuis pocketbase
-async function downloadFile(fileUrl, gameId) {
-    console.log('downloading files')
-    try {
-        const response = await axios({
-            method: 'get',
-            url: fileUrl,
-            responseType: 'stream', // Important for large files
-        });
-        const filePath = path.join('public','tmp', `${gameId}.zip`); // Temp file path
-        console.log(filePath);
-        const writer = fs.createWriteStream(filePath);
-        // Pipe the response stream to the file
-        response.data.pipe(writer);
-        return new Promise((resolve, reject) => {
-            writer.on('finish', () => resolve(filePath));
-            writer.on('error', reject);
-        });
+//         if (extname == '.zip') {
+//             const zip = new AdmZip(filePath);
+//             zip.extractAllTo(extractionDestDir, true);
+//             console.log(`Fichier ZIP extrait vers : ${extractionDestDir}`);
+//         } else {
+//             console.error('Type de fichier non reconnu : ', extname);
+//             return;
+//         }
 
-    } catch (error) {
-        console.error('Error downloading the file:', error);
-    }
-}
+//         //Update l'entrée Pocketbase
+//         await pb.collection('GAME').update(id, { "file_path": `/games/${id}/index.html` });
+
+//     } catch (error) {
+//         console.error('Une erreur est survenue en essayant d extraire les fichiers du jeu');
+//     }
+// }
+// //Troisième fonction télécharge le fichier depuis pocketbase
+// async function downloadFile(fileUrl, gameId) {
+//     console.log('downloading files')
+//     try {
+//         const response = await axios({
+//             method: 'get',
+//             url: fileUrl,
+//             responseType: 'stream', // Important for large files
+//         });
+//         const filePath = path.join('public','tmp', `${gameId}.zip`); // Temp file path
+//         console.log(filePath);
+//         const writer = fs.createWriteStream(filePath);
+//         // Pipe the response stream to the file
+//         response.data.pipe(writer);
+//         return new Promise((resolve, reject) => {
+//             writer.on('finish', () => resolve(filePath));
+//             writer.on('error', reject);
+//         });
+
+//     } catch (error) {
+//         console.error('Error downloading the file:', error);
+//     }
+// }
