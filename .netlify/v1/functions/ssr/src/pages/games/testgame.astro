@@ -1,0 +1,25 @@
+---
+import { getGame } from "../../../backend/backend.mjs";
+
+const game = await getGame('iu743xr63tdf9ua');
+console.log(game);
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>This is a Game</title>
+</head>
+
+<body>
+    <h1>This is a game</h1>
+    <iframe
+    src={game.file_path}
+    width="100%"
+    height="600"
+    style="border: none;"
+    allowfullscreen
+    />   
+</body>
+</html>

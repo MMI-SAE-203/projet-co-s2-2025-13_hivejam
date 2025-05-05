@@ -1,0 +1,65 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import Game from "../../components/Card/Game/Game.astro";
+
+import Next from "../../assets/svg/Next.svg";
+import Prev from "../../assets/svg/Prev.svg";
+
+const { id } = Astro.params;
+import { getJamPage } from "../../../backend/backend.mjs";
+const jam = await getJamPage(id);
+console.log(jam);
+---
+
+<Layout>
+    <div class="px-10 py-20 space-y-10">
+        <section class="flex justify-between items-center">
+            <h1>{jam?.name}</h1>
+            <a href="" class="btn-full">Rejoindre</a>
+        </section>
+        <section class="grid grid-cols-2 gap-10">
+            <img src={jam?.image_URL} alt="" class="col-start-1" />
+            <div class="flex flex-col justify-between py-11">
+                <div class="flex flex-col justify-center items-center gap-4">
+                    <h2>Compte à rebours</h2>
+                    <div>
+                        <p>{jam?.time_info}</p>
+                        <span class="font-bold text-6xl text-negative"
+                            >12:34:56</span
+                        >
+                    </div>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <h2>Thème</h2>
+                    <p>{jam?.theme}</p>
+                </div>
+            </div>
+        </section>
+        <section class="space-y-5">
+            <h2>Description</h2>
+            <div set:html={jam?.description} />
+        </section>
+        <section>
+            <h2>Jeux Soumis</h2>
+            <div class="flex flex-col">
+                <div
+                    class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2"
+                >
+                </div>
+                <div class="flex justify-center gap-10">
+                    <button
+                        class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer"
+                    >
+                        <Prev />
+                    </button>
+                    <button
+                        class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer"
+                    >
+                        <Next />
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</Layout>

@@ -1,0 +1,57 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// Récupération des donné utilisateur
+import PocketBase from "pocketbase";
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+
+// Créeation de la Jam dans le PocketBase
+import { addJam } from "../../backend/backend.mjs";
+
+if (Astro.request.method == "POST") {
+    const data = await Astro.request.formData();
+    data.append("host", user?.id)
+    console.log(data);
+    const message = await addJam(data, user?.name, user?.id)
+    console.log(message);
+    return Astro.redirect(message.redirect)
+}
+---
+
+<Layout>
+    <h2>Créer votre Jam</h2>
+    <form method="POST">
+        <input type="hidden" name="formType" value="jam" />
+        <input type="text" name="name" placeholder="Nom de la jam" required />
+        <input
+            type="text"
+            name="theme"
+            placeholder="Thème de la jam"
+            required
+        />
+        <textarea name="description" placeholder="Descrption du thème"
+        ></textarea>
+        <input
+            type="date"
+            name="date_beginning"
+            placeholder="Débuts de la Jam"
+            required
+        />
+        <input type="number" name="duration" required />
+        <button type="submit">Envoyer</button>
+    </form>
+</Layout>

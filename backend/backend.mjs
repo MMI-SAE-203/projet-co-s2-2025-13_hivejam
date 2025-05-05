@@ -2,7 +2,6 @@
 import fs from 'fs';
 import path from 'path';
 import AdmZip from 'adm-zip';
-import { Client } from 'basic-ftp';
 import axios from 'axios';
 
 import Pocketbase from "pocketbase";

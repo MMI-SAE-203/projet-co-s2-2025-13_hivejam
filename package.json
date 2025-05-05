@@ -5,13 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "start": "node server.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/alpinejs": "^0.4.3",
-    "@astrojs/node": "^9.2.1",
+    "@astrojs/netlify": "^6.3.2",
     "@tailwindcss/vite": "^4.0.15",
     "@types/alpinejs": "^3.13.11",
     "adm-zip": "^0.5.16",

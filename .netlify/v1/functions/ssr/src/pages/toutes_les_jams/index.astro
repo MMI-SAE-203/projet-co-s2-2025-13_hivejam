@@ -1,0 +1,77 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import JamMedium from "../../components/Card/Jam/Jam_medium.astro";
+
+import { getAllJamFiltered } from "../../../backend/backend.mjs";
+
+let jams = await getAllJamFiltered(true, "present");
+
+if (Astro.request.method === "POST") {
+    try {
+        const data = await Astro.request.formData();
+        console.log(data)
+        jams = await getAllJamFiltered(data.get("popular"), data.get("status"));
+    } catch (error) {
+        console.error(error);
+    }
+} else {
+    jams = await getAllJamFiltered(true, "present")
+}
+---
+
+<Layout>
+    <div class="space-y-12.5 p-10">
+        <h1>Toutes les jams</h1>
+        <section class="space-y-5">
+            <h2 class="normal-case">Trier par</h2>
+            <div class="flex gap-4">
+                <button class="btn-light cursor-pointer">
+                    Popularité
+                    <span class="border-t-2 border-r-2 border-brand-1 h-3 w-3 rotate-135 relative bottom-1 left-1"></span>
+                </button>
+                <button class="btn-light cursor-pointer">
+                    Satut
+                    <span class="border-t-2 border-r-2 border-brand-1 h-3 w-3 rotate-135 relative bottom-1 left-1"></span>
+                </button>
+                <div>
+                    <form method="POST" class="flex gap-8">
+                        <div>
+                            <div>
+                                <label for="status">Past</label>
+                                <input type="radio" name="status" id="past" value="past" required>
+                            </div>
+                            <div>
+                                <label for="status">Present</label>
+                                <input type="radio" name="status" id="present" value="present" required>
+                            </div>
+                            <div>
+                                <label for="status">Future</label>
+                                <input type="radio" name="status" id="future" value="future" required>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Trièe par popularité</p>
+                            <div>
+                                <label for="popular">Croissante</label>
+                                <input type="radio" name="popular" id="yes" value="true" required>
+                            </div>
+                            <div>
+                                <label for="popular">Décroissante</label>
+                                <input type="radio" name="popular" id="yes" value="false" required>
+                            </div>
+                        </div>
+                        <button type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="grid grid-cols-4 gap-6">
+                {
+                    jams?.map((jam) => (
+                        <JamMedium {...jam}/>
+                    ))
+                }
+        </section>
+    </div>
+</Layout>

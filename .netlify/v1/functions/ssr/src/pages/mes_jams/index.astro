@@ -1,0 +1,145 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import Team from "../../components/Card/Team/Team.astro";
+import Team_medium from "../../components/Card/Team/Team_medium.astro";
+import Jam_Mini from "../../components/Card/Jam/Jam_mini.astro";
+
+import Next from "../../assets/svg/Next.svg";
+import Prev from "../../assets/svg/Prev.svg";
+
+// Cécupération des donné utilisateur
+import PocketBase from "pocketbase";
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+
+import { getUserTeams } from "../../../backend/backend.mjs";
+const userTeams = await getUserTeams(user?.id);
+---
+
+<Layout>
+    <div class="grid grid-cols-4 gap-10 p-10">
+        {
+            user ? (
+                <div class="space-y-12 col-start-1 col-end-4">
+                    <h1>Mes jams</h1>
+
+                    <section class="flex flex-col gap-10">
+                        <div class="flex justify-between">
+                            <h2>Mes Jams en cours</h2>
+                            <div class="flex gap-2">
+                                <a href="/mes_jams" class="btn-light">
+                                    Rejoindre
+                                </a>
+                                <a href="/creer" class="btn-full">
+                                    Créer
+                                </a>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                                {userTeams?.present.map((team) => (
+                                    <Team {...team} />
+                                ))}
+                            </div>
+                            <div class="flex justify-center gap-10">
+                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                    <Prev />
+                                </button>
+                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                    <Next />
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="flex flex-col gap-10">
+                        <div class="flex">
+                            <h2>À venir</h2>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                                {userTeams?.future.map((team) => (
+                                    <Team_medium {...team} />
+                                ))}
+                            </div>
+                            <div class="flex justify-center gap-10">
+                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                    <Prev />
+                                </button>
+                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                    <Next />
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="flex flex-col gap-10">
+                        <div class="flex">
+                            <h2>Terminée</h2>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                                {userTeams?.past.map((team) => (
+                                    <Team_medium {...team} />
+                                ))}
+                            </div>
+                            <div class="flex justify-center gap-10">
+                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                    <Prev />
+                                </button>
+                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                    <Next />
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            ) : (
+                <div class="space-y-12 col-start-1 col-end-4 display flex flex-col justify-center items-center">
+                    <h2>Vous n'êtes pas connectez</h2>
+                    <div class="flex items-center gap-2.5">
+                        <a href="/auth" class="btn-light">
+                            Login
+                        </a>
+                        <a href="/auth" class="btn-full">
+                            Sign Up
+                        </a>
+                    </div>
+                </div>
+            )
+        }
+
+        <div class="space-y-10">
+            <section
+                class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md"
+            >
+                <h2>Jams Populaires</h2>
+                <div class="border-b border-dark-gray">
+                    <Jam_Mini />
+                    <Jam_Mini />
+                    <Jam_Mini />
+                    <Jam_Mini />
+                    <Jam_Mini />
+                    <Jam_Mini />
+                </div>
+                <a href="/toutes_les_jams" class="btn-light self-end"
+                    >Voir toutes les jams</a
+                >
+            </section>
+        </div>
+    </div>
+</Layout>

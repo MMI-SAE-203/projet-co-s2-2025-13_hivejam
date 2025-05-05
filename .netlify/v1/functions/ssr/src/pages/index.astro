@@ -1,0 +1,127 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+import Team from "../components/Card/Team/Team.astro";
+import Jam_Mini from "../components/Card/Jam/Jam_mini.astro";
+import Post from "../components/Card/Forum/Post.astro";
+import Article_Mini from "../components/Card/Forum/Article_mini.astro";
+
+import Next from "../assets/svg/Next.svg";
+import Prev from "../assets/svg/Prev.svg";
+
+// Récupération des donné utilisateur
+import PocketBase from "pocketbase";
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+console.log(user?.id);
+
+import { getUserTeams } from "../../backend/backend.mjs";
+const userTeams = await getUserTeams(user?.id);
+---
+
+<Layout>
+    <div class="grid grid-cols-4 gap-10 p-10">
+        <div class="space-y-10 col-start-1 col-end-4">
+            {
+                user ? (
+                    <section class="flex flex-col gap-10">
+                        <div class="flex justify-between">
+                            <h2>Mes Jams en cours</h2>
+                            <div class="flex gap-2">
+                                <a href="/mes_jams" class="btn-light">
+                                    Voir mes jams
+                                </a>
+                                <a href="/creer" class="btn-full">
+                                    Créer
+                                </a>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                                {userTeams?.present.map((team) => (
+                                    <Team {...team} />
+                                ))}
+                            </div>
+                            <div class="flex justify-center gap-10">
+                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                    <Prev />
+                                </button>
+                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                    <Next />
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                ) : (
+                    <div class="space-y-6 col-start-1 col-end-4 display flex flex-col justify-center items-center">
+                        <h2 class="self-start">Mes Jams en cours</h2>
+                        <h3>Vous n'êtes pas connectez</h3>
+                        <div class="flex items-center gap-2.5">
+                            <a href="/auth" class="btn-light">
+                                Login
+                            </a>
+                            <a href="/auth" class="btn-full">
+                                Sign Up
+                            </a>
+                        </div>
+                    </div>
+                )
+            }
+            <section class="flex flex-col gap-10">
+                <div class="flex justify-between">
+                    <h2>Discussions récentes</h2>
+                    <div class="flex gap-2">
+                        <a href="/forum" class="btn-light">Aller au forum</a>
+                    </div>
+                </div>
+
+                <div class="border-b-1 border-dark-gray">
+                    <Post />
+                    <Post />
+                </div>
+            </section>
+        </div>
+
+        <div class="space-y-10">
+            <section
+                class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md"
+            >
+                <h2>Jams Populaires</h2>
+                <div class="border-b border-dark-gray">
+                    <Jam_Mini />
+                    <Jam_Mini />
+                    <Jam_Mini />
+                </div>
+                <a href="/toutes_les_jams" class="btn-light self-end"
+                    >Voir toutes les jams</a
+                >
+            </section>
+
+            <section
+                class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md"
+            >
+                <h2>Actualité</h2>
+                <div class="border-b border-dark-gray">
+                    <Article_Mini />
+                    <Article_Mini />
+                    <Article_Mini />
+                </div>
+                <a href="/actu" class="btn-light self-end">Voir toutes l'actu</a
+                >
+            </section>
+        </div>
+    </div>
+</Layout>

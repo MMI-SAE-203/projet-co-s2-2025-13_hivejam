@@ -1,0 +1,34 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import Article from "../../components/Card/Forum/Article.astro"
+import ArticleBig from "../../components/Card/Forum/Article_big.astro"
+---
+
+<Layout>
+    <div class="space-y-12.5 p-10">
+        <h1>Actualités</h1>
+        <section class="space-y-10">
+            <h2>Articles à la une</h2>
+            <div class="grid grid-cols-3 grid-rows-1 gap-6">
+                <ArticleBig />
+                <Article />
+                <Article />
+            </div>
+        </section>
+        <section class="space-y-10">
+            <h2>Toute l'actualité</h2>
+            <div class="grid grid-cols-4 gap-6">
+                <Article />
+                <Article />
+                <Article />
+                <Article />
+                <Article />
+                <Article />
+                <Article />
+                <Article />
+                <Article />
+            </div>
+        </section>
+    </div>
+</Layout>

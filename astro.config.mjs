@@ -5,14 +5,14 @@ import tailwindcss from '@tailwindcss/vite';
 
 import alpinejs from '@astrojs/alpinejs';
 
-import node from '@astrojs/node';
+import netlify from '@astrojs/netlify/functions';
 
 // https://astro.build/config
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
-  adapter: node({ mode: 'standalone'}),
+  adapter: netlify({}),
   experimental: { svg: true , session: true},
   integrations: [alpinejs()],
   output: 'server',
