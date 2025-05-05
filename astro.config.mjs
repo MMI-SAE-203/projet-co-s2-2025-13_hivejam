@@ -5,13 +5,15 @@ import tailwindcss from '@tailwindcss/vite';
 
 import alpinejs from '@astrojs/alpinejs';
 
+import node from '@astrojs/node';
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
-
-  experimental: { svg: true },
+  adapter: node({ mode: 'standalone'}),
+  experimental: { svg: true , session: true},
   integrations: [alpinejs()],
   output: 'server',
 });

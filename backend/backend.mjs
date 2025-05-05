@@ -2,10 +2,11 @@
 import fs from 'fs';
 import path from 'path';
 import AdmZip from 'adm-zip';
+import { Client } from 'basic-ftp';
 import axios from 'axios';
 
 import Pocketbase from "pocketbase";
-const pb = new Pocketbase('http://127.0.0.1:8090')
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
 
 //fonctions get génériques pour récupérer une entrée avec un id
 
@@ -42,7 +43,7 @@ export async function getTask(id) {
 
 export async function getPost(id) {
     try {
-        let post = await pb.collection('POST').getOne(id, {expand : 'user'});
+        let post = await pb.collection('POST').getOne(id, { expand: 'user' });
         post.image_URL = pb.files.getURL(post, post.image);
         post.expand.user.image_URL = pb.files.getURL(post.expand.user, post.expand.user.image);
         return post;
@@ -77,7 +78,7 @@ export async function getGame(id) {
 export async function getComment(id) {
     try {
         let comment = await pb.collection('COMMENT').getOne(id, { expand: 'user' });
-        comment.expand.user.image_URL = pb.files.getURL(comment.expand.user,comment.expand.user.image);
+        comment.expand.user.image_URL = pb.files.getURL(comment.expand.user, comment.expand.user.image);
         return comment;
     } catch (error) {
         console.log('Une erreur est survenue en lisant une entrée dans la collection COMMENT');
@@ -100,17 +101,17 @@ export async function getArticle(id) {
 export async function addJam(data, username, userid) {
     try {
         const jam = await pb.collection("GAME_JAM").create(data);
-        
+
         const name = "Équipe de " + username;
         const game_jam = jam.id;
         const team = await pb.collection("TEAM").create({
             name,
             game_jam
         });
-        
+
         const userRecord = await pb.collection("users").getOne(userid);
-        await pb.collection("users").update(userid, {team: [...userRecord.team, team.id]});
-        
+        await pb.collection("users").update(userid, { team: [...userRecord.team, team.id] });
+
         return {
             success: true,
             message: "La Jam a bien été créer.",
@@ -550,6 +551,11 @@ export async function getCommentTree(comments) {
     return comments
 }
 
+
+//____________________________________upload des jeux en ligne (test)_________________________________________________
+
+
+
 //_____________________________________upload des jeux local (temporaire)________________________________________________
 
 //Grosses fonctions pour uploader les jeux, utilisée en locale, la solution finale sera différente
@@ -574,13 +580,13 @@ export async function addGame(gameData) {
         return null;
     }
 }
-//Deuxième fonction sert à extraire les fichiers et les publier dans le dossier public
+//Deuxième fonction sert à extraire les fichiers
 async function extractGameFile(id, uploadedFileURL) {
     try {
         //Récupère le fichier
         const filePath = await downloadFile(uploadedFileURL, id);
         const extname = path.extname(filePath).toLowerCase();
-        const extractionDestDir = path.join('public', 'games', id);
+        const extractionDestDir = path.join('games', id);
         fs.mkdirSync(extractionDestDir, { recursive: true });
 
         if (extname == '.zip') {
@@ -608,7 +614,7 @@ async function downloadFile(fileUrl, gameId) {
             url: fileUrl,
             responseType: 'stream', // Important for large files
         });
-        const filePath = path.join('public', 'tmp', `${gameId}.zip`); // Temp file path
+        const filePath = path.join('tmp', `${gameId}.zip`); // Temp file path
         console.log(filePath);
         const writer = fs.createWriteStream(filePath);
         // Pipe the response stream to the file
