@@ -567,7 +567,7 @@ export async function addGame(gameData) {
             const game = await pb.collection("GAME").create(gameData);
             //Vérifie s'il ya un fichier dans file_web
             if (game.file_web) {
-                const uploadedFileURL = await pb.files.getURL(game, game.file_web);
+                const uploadedFileURL = pb.files.getURL(game, game.file_web);
                 console.log(uploadedFileURL);
                 await extractGameFile(game.id, uploadedFileURL);
             }
@@ -586,7 +586,7 @@ async function extractGameFile(id, uploadedFileURL) {
         //Récupère le fichier
         const filePath = await downloadFile(uploadedFileURL, id);
         const extname = path.extname(filePath).toLowerCase();
-        const extractionDestDir = path.join('games', id);
+        const extractionDestDir = path.join('public','games', id);
         fs.mkdirSync(extractionDestDir, { recursive: true });
 
         if (extname == '.zip') {
@@ -614,7 +614,7 @@ async function downloadFile(fileUrl, gameId) {
             url: fileUrl,
             responseType: 'stream', // Important for large files
         });
-        const filePath = path.join('tmp', `${gameId}.zip`); // Temp file path
+        const filePath = path.join('public','tmp', `${gameId}.zip`); // Temp file path
         console.log(filePath);
         const writer = fs.createWriteStream(filePath);
         // Pipe the response stream to the file
