@@ -29,10 +29,12 @@ if (!user && pb.authStore.isValid) {
 console.log(user?.id);
 
 // Récupération team, jam populaire
-import { getUserTeams, getPopularJam } from "../../backend/backend.mjs";
+import { getUserTeams, getPopularJam, getRecentArticle } from "../../backend/backend.mjs";
 import JamMini from "../components/Card/Jam/Jam_mini.astro";
+import ArticleMini from "../components/Card/Forum/Article_mini.astro";
 const userTeams = await getUserTeams(user?.id);
 const jamsPopulaire = await getPopularJam();
+const recentArticle = await getRecentArticle();
 ---
 
 <Layout>
@@ -114,9 +116,7 @@ const jamsPopulaire = await getPopularJam();
             >
                 <h2>Actualité</h2>
                 <div class="border-b border-dark-gray">
-                    <Article_Mini />
-                    <Article_Mini />
-                    <Article_Mini />
+                    {recentArticle?.map((article) => <ArticleMini {...article} />)}
                 </div>
                 <a href="/actu" class="btn-light self-end">Voir toutes l'actu</a
                 >
