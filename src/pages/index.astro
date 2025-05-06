@@ -10,8 +10,8 @@ import Next from "../assets/svg/Next.svg";
 import Prev from "../assets/svg/Prev.svg";
 
 // Récupération des donné utilisateur
-import PocketBase from "pocketbase";
-const pb = new PocketBase("http://127.0.0.1:8090");
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
 
 const cookies = Astro.cookies;
 const token = cookies.get("pb_auth")?.value;
@@ -20,7 +20,7 @@ if (token) {
     pb.authStore.save(token);
 }
 
-let user = pb.authStore.model;
+ let user = pb.authStore.model;
 
 if (!user && pb.authStore.isValid) {
     await pb.collection("users").authRefresh();

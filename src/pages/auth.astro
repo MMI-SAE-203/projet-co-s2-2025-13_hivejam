@@ -1,8 +1,8 @@
 ---
 import "../styles/global.css";
 
-import PocketBase from "pocketbase";
-const pb = new PocketBase("http://127.0.0.1:8090");
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
 
 let error = "";
 let message = "";
@@ -60,18 +60,25 @@ if (Astro.request.method === "POST") {
 console.log(pb.authStore.isValid);
 console.log(pb.authStore.record?.id);
 console.log(user?.name);
+
+if (!pb.authStore.isValid) {
+  error = "L'adresse e-mail ou le mot de passe est incorrect."
+}
 ---
-
-<html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Document</title>
+  </head>
   <body>
-    {error && <p class="error">{error}</p>}
-    {message && <p class="success">{message}</p>}
-
     {
       user ? (
         <>
           <p>
             Bienvenue, <strong>{user.name || user.email}</strong> 👋
+            <a href="/logout">Logout</a>
           </p>
         </>
       ) : (
@@ -83,6 +90,8 @@ console.log(user?.name);
             >
               <h1>Connecte toi !</h1>
               <input type="hidden" name="formType" value="login" />
+
+              {error && <p class=" text-negative">{error}</p>}
               <div class="space-y-5">
                 <div>
                   <label for="email">Votre email</label>
