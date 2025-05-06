@@ -1,13 +1,13 @@
 ---
 import Placeholder from "../../../assets/img/Jam_placeholder.png";
+
+const jam = Astro.props;
 ---
 
-<a href="id" class="flex gap-2 border-t border-dark-gray p-2">
-    <div class="mask mask-hexagon">
-        <img src={Placeholder.src} alt="" class="h-12.5 w-12.5">
-    </div>
+<a href=`/toutes_les_jams/${jam.id}` class="flex gap-2 border-t border-dark-gray p-2">
+    <img src={jam.image_URL} alt="" class="hexagon w-10.5 h-12 object-center">
     <div>
-        <h4>Nom de la jam</h4>
-        <p class="tiny">Description de la jam</p>
+        <h4>{jam.name}</h4>
+        <p class="tiny line-clamp-1">{jam.description}</p>
     </div>
 </a>
