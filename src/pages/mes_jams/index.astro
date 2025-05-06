@@ -26,8 +26,9 @@ if (!user && pb.authStore.isValid) {
     user = pb.authStore.model;
 }
 
-import { getUserTeams } from "../../../backend/backend.mjs";
+import { getUserTeams, getPopularJam } from "../../../backend/backend.mjs";
 const userTeams = await getUserTeams(user?.id);
+const jamsPopulaire = await getPopularJam();
 ---
 
 <Layout>
@@ -129,12 +130,7 @@ const userTeams = await getUserTeams(user?.id);
             >
                 <h2>Jams Populaires</h2>
                 <div class="border-b border-dark-gray">
-                    <Jam_Mini />
-                    <Jam_Mini />
-                    <Jam_Mini />
-                    <Jam_Mini />
-                    <Jam_Mini />
-                    <Jam_Mini />
+                    {jamsPopulaire?.map((jam) => <Jam_Mini {...jam} />)}
                 </div>
                 <a href="/toutes_les_jams" class="btn-light self-end"
                     >Voir toutes les jams</a
