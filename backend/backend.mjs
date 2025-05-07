@@ -550,12 +550,15 @@ export async function getCommentTree(comments) {
 }
 
 
-//____________________________________upload des jeux en ligne (test)_________________________________________________
+//____________________________________upload des jeux en ligne_________________________________________________
 
 export async function addGame(gameData) {
     try {
+        //Création de l'entrée dans PocketBase
         const game = await pb.collection("GAME").create(gameData);
+        //Si une version web a été fournie
         if (game.file_web) {
+            //Appel de l'API custom
             const response = await fetch('https://hivejam-games.paolo-vincent.fr/extract', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -564,6 +567,7 @@ export async function addGame(gameData) {
                     zipUrl: pb.files.getURL(game, game.file_web)
                 })
             });
+            //Ajout de l'url du jeu dans PocketBase
             await pb.collection('GAME').update(game.id, { web_URL: `https://hivejam-games.paolo-vincent.fr/${game.id}/` });
             console.log(response.text());
             return response
