@@ -24,10 +24,13 @@ console.log(jam);
                 <div class="flex flex-col justify-center items-center gap-4">
                     <h2>Compte à rebours</h2>
                     <div>
-                        <p>{jam?.time_info}</p>
-                        <span class="font-bold text-6xl text-negative"
-                            >12:34:56</span
-                        >
+                        {
+                            jam.time == "present" ? (
+                                <p class="CD text-3xl">{jam.time_info}</p>
+                            ) : (
+                                <p class="tiny">{jam.time_info}</p>
+                            )
+                        }
                     </div>
                 </div>
                 <div class="flex flex-col justify-center items-center">
@@ -63,3 +66,35 @@ console.log(jam);
         </section>
     </div>
 </Layout>
+
+<script>
+    const CDs = document.querySelectorAll(".CD");
+
+    function count() {
+        CDs.forEach((CD) => {
+            if (!CD.textContent) {
+                return null;
+            }
+            const parts = CD.textContent.trim().split(":");
+            if (parts.length !== 3) return;
+
+            let [hours, minutes, seconds] = parts.map(Number);
+
+            let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            if (totalSeconds <= 0) return;
+
+            totalSeconds--;
+
+            const h = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+            const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
+                2,
+                "0",
+            );
+            const s = String(totalSeconds % 60).padStart(2, "0");
+
+            CD.textContent = `${h}:${m}:${s}`;
+        });
+    }
+
+    setInterval(count, 1000);
+</script>

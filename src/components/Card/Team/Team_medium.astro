@@ -33,7 +33,13 @@ if (!user && pb.authStore.isValid) {
             </div>
         </div>
         <div class="flex flex-col">
-            <p class="tiny">Terminée il y a 4 mois et 2 semaines</p>
+            {
+                team.time == "present" ? (
+                    <p class="CD text-3xl">{team.time_info}</p>
+                ) : (
+                    <p class="tiny">{team.time_info}</p>
+                )
+            }
         </div>
         {
             team.expand.game_jam.host == user?.id ? (

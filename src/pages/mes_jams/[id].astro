@@ -26,9 +26,47 @@ console.log(team);
             <div>
                 <article>
                     <h2>Compte à rebours</h2>
-                    <!-- <p>{team.expand.game_jam?.d}</p> -->
+                    {
+                        team.time == "present" ? (
+                            <p class="CD text-3xl">{team.time_info}</p>
+                        ) : (
+                            <p class="tiny">{team.time_info}</p>
+                        )
+                    }
                 </article>
             </div>
         </section>  
     </div>
 </Layout>
+
+<script>
+    const CDs = document.querySelectorAll(".CD");
+
+    function count() {
+        CDs.forEach((CD) => {
+            if (!CD.textContent) {
+                return null;
+            }
+            const parts = CD.textContent.trim().split(":");
+            if (parts.length !== 3) return;
+
+            let [hours, minutes, seconds] = parts.map(Number);
+
+            let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            if (totalSeconds <= 0) return;
+
+            totalSeconds--;
+
+            const h = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+            const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
+                2,
+                "0",
+            );
+            const s = String(totalSeconds % 60).padStart(2, "0");
+
+            CD.textContent = `${h}:${m}:${s}`;
+        });
+    }
+
+    setInterval(count, 1000);
+</script>
