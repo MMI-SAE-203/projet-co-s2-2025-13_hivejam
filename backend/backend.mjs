@@ -272,7 +272,8 @@ export async function getAllJamFiltered(popular, time) {
                     if (!accumulator[jamID]) {
                         accumulator[jamID] = {
                             teamCount: 0,
-                            info: jamStatus.info
+                            info: jamStatus.info,
+                            time: jamStatus.time
                         };
                     }
                     accumulator[jamID].teamCount++;
@@ -281,7 +282,8 @@ export async function getAllJamFiltered(popular, time) {
                 if (!accumulator[jamID]) {
                     accumulator[jamID] = {
                         teamCount: 0,
-                        info: jamStatus.info
+                        info: jamStatus.info,
+                        time: jamStatus.time
                     };
                 }
                 accumulator[jamID].teamCount++;
@@ -298,7 +300,8 @@ export async function getAllJamFiltered(popular, time) {
             .map(([id, data]) => ({
                 id,
                 count: data.teamCount,
-                info: data.info
+                info: data.info,
+                time: data.time
             }));
 
         const jams = [];
@@ -308,6 +311,7 @@ export async function getAllJamFiltered(popular, time) {
             jam.team_NB = element.count;
             jam.image_URL = pb.files.getURL(jam, jam.image);
             jam.time_info = element.info;
+            jam.time = element.time;
             jams.push(jam);
         }
 
@@ -408,7 +412,9 @@ export async function getJamPage(id) {
     try {
         let jam = await pb.collection('GAME_JAM').getOne(id, { expand: 'games' });
         jam.image_URL = pb.files.getURL(jam, jam.image);
-        jam.time_info = getJamStatus(jam).info;
+        const status = getJamStatus(jam);
+        jam.time_info = status.info;
+        jam.time = status.time;
         for (let i in jam.expand.games) {
             jam.expand.games[i].image_URL = pb.files.getURL(jam.expand.games[i], jam.expand.games[i].image);
         }
@@ -439,55 +445,101 @@ export async function getGamePage(id) {
 
 //______________________________________________________librairie perso____________________________________________________
 
-//Fonction pour savoir si une jam est en cours, terminée ou à venir
-//renvoie un object repsonse avec .time un string past,present ou future et .info une phrase donnant une indication temporelle sur la jam
+
 function getJamStatus(jam) {
     const now = new Date();
     const start = new Date(jam.date_beginning);
     const end = new Date(start.getTime() + jam.duration * 60 * 60 * 1000);
 
     let status;
-    let timeDiff;
     let timeInfo;
 
-    //Transforme la différence de temps en un truc lisible en mois, semaines, jours etc en fonction
-    const msToTime = (timeDiff) => {
-        const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30)); // 30 days in a month
-        const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7)); // 7 days in a week
-        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 1 day in ms
-        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const formatDate = (date) => {
+        return date.toLocaleString('fr-FR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
 
-        if (months > 0) return `${months} mois`;
-        if (weeks > 0) return `${weeks} semaines`;
-        if (days > 0) return `${days} jours`;
-        if (hours > 0) return `${hours} heures`;
-        return `${minutes} minutes`;
+    const formatCountdown = (ms) => {
+        const totalSeconds = Math.floor(ms / 1000);
+        const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const seconds = String(totalSeconds % 60).padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
     };
 
     if (now < start) {
-        // Si c'est dans le futur
         status = 'future';
-        timeDiff = start - now;
-        timeInfo = `Cette jam commencera dans ${msToTime(timeDiff)}`;
+        timeInfo = `Commencera le ${formatDate(start)}`;
     } else if (now >= start && now <= end) {
-        // Si c'est en cours
         status = 'present';
-        timeDiff = end - now;
-        timeInfo = `${msToTime(timeDiff)} avant la fin de cette jam`;
+        const remaining = end - now;
+        timeInfo = formatCountdown(remaining);
     } else {
-        // Si c'est terminé
         status = 'past';
-        timeDiff = now - end;
-        timeInfo = `Cette jam s'est terminé il y a ${msToTime(timeDiff)}`;
+        timeInfo = `Terminé le ${formatDate(end)}`;
     }
 
-    let response = {
-        "time": status,
-        "info": timeInfo
+    return {
+        time: status,
+        info: timeInfo
     };
-    return response;
 }
+
+// //Fonction pour savoir si une jam est en cours, terminée ou à venir
+// //renvoie un object repsonse avec .time un string past,present ou future et .info une phrase donnant une indication temporelle sur la jam
+// function getJamStatus(jam) {
+//     const now = new Date();
+//     const start = new Date(jam.date_beginning);
+//     const end = new Date(start.getTime() + jam.duration * 60 * 60 * 1000);
+
+//     let status;
+//     let timeDiff;
+//     let timeInfo;
+
+//     //Transforme la différence de temps en un truc lisible en mois, semaines, jours etc en fonction
+//     const msToTime = (timeDiff) => {
+//         const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30)); // 30 days in a month
+//         const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7)); // 7 days in a week
+//         const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 1 day in ms
+//         const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+//         const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+//         if (months > 0) return `${months} mois`;
+//         if (weeks > 0) return `${weeks} semaines`;
+//         if (days > 0) return `${days} jours`;
+//         if (hours > 0) return `${hours} heures`;
+//         return `${minutes} minutes`;
+//     };
+
+//     if (now < start) {
+//         // Si c'est dans le futur
+//         status = 'future';
+//         timeDiff = start - now;
+//         timeInfo = `Cette jam commencera dans ${msToTime(timeDiff)}`;
+//     } else if (now >= start && now <= end) {
+//         // Si c'est en cours
+//         status = 'present';
+//         timeDiff = end - now;
+//         timeInfo = `${msToTime(timeDiff)} avant la fin de cette jam`;
+//     } else {
+//         // Si c'est terminé
+//         status = 'past';
+//         timeDiff = now - end;
+//         timeInfo = `Cette jam s'est terminé il y a ${msToTime(timeDiff)}`;
+//     }
+
+//     let response = {
+//         "time": status,
+//         "info": timeInfo
+//     };
+//     return response;
+// }
 
 //Formatage d'une date iso en 00 mois
 function formatDate(dateString) {

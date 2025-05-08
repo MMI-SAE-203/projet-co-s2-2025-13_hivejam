@@ -60,10 +60,10 @@ import { getAllArticle, getAllJamFiltered, getArticle, getCommentTree, getGame, 
 // const records = await getTeamBoard('2mlvll2tmwgwl2l');
 // console.log(JSON.stringify(records,null,2));
 
-// const records = await getJamPage('f44p4fp3e43l9tb');
-// console.log(JSON.stringify(records,null,2));
+const records = await getJamPage('f44p4fp3e43l9tb');
+console.log(JSON.stringify(records,null,2));
 
-// const records = await getGamePage('9c45s7o794p6kmj');
+// const records = await getGamePage('f44p4fp3e43l9tb');
 // console.log(JSON.stringify(records,null,2));
 
 // const records = await getRecentComment('8x7n9a6bo63hz29');
