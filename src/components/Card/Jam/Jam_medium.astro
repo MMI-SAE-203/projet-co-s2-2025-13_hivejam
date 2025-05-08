@@ -16,7 +16,13 @@ const { ...jam } = Astro.props;
             </div>
         </div>
         <div class="flex flex-col">
-            {jam.time == "present" ? (<p class="text-3xl">{jam.time_info}</p>) : (<p class="tiny">{jam.time_info}</p>)}
+            {
+                jam.time == "present" ? (
+                    <p class="CD text-3xl">{jam.time_info}</p>
+                ) : (
+                    <p class="tiny">{jam.time_info}</p>
+                )
+            }
         </div>
         <div class="flex items-center gap-2 self-end">
             <Group />
@@ -24,3 +30,33 @@ const { ...jam } = Astro.props;
         </div>
     </article>
 </a>
+
+<script>
+    const CD = document.querySelector(".CD");
+
+    function count() {
+        if (!CD.textContent) {
+            return null
+        }
+        const parts = CD.textContent.trim().split(":");
+        if (parts.length !== 3) return;
+
+        let [hours, minutes, seconds] = parts.map(Number);
+
+        let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        if (totalSeconds <= 0) return;
+
+        totalSeconds--;
+
+        const h = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+        const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(
+            2,
+            "0",
+        );
+        const s = String(totalSeconds % 60).padStart(2, "0");
+
+        CD.textContent = `${h}:${m}:${s}`;
+    }
+
+    setInterval(count, 1000)
+</script>

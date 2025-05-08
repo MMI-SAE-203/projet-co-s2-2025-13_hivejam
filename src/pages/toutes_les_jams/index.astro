@@ -9,9 +9,13 @@ let jams = await getAllJamFiltered(true, "present");
 
 if (Astro.request.method === "POST") {
     try {
-        const data = await Astro.request.formData();
+        const formData = await Astro.request.formData();
+        const data = {
+            status : formData.get("status"),
+            popular : (formData.get("popular") == "true")
+        }
         console.log(data)
-        jams = await getAllJamFiltered(data.get("popular"), data.get("status"));
+        jams = await getAllJamFiltered(data.popular, data.status);
     } catch (error) {
         console.error(error);
     }

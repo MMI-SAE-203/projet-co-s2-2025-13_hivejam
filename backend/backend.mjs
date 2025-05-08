@@ -254,76 +254,126 @@ export async function getSimilarArticle(topic) {
     }
 }
 
-//Fonction pour récupérer la liste de toutes les jams triées par popularité et par status
-//Il y a deux paramètre possible pour la fonction, popular (boolean) et time ("past", "present" ou "future")
+// //Fonction pour récupérer la liste de toutes les jams triées par popularité et par status
+// //Il y a deux paramètre possible pour la fonction, popular (boolean) et time ("past", "present" ou "future")
+// export async function getAllJamFiltered(popular, time) {
+//     try {
+//         let teams = await pb.collection('TEAM').getFullList({
+//             expand: 'game_jam'
+//         });
+
+//         //Compte combien de teams sont associées à chaque jam et les infos de timing (genre : commence dans 2 mois)
+//         const jamTeamCountandInfo = teams.reduce((accumulator, team) => {
+//             const jam = team.expand.game_jam;
+//             const jamID = jam.id;
+//             const jamStatus = getJamStatus(jam);
+//             if (time) {
+//                 if (jamStatus.time === time) {
+//                     if (!accumulator[jamID]) {
+//                         accumulator[jamID] = {
+//                             teamCount: 0,
+//                             info: jamStatus.info,
+//                             time: jamStatus.time
+//                         };
+//                     }
+//                     accumulator[jamID].teamCount++;
+//                 }
+//             } else {
+//                 if (!accumulator[jamID]) {
+//                     accumulator[jamID] = {
+//                         teamCount: 0,
+//                         info: jamStatus.info,
+//                         time: jamStatus.time
+//                     };
+//                 }
+//                 accumulator[jamID].teamCount++;
+//             }
+
+//             return accumulator;
+//         }, {});
+
+//         //Récupère les jams avec le plus de teams et le nombre de teams
+//         const topJams = Object.entries(jamTeamCountandInfo)
+//             .sort((a, b) =>
+//                 popular ? b[1].teamCount - a[1].teamCount : a[1].teamCount - b[1].teamCount
+//             )
+//             .map(([id, data]) => ({
+//                 id,
+//                 count: data.teamCount,
+//                 info: data.info,
+//                 time: data.time
+//             }));
+
+//         const jams = [];
+//         //Récupère le jam et lui ajoute le nombre de team et l'URL de l'image d'illustration
+//         for (const element of topJams) {
+//             const jam = await getJam(element.id);
+//             jam.team_NB = element.count;
+//             jam.image_URL = pb.files.getURL(jam, jam.image);
+//             jam.time_info = element.info;
+//             jam.time = element.time;
+//             jams.push(jam);
+//         }
+
+//         return jams;
+//     } catch (error) {
+//         console.log('Une erreur est survenue en lisant des entrée dans la collection TEAM');
+//         return null;
+//     }
+// }
+
+//Fonction pour charger des posts par page, nécessite le paramètre currentPage qui est le numéro de la page
+//Fonction à utiliser sur la homepage et sur la page forum autant pour le chargement initial que pour charger plus de posts
+
 export async function getAllJamFiltered(popular, time) {
     try {
-        let teams = await pb.collection('TEAM').getFullList({
+        //Récupère toutes les jams
+        const jams = await pb.collection('GAME_JAM').getFullList();
+
+        //Récupère toutes les teams
+        const teams = await pb.collection('TEAM').getFullList({
             expand: 'game_jam'
         });
 
-        //Compte combien de teams sont associées à chaque jam et les infos de timing (genre : commence dans 2 mois)
-        const jamTeamCountandInfo = teams.reduce((accumulator, team) => {
-            const jam = team.expand.game_jam;
-            const jamID = jam.id;
-            const jamStatus = getJamStatus(jam);
-            if (time) {
-                if (jamStatus.time === time) {
-                    if (!accumulator[jamID]) {
-                        accumulator[jamID] = {
-                            teamCount: 0,
-                            info: jamStatus.info,
-                            time: jamStatus.time
-                        };
-                    }
-                    accumulator[jamID].teamCount++;
-                }
-            } else {
-                if (!accumulator[jamID]) {
-                    accumulator[jamID] = {
-                        teamCount: 0,
-                        info: jamStatus.info,
-                        time: jamStatus.time
-                    };
-                }
-                accumulator[jamID].teamCount++;
+        //comptage des teams pour chaque jam
+        const teamCounts = teams.reduce((acc, team) => {
+            const jamID = team.expand.game_jam?.id;
+            if (jamID) {
+                acc[jamID] = (acc[jamID] || 0) + 1;
             }
-
-            return accumulator;
+            return acc;
         }, {});
 
-        //Récupère les jams avec le plus de teams et le nombre de teams
-        const topJams = Object.entries(jamTeamCountandInfo)
-            .sort((a, b) =>
-                popular ? b[1].teamCount - a[1].teamCount : a[1].teamCount - b[1].teamCount
-            )
-            .map(([id, data]) => ({
-                id,
-                count: data.teamCount,
-                info: data.info,
-                time: data.time
-            }));
+        // Step 4: Filter and map jams, including those with zero teams
+        let filteredJams = jams
+            .map(jam => {
+                const jamStatus = getJamStatus(jam);
+                if (time && jamStatus.time !== time) return null;
 
-        const jams = [];
-        //Récupère le jam et lui ajoute le nombre de team et l'URL de l'image d'illustration
-        for (const element of topJams) {
-            const jam = await getJam(element.id);
-            jam.team_NB = element.count;
-            jam.image_URL = pb.files.getURL(jam, jam.image);
-            jam.time_info = element.info;
-            jam.time = element.time;
-            jams.push(jam);
+                return {
+                    ...jam,
+                    team_NB: teamCounts[jam.id] || 0,
+                    image_URL: pb.files.getURL(jam, jam.image),
+                    time_info: jamStatus.info,
+                    time: jamStatus.time
+                };
+            })
+            .filter(Boolean); // remove nulls
+
+        // Step 5: Sort by popularity if needed
+        if (popular) {
+            filteredJams.sort((a, b) => b.team_NB - a.team_NB);
+        } else {
+            filteredJams.sort((a, b) => a.team_NB - b.team_NB);
         }
 
-        return jams;
+        return filteredJams;
     } catch (error) {
-        console.log('Une erreur est survenue en lisant des entrée dans la collection TEAM');
+        console.log('Une erreur est survenue en lisant les collections GAME_JAM ou TEAM');
         return null;
     }
 }
 
-//Fonction pour charger des posts par page, nécessite le paramètre currentPage qui est le numéro de la page
-//Fonction à utiliser sur la homepage et sur la page forum autant pour le chargement initial que pour charger plus de posts
 export async function getSomePost(currentpage) {
     try {
         let postsList = await pb.collection('POST').getList(currentpage, 20, {
