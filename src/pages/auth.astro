@@ -92,6 +92,7 @@ if (!pb.authStore.isValid) {
               <input type="hidden" name="formType" value="login" />
 
               {error && <p class=" text-negative">{error}</p>}
+              {message && <p class="">{message}</p>}
               <div class="space-y-5">
                 <div>
                   <label for="email">Votre email</label>
