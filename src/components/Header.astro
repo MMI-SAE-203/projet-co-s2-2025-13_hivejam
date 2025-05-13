@@ -1,5 +1,6 @@
 ---
 import Logo from "../assets/svg/logo.svg";
+import PP from "../assets/img/Rectangle_4.png";
 
 // Cécupération des donné utilisateur
 import Pocketbase from "pocketbase";
@@ -48,11 +49,21 @@ if (!user && pb.authStore.isValid) {
              @click="open = ! open"
              class="flex items-center gap-4 cursor-pointer">
                 <h4>{user.name}</h4>
-                <img
+                {
+                    user.image ? (
+                    <img
                     src={user.image_URL}
                     alt={"photo de profile de " + user.name}
                     class="hexagon"
                 />
+                    ) : (
+                    <img
+                    src={PP.src}
+                    alt={"photo de profile de " + user.name}
+                    class="hexagon"
+                />
+                    )
+                }
             </button>
 
             <nav 

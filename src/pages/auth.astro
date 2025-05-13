@@ -29,17 +29,19 @@ if (Astro.request.method === "POST") {
 
   const email = formData.get("email");
   const password = formData.get("password");
-  const passwordConfirm = formData.get("passwordConfirm");
+  console.log(email);
 
   try {
     if (formType === "register") {
-      const name = formData.get("name");
-      await pb.collection("users").create({
-        email,
-        password,
-        passwordConfirm,
-        name,
-      });
+      const data = {
+        "email": formData.get("email"),
+        "password": formData.get("password"),
+        "passwordConfirm": formData.get("passwordConfirm"),
+        "name": formData.get("name"),
+        "subscription": "free"
+      }
+      console.log(data)
+      await pb.collection("users").create(data);
       message = "✅ Compte créé. Connectez-vous.";
     }
 

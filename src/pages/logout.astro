@@ -1,7 +1,7 @@
 ---
-import PocketBase from 'pocketbase';
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
 
-const pb = new PocketBase('http://127.0.0.1:8090');
 const cookies = Astro.cookies;
 
 // Supprime l'auth
