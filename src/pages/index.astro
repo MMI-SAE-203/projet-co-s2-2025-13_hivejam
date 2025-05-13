@@ -10,8 +10,8 @@ import Next from "../assets/svg/Next.svg";
 import Prev from "../assets/svg/Prev.svg";
 
 // Récupération des donné utilisateur
-import PocketBase from "pocketbase";
-const pb = new PocketBase("http://127.0.0.1:8090");
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase("https://hivejam.paolo-vincent.fr:443/");
 
 const cookies = Astro.cookies;
 const token = cookies.get("pb_auth")?.value;
@@ -28,8 +28,11 @@ if (!user && pb.authStore.isValid) {
 }
 console.log(user?.id);
 
-import { getUserTeams } from "../../backend/backend.mjs";
+// Récupération team, jam populaire
+import { getUserTeams, getPopularJam, getRecentArticle } from "../../backend/backend.mjs";
 const userTeams = await getUserTeams(user?.id);
+const jamsPopulaire = await getPopularJam();
+const recentArticle = await getRecentArticle();
 ---
 
 <Layout>
@@ -51,9 +54,7 @@ const userTeams = await getUserTeams(user?.id);
                         </div>
                         <div class="flex flex-col">
                             <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
-                                {userTeams?.present.map((team) => (
-                                    <Team {...team} />
-                                ))}
+                                {userTeams?.present.map((team) => <Team {...team} />)}
                             </div>
                             <div class="flex justify-center gap-10">
                                 <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
@@ -101,9 +102,7 @@ const userTeams = await getUserTeams(user?.id);
             >
                 <h2>Jams Populaires</h2>
                 <div class="border-b border-dark-gray">
-                    <Jam_Mini />
-                    <Jam_Mini />
-                    <Jam_Mini />
+                    {jamsPopulaire?.map((jam) => <Jam_Mini {...jam} />)}
                 </div>
                 <a href="/toutes_les_jams" class="btn-light self-end"
                     >Voir toutes les jams</a
@@ -115,9 +114,7 @@ const userTeams = await getUserTeams(user?.id);
             >
                 <h2>Actualité</h2>
                 <div class="border-b border-dark-gray">
-                    <Article_Mini />
-                    <Article_Mini />
-                    <Article_Mini />
+                    {recentArticle?.map((article) => <Article_Mini {...article} />)}
                 </div>
                 <a href="/actu" class="btn-light self-end">Voir toutes l'actu</a
                 >

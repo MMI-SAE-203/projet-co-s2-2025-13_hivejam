@@ -1,7 +1,6 @@
 //Dépendences
 import fs from 'fs';
 import path from 'path';
-import unzipper from 'unzipper';
 
 import Pocketbase from "pocketbase";
 const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
