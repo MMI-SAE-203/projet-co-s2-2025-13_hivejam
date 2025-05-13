@@ -1,0 +1,42 @@
+---
+import PP from "../../../assets/img/Rectangle_4.png";
+import Dots from "../../../assets/svg/Dots.svg";
+
+const tache = Astro.props;
+---
+
+<div class="grid grid-cols-5 gap-1 h-15 *:bg-light-gray *:flex *:items-center *:py-2 *:px-3 *:rounded-md">
+    <div>
+        {tache.name}
+    </div>
+    <div>
+        {tache.description}
+    </div>
+    <div class="gap-4">
+        {
+            tache.expand.user.map((user) => (
+                <div class="flex items-center gap-2">
+                    {user.image ? (
+                        <img
+                            src={user.image_URL}
+                            alt=""
+                            height="40px"
+                            width="40px"
+                        />
+                    ) : (
+                        <img src={PP.src} alt="" height="40px" width="40px" />
+                    )}
+                    <p>{user.name}</p>
+                </div>
+            ))
+        }
+    </div>
+    <div>
+        <p>{tache.state}</p>
+    </div>
+    <div>
+        <button>
+            <Dots />
+        </button>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import User from "../../assets/svg/User_orange.svg";
 
 const { id } = Astro.params;
 import { getTeamBoard } from "../../../backend/backend.mjs";
+import Tache from "../../components/Card/Team/Tache.astro";
 const team = await getTeamBoard(id);
 console.log(team);
 ---
@@ -47,6 +48,23 @@ console.log(team);
                 </article>
             </div>
         </section>  
+        <section class="mt-20 space-y-5">
+            <div class="flex justify-between">
+                <h2>Suivie de tâche</h2>
+                <a href="" class="btn-light">Ajouter une thâche</a>
+            </div>
+            <div class="grid grid-cols-5">
+                <p class="font-bold text-xl text-brand-1">Titre</p>
+                <p class="font-bold text-xl">Description</p>
+                <p class="font-bold text-xl">Responsables</p>
+                <p class="font-bold text-xl">Statut</p>
+            </div>
+            <div class="flex flex-col gap-3">
+                {
+                    team?.task.map((record) => <Tache {...record}/>)
+                }
+            </div>
+        </section>
     </div>
 </Layout>
 
