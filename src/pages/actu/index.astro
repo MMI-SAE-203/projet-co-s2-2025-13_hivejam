@@ -14,9 +14,9 @@ const articles = await getAllArticle();
         <section class="space-y-10">
             <h2>Articles à la une</h2>
             <div class="grid grid-cols-3 grid-rows-1 gap-6">
-                <ArticleBig />
-                <Article />
-                <Article />
+                <ArticleBig {...articles[0]}/>
+                <Article {...articles[1]}/>
+                <Article {...articles[2]}/>
             </div>
         </section>
         <section class="space-y-10">

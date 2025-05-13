@@ -1,20 +1,20 @@
 ---
 import Book from "../../../assets/svg/Book.svg";
 
-import Placholder from "../../../assets/img/Article_placeholder.png"
+const article = Astro.props;
 ---
 
-<a href="" class="col-start-1 col-end-3 row-start-1 row-end-3">
+<a href=`/actu/${article.id}` class="col-start-1 col-end-3 row-start-1 row-end-3">
     <article class="flex flex-col gap-2 h-full">
-        <img src={Placholder.src} alt="" class="h-full">
+        <img src={article.image_URL} alt="" class="h-160">
         <div class="space-y-2.5">
-            <h3>Titre de l'article principale</h3>
+            <h3>{article.title}</h3>
             <div class="flex gap-2.5 items-center tiny">
-                <p class="border rounded-md px-2.5 py-1">Topic</p>
-                <p>07 Mars 25</p>
+                <p class="border rounded-md px-2.5 py-1">{article.topic}</p>
+                <p>{article.date}</p>
                 <span class="bg-dark-gray w-0.25 h-3"></span>
                 <Book />
-                <p>2 min</p>
+                <p>{article.reading_time} min</p>
             </div>
         </div>
     </article>

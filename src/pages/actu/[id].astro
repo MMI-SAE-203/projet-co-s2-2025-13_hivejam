@@ -1,9 +1,35 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Book from "../../assets/svg/Book.svg";
 
-const id = Astro.params;
+import { getArticle } from "../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+const article = await getArticle(id);
 ---
 
 <Layout>
-    
+    <div class="px-10 py-20 space-y-20">
+        <article class="grid grid-cols-2 gap-8">
+            <img src={article?.image_URL} alt="" class="max-h-100 justify-self-center" />
+            <div class="flex flex-col justify-center items-center gap-8">
+                <h1 class="text-center">{article?.title}</h1>
+                <div class="flex items-center gap-8">
+                    <p class="border rounded-md px-2.5 py-1">
+                        {article?.topic}
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <Book />
+                        <p>{article?.reading_time} min</p>
+                    </div>
+                    <p>{article?.date}</p>
+                </div>
+            </div>
+        </article>
+        <article class="space-y-10 px-100">
+            <h2>Article</h2>
+            <div set:html={article?.text} class="flex flex-col gap-4"></div>
+        </article>
+        
+    </div>
 </Layout>
