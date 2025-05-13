@@ -307,7 +307,7 @@ export async function getAllJamFiltered(popular, time) {
 
 //Fonction pour charger des posts par page, nécessite le paramètre currentPage qui est le numéro de la page
 //Fonction à utiliser sur la homepage et sur la page forum autant pour le chargement initial que pour charger plus de posts
-export async function getSomePost(currentpage) {
+export async function getSomePost(currentpage, nbrOfPage) {
     try {
         let postsList = await pb.collection('POST').getList(currentpage, 20, {
             sort: '-created',
@@ -428,7 +428,8 @@ export async function getGamePage(id) {
 
 //______________________________________________________librairie perso____________________________________________________
 
-
+//Fonction pour savoir si une jam est en cours, terminée ou à venir
+//renvoie un object repsonse avec .time un string past,present ou future et .info une phrase donnant une indication temporelle sur la jam
 function getJamStatus(jam) {
     const now = new Date();
     const start = new Date(jam.date_beginning);
@@ -474,55 +475,6 @@ function getJamStatus(jam) {
     };
 }
 
-// //Fonction pour savoir si une jam est en cours, terminée ou à venir
-// //renvoie un object repsonse avec .time un string past,present ou future et .info une phrase donnant une indication temporelle sur la jam
-// function getJamStatus(jam) {
-//     const now = new Date();
-//     const start = new Date(jam.date_beginning);
-//     const end = new Date(start.getTime() + jam.duration * 60 * 60 * 1000);
-
-//     let status;
-//     let timeDiff;
-//     let timeInfo;
-
-//     //Transforme la différence de temps en un truc lisible en mois, semaines, jours etc en fonction
-//     const msToTime = (timeDiff) => {
-//         const months = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30)); // 30 days in a month
-//         const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7)); // 7 days in a week
-//         const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 1 day in ms
-//         const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-//         const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-
-//         if (months > 0) return `${months} mois`;
-//         if (weeks > 0) return `${weeks} semaines`;
-//         if (days > 0) return `${days} jours`;
-//         if (hours > 0) return `${hours} heures`;
-//         return `${minutes} minutes`;
-//     };
-
-//     if (now < start) {
-//         // Si c'est dans le futur
-//         status = 'future';
-//         timeDiff = start - now;
-//         timeInfo = `Cette jam commencera dans ${msToTime(timeDiff)}`;
-//     } else if (now >= start && now <= end) {
-//         // Si c'est en cours
-//         status = 'present';
-//         timeDiff = end - now;
-//         timeInfo = `${msToTime(timeDiff)} avant la fin de cette jam`;
-//     } else {
-//         // Si c'est terminé
-//         status = 'past';
-//         timeDiff = now - end;
-//         timeInfo = `Cette jam s'est terminé il y a ${msToTime(timeDiff)}`;
-//     }
-
-//     let response = {
-//         "time": status,
-//         "info": timeInfo
-//     };
-//     return response;
-// }
 
 //Formatage d'une date iso en 00 mois
 function formatDate(dateString) {
