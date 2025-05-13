@@ -307,9 +307,9 @@ export async function getAllJamFiltered(popular, time) {
 
 //Fonction pour charger des posts par page, nécessite le paramètre currentPage qui est le numéro de la page
 //Fonction à utiliser sur la homepage et sur la page forum autant pour le chargement initial que pour charger plus de posts
-export async function getSomePost(currentpage, nbrOfPage) {
+export async function getSomePost(currentpage, nbrOfPost) {
     try {
-        let postsList = await pb.collection('POST').getList(currentpage, 20, {
+        let postsList = await pb.collection('POST').getList(currentpage, nbrOfPost, {
             sort: '-created',
             expand: 'user'
         });

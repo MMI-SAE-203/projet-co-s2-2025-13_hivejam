@@ -33,10 +33,13 @@ import {
     getUserTeams,
     getPopularJam,
     getRecentArticle,
+    getSomePost,
 } from "../../backend/backend.mjs";
 const userTeams = await getUserTeams(user?.id);
 const jamsPopulaire = await getPopularJam();
 const recentArticle = await getRecentArticle();
+const posts = await getSomePost(1,5);
+console.log(posts)
 ---
 
 <Layout>
@@ -73,7 +76,7 @@ const recentArticle = await getRecentArticle();
                                 </div>
                             </div>
                         ) : (
-                            <div class="text-center">
+                            <div class="text-center mb-10">
                                 <p>Vous n'avez aucune game jam en cours</p>
                             </div>
                         )}
@@ -102,8 +105,7 @@ const recentArticle = await getRecentArticle();
                 </div>
 
                 <div class="border-b-1 border-dark-gray">
-                    <Post />
-                    <Post />
+                    {posts?.map((post) => <Post {...post} />)}
                 </div>
             </section>
         </div>
