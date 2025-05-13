@@ -1,16 +1,19 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Book from "../../assets/svg/Book.svg";
-
-import { getArticle } from "../../../backend/backend.mjs";
+import Next from "../../assets/svg/Next.svg";
+import Prev from "../../assets/svg/Prev.svg";
+import { getArticle, getSimilarArticle } from "../../../backend/backend.mjs";
+import Article from "../../components/Card/Forum/Article.astro";
 
 const { id } = Astro.params;
 const article = await getArticle(id);
+const similarArticle = await getSimilarArticle(article?.topic);
 ---
 
 <Layout>
     <div class="px-10 py-20 space-y-20">
-        <article class="grid grid-cols-2 gap-8">
+        <section class="grid grid-cols-2 gap-8">
             <img src={article?.image_URL} alt="" class="max-h-100 justify-self-center" />
             <div class="flex flex-col justify-center items-center gap-8">
                 <h1 class="text-center">{article?.title}</h1>
@@ -25,11 +28,30 @@ const article = await getArticle(id);
                     <p>{article?.date}</p>
                 </div>
             </div>
-        </article>
-        <article class="space-y-10 px-100">
+        </section>
+        <section class="space-y-10 px-100">
             <h2>Article</h2>
             <div set:html={article?.text} class="flex flex-col gap-4"></div>
-        </article>
-        
+        </section>
+        <section class="space-y-10">
+            <h2>D'autre articles</h2>
+            <div class="flex flex-col">
+                <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                    {similarArticle.map((team) => (
+                        <div class="w-100">
+                            <Article {...team} />
+                        </div>
+                    ))}
+                </div>
+                <div class="flex justify-center gap-10">
+                    <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                        <Prev />
+                    </button>
+                    <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                        <Next />
+                    </button>
+                </div>
+            </div>
+        </section>
     </div>
 </Layout>
