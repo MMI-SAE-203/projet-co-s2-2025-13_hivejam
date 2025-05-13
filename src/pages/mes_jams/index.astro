@@ -10,7 +10,7 @@ import Prev from "../../assets/svg/Prev.svg";
 
 // Cécupération des donné utilisateur
 import Pocketbase from "pocketbase";
-const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
+const pb = new Pocketbase("https://hivejam.paolo-vincent.fr:443/");
 
 const cookies = Astro.cookies;
 const token = cookies.get("pb_auth")?.value;
@@ -40,7 +40,7 @@ const jamsPopulaire = await getPopularJam();
 
                     <section class="flex flex-col gap-10">
                         <div class="flex justify-between">
-                            <h2>Mes Jams en cours</h2>
+                            <h2>En cours</h2>
                             <div class="flex gap-2">
                                 <a href="/mes_jams" class="btn-light">
                                     Rejoindre
@@ -50,48 +50,61 @@ const jamsPopulaire = await getPopularJam();
                                 </a>
                             </div>
                         </div>
-                        <div class="flex flex-col">
-                            <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
-                                {userTeams?.present.map((team) => (
-                                    <Team {...team} />
-                                ))}
+                        {Object.keys(userTeams.present).length > 0 ? (
+                            <div class="flex flex-col">
+                                <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                                    {userTeams?.present.map((team) => (
+                                        <Team {...team} />
+                                    ))}
+                                </div>
+                                <div class="flex justify-center gap-10">
+                                    <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                        <Prev />
+                                    </button>
+                                    <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                        <Next />
+                                    </button>
+                                </div>
                             </div>
-                            <div class="flex justify-center gap-10">
-                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
-                                    <Prev />
-                                </button>
-                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
-                                    <Next />
-                                </button>
+                        ) : (
+                            <div class="text-center">
+                                <p>Vous n'avez aucune game jam en cours</p>
                             </div>
-                        </div>
+                        )}
                     </section>
 
                     <section class="flex flex-col gap-10">
                         <div class="flex">
                             <h2>À venir</h2>
                         </div>
-                        <div class="flex flex-col">
-                            <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
-                                {userTeams?.future.map((team) => (
-                                    <Team_medium {...team} />
-                                ))}
+                        {Object.keys(userTeams.future).length > 0 ? (
+                            <div class="flex flex-col">
+                                <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                                    {userTeams?.future.map((team) => (
+                                        <Team_medium {...team} />
+                                    ))}
+                                </div>
+                                <div class="flex justify-center gap-10">
+                                    <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                        <Prev />
+                                    </button>
+                                    <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                        <Next />
+                                    </button>
+                                </div>
                             </div>
-                            <div class="flex justify-center gap-10">
-                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
-                                    <Prev />
-                                </button>
-                                <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
-                                    <Next />
-                                </button>
+                        ) : (
+                            <div class="text-center">
+                                <p>Vous n'avez aucune game jam à venir</p>
                             </div>
-                        </div>
+                        )}
                     </section>
 
                     <section class="flex flex-col gap-10">
                         <div class="flex">
                             <h2>Terminée</h2>
                         </div>
+                        {Object.keys(userTeams.past).length > 0 ? (
                         <div class="flex flex-col">
                             <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
                                 {userTeams?.past.map((team) => (
@@ -107,6 +120,11 @@ const jamsPopulaire = await getPopularJam();
                                 </button>
                             </div>
                         </div>
+                        ) : (
+                            <div class="text-center">
+                                <p>Vous n'avez aucune game jam terminée</p>
+                            </div>
+                        )}
                     </section>
                 </div>
             ) : (

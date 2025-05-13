@@ -6,6 +6,8 @@ import Post from "../../components/Card/Forum/Post.astro";
 
 // Cécupération des donné utilisateur
 import Pocketbase from "pocketbase";
+import { getSomePost } from "../../../backend/backend.mjs";
+import { getRecentComment } from "../../../backend/backend.mjs";
 const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
 
 const cookies = Astro.cookies;
@@ -21,6 +23,16 @@ if (!user && pb.authStore.isValid) {
     await pb.collection("users").authRefresh();
     user = pb.authStore.model;
 }
+
+const pageParam = Astro.params;
+const page = parseInt(pageParam.page);
+
+let posts = await getSomePost(page, 1);
+let comments
+if (user) {
+    comments = await getRecentComment(user.id);
+}
+console.log(posts)
 ---
 
 <Layout>
@@ -29,9 +41,11 @@ if (!user && pb.authStore.isValid) {
             <h1>Forum</h1>
             <h2>Discussions récentes</h2>
             <section class="border-b-1 border-dark-gray">
-                <Post />
-                <Post />
+                {posts.posts?.map((post) => <Post {...post} />)}
             </section>
+            {(page > 1) ? (<a href={`/forum/${page-1}`}>Previous page</a>) : ''}
+            {(page < posts?.totalPages) ? (<a href={`/forum/${page+1}`}>Next page</a>) : ''}
+            
         </div>
 
         <div class="space-y-10">
@@ -42,21 +56,11 @@ if (!user && pb.authStore.isValid) {
                 {
                     user ? (
                         <div class="border-b border-dark-gray">
-                            <Reponses />
-                            <Reponses />
-                            <Reponses />
+                            {comments?.map((comment) => <Reponses {...comment} />)}
                         </div>
                     ) : (
                         <div class="space-y-4 col-start-1 col-end-4 display flex flex-col justify-center items-center">
-                            <h4>Vous n'êtes pas connectez</h4>
-                            <div class="flex items-center gap-2.5">
-                                <a href="/auth" class="btn-light">
-                                    Login
-                                </a>
-                                <a href="/auth" class="btn-full">
-                                    Sign Up
-                                </a>
-                            </div>
+                            <h4>Vous n'êtes pas connecté</h4>
                         </div>
                     )
                 }
