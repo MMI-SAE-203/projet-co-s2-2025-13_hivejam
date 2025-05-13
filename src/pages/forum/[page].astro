@@ -24,11 +24,15 @@ if (!user && pb.authStore.isValid) {
     user = pb.authStore.model;
 }
 
-const posts = await getSomePost(1,1);
+const pageParam = Astro.params;
+const page = parseInt(pageParam.page);
+
+let posts = await getSomePost(page, 1);
 let comments
 if (user) {
     comments = await getRecentComment(user.id);
 }
+console.log(posts)
 ---
 
 <Layout>
@@ -37,8 +41,11 @@ if (user) {
             <h1>Forum</h1>
             <h2>Discussions récentes</h2>
             <section class="border-b-1 border-dark-gray">
-                {posts?.map((post) => <Post {...post} />)}
+                {posts.posts?.map((post) => <Post {...post} />)}
             </section>
+            {(page > 1) ? (<a href={`/forum/${page-1}`}>Previous page</a>) : ''}
+            {(page < posts?.totalPages) ? (<a href={`/forum/${page+1}`}>Next page</a>) : ''}
+            
         </div>
 
         <div class="space-y-10">
@@ -53,7 +60,7 @@ if (user) {
                         </div>
                     ) : (
                         <div class="space-y-4 col-start-1 col-end-4 display flex flex-col justify-center items-center">
-                            <h4>Vous n'êtes pas connectés</h4>
+                            <h4>Vous n'êtes pas connecté</h4>
                         </div>
                     )
                 }

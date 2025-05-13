@@ -39,7 +39,6 @@ const userTeams = await getUserTeams(user?.id);
 const jamsPopulaire = await getPopularJam();
 const recentArticle = await getRecentArticle();
 const posts = await getSomePost(1,5);
-console.log(posts)
 ---
 
 <Layout>
@@ -105,7 +104,7 @@ console.log(posts)
                 </div>
 
                 <div class="border-b-1 border-dark-gray">
-                    {posts?.map((post) => <Post {...post} />)}
+                    {posts.posts?.map((post) => <Post {...post} />)}
                 </div>
             </section>
         </div>
