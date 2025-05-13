@@ -4,8 +4,8 @@ import Layout from "../../layouts/Layout.astro";
 import User from "../../assets/svg/User_orange.svg";
 
 const { id } = Astro.params;
-import { getTeam } from "../../../backend/backend.mjs";
-const team = await getTeam(id);
+import { getTeamBoard } from "../../../backend/backend.mjs";
+const team = await getTeamBoard(id);
 console.log(team);
 ---
 
@@ -18,21 +18,32 @@ console.log(team);
                 Inviter
             </a>
         </section>
-        <section class="">
+        <section class="space-y-10">
             <div class="flex justify-between items-center">
-                <h1>{team.expand.game_jam?.name}</h1>
-                <a href=`/toutes_les_jams/${team.expand.game_jam?.id}` class="btn-light">Page de la jam</a>
+                <h1>{team?.expand?.game_jam?.name}</h1>
+                <a href=`/toutes_les_jams/${team?.expand?.game_jam?.id}` class="btn-light">Page de la jam</a>
             </div>
-            <div>
-                <article>
-                    <h2>Compte à rebours</h2>
+            <div class="grid grid-cols-2 gap-10">
+                <article class="flex flex-col gap-4 items-center border-1 py-10 rounded-md">
                     {
-                        team.time == "present" ? (
-                            <p class="CD text-3xl">{team.time_info}</p>
+                        team?.time == "present" ? (
+                        <header>
+                            <h2>Compte à rebours</h2>
+                        </header>
+                            <div>
+                                <p>Se termine dans ...</p>
+                                <p class="CD font-black text-negative text-6xl">{team.time_info}</p>
+                            </div>
                         ) : (
-                            <p class="tiny">{team.time_info}</p>
+                            <p class="text-2xl">{team?.time_info}</p>
                         )
                     }
+                </article>
+                <article class="flex flex-col items-center justify-center gap-4">
+                    <header>
+                        <h2>thème</h2>
+                    </header>
+                    <p>{team?.expand?.game_jam?.theme}</p>
                 </article>
             </div>
         </section>  

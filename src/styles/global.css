@@ -53,11 +53,11 @@
 
 @layer components {
     .btn-light {
-        @apply flex items-center justify-center border-2 text-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl gap-2.5
+        @apply flex items-center justify-center border-2 text-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl gap-2.5 cursor-pointer
     }
 
     .btn-full {
-        @apply flex items-center justify-center text-white bg-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl gap-2.5
+        @apply flex items-center justify-center text-white bg-brand-1 uppercase text-base font-medium px-5 py-1 rounded-2xl gap-2.5 cursor-pointer 
     }
 
     .tiny {

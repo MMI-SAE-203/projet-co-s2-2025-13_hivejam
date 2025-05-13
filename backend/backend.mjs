@@ -374,8 +374,9 @@ export async function getPostPage(id) {
 export async function getTeamBoard(id) {
     try {
         let team = await pb.collection('TEAM').getOne(id, { expand: 'game_jam' });
-        team.expand.game_jam.time_info = getJamStatus(team.expand.game_jam).info;
-
+        let status = getJamStatus(team.expand.game_jam);
+        team.time_info = status.info;
+        team.time = status.time;
         for (let i in team.task) {
             team.task[i] = await pb.collection('TASK').getOne(team.task[i], { expand: 'user' });
             for (let j in team.task[i].expand.user) {
