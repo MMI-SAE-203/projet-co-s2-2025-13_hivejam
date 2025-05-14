@@ -124,6 +124,28 @@ export async function addJam(data, username, userid) {
     }
 }
 
+export async function addTask(data, teamid) {
+    try {
+        
+        const task = await pb.collection('TASK').create(data);
+
+        const teamRecord = await pb.collection("TEAM").getOne(teamid);
+        await pb.collection("TEAM").update(teamid, { task: [...teamRecord.task, task.id] });
+
+        return {
+            success: true,
+            message: "La Jam a bien été créer.",
+            redirect: `/mes_jams/${teamid}`
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors de la création de la jam : " + error,
+            redirect: `/mes_jams/${teamid}`
+        }
+    }
+}
+
 //_______________________________________________________Fonctions spécifiques_____________________________________________
 
 //Fonction pour récupérer les teams de l'utilisateurs donc ses participations aux jams
@@ -374,7 +396,7 @@ export async function getPostPage(id) {
 //c'est un peu long et dégueu mais ça passe, task est un array hein
 export async function getTeamBoard(id) {
     try {
-        let team = await pb.collection('TEAM').getOne(id, { expand: 'game_jam' });
+        let team = await pb.collection('TEAM').getOne(id, { expand: 'game_jam, users' });
         let status = getJamStatus(team.expand.game_jam);
         team.time_info = status.info;
         team.time = status.time;
@@ -383,6 +405,9 @@ export async function getTeamBoard(id) {
             for (let j in team.task[i].expand.user) {
                 team.task[i].expand.user[j].image_URL = pb.files.getURL(team.task[i].expand.user[j], team.task[i].expand.user[j].image)
             }
+        }
+        for (let i in team.expand.users) {
+            team.expand.users[i].image_URL = pb.files.getURL(team.expand.users[i], team.expand.users[i].image)
         }
 
         return team;

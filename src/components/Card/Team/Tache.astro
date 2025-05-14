@@ -3,6 +3,7 @@ import PP from "../../../assets/img/Rectangle_4.png";
 import Dots from "../../../assets/svg/Dots.svg";
 
 const tache = Astro.props;
+console.log(tache)
 ---
 
 <div class="grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-1 h-15 *:bg-light-gray *:flex *:items-center *:py-2 *:px-3 *:rounded-md">
@@ -13,8 +14,9 @@ const tache = Astro.props;
         {tache.description}
     </div>
     <div class="gap-4">
-        {
-            tache.expand.user.map((user) => (
+
+        <!-- {
+            tache?.expand?.user.map((user) => (
                 <a href=`/profile/${user.id}` class="flex items-center gap-2">
                     {user.image ? (
                         <img
@@ -28,6 +30,29 @@ const tache = Astro.props;
                     )}
                 </a>
             ))
+        } -->
+
+        {
+            Object.keys(tache.user).length > 0 ? (
+                
+            tache?.expand?.user.map((user) => (
+                <a href=`/profile/${user.id}` class="flex items-center gap-2">
+                    {user.image ? (
+                        <img
+                            src={user.image_URL}
+                            alt=""
+                            height="40px"
+                            width="40px"
+                        />
+                    ) : (
+                        <img src={PP.src} alt="" height="40px" width="40px" />
+                    )}
+                </a>
+            ))
+        
+            ) : (
+                <p>Pas de responsables</p>
+            )
         }
     </div>
     <div>
