@@ -19,7 +19,19 @@ if (Astro.request.method == "POST") {
 <Layout>
     <div class="px-10 py-20">
         <section class="flex justify-between items-center">
-            <p>{team?.name}</p>
+            <div class="flex gap-10 items-center">
+                <p>{team?.name}</p>
+                <div class="flex items-center gap-2">
+                    {
+                            team?.expand?.users.map((user) => (
+                            <div class="flex gap-2 items-center">
+                                <img src={user.image_URL} alt="" width="30px" height="30px"/>
+                                <p>{user.name}</p>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
             <a href="" class="btn-light">
                 <User />
                 Inviter
@@ -81,8 +93,8 @@ if (Astro.request.method == "POST") {
                         {
                             team?.expand?.users.map((user) => (
                                 <div class="flex gap-2">
-                                    <input type="checkbox" name="user" value={user.id}>
-                                    <img src={user.image_URL} alt="" width="40px">
+                                    <input type="checkbox" name="user" value={user.id} />
+                                    <img src={user.image_URL} alt="" width="40px" />
                                     <p>{user.name}</p>
                                 </div>
                             ))
