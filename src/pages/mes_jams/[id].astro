@@ -24,10 +24,10 @@ if (Astro.request.method == "POST") {
                 <div class="flex items-center gap-2">
                     {
                             team?.expand?.users.map((user) => (
-                            <div class="flex gap-2 items-center">
+                            <a href=`/profile/${user.id}` class="flex gap-2 items-center">
                                 <img src={user.image_URL} alt="" width="30px" height="30px"/>
                                 <p>{user.name}</p>
-                            </div>
+                            </a>
                         ))
                     }
                 </div>
