@@ -103,7 +103,8 @@ export async function addJam(data, username, userid) {
         const game_jam = jam.id;
         const team = await pb.collection("TEAM").create({
             name,
-            game_jam
+            game_jam,
+            "users": userid
         });
 
         const userRecord = await pb.collection("users").getOne(userid);
