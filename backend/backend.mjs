@@ -141,7 +141,7 @@ export async function addTask(data, teamid) {
         return {
             success: false,
             message: "Il y a eu un problème lors de la création de la jam : " + error,
-            redirect: `/mes_jams/${teamid}`
+            redirect: `/mes_jams/${teamid}?error`
         }
     }
 }
