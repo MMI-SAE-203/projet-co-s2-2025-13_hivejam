@@ -27,7 +27,7 @@ if (!user && pb.authStore.isValid) {
 const pageParam = Astro.params;
 const page = parseInt(pageParam.page);
 
-let posts = await getSomePost(page, 1);
+let posts = await getSomePost(page, 2);
 let comments
 if (user) {
     comments = await getRecentComment(user.id);
@@ -37,18 +37,24 @@ console.log(posts)
 
 <Layout>
     <div class="grid grid-cols-4 gap-10 p-10">
-        <div class="space-y-12 col-start-1 col-end-4">
+        <div class="space-y-12 col-start-1 col-span-3">
             <h1>Forum</h1>
             <h2>Discussions récentes</h2>
             <section class="border-b-1 border-dark-gray">
                 {posts.posts?.map((post) => <Post {...post} />)}
             </section>
-            {(page > 1) ? (<a href={`/forum/${page-1}`}>Previous page</a>) : ''}
-            {(page < posts?.totalPages) ? (<a href={`/forum/${page+1}`}>Next page</a>) : ''}
-            
+            <div class="flex gap-4 justify-center">
+                <div class="w-full flex justify-end">
+                    {(page > 1) ? (<a href={`/forum/${page-1}`}>&lt; page précédente</a>) : ''}
+                </div>
+                <p class="rounded-full min-w-7 bg-brand-1 font-medium text-white text-xl text-center">{page}</p>
+                <div class="w-full flex">
+                    {(page < posts?.totalPages) ? (<a href={`/forum/${page+1}`}>page suivante &gt;</a>) : ''}
+                </div>
+            </div>
         </div>
 
-        <div class="space-y-10">
+        <div class="space-y-10 col-span-1">
             <section
                 class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md"
             >

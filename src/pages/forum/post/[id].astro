@@ -1,0 +1,77 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Comment from "../../../assets/svg/Comment.svg";
+import CommentCard from "../../../components/Card/Forum/CommentCard.astro";
+
+// Cécupération des donné utilisateur
+import Pocketbase from "pocketbase";
+import { getPostPage } from "../../../../backend/backend.mjs";
+const pb = new Pocketbase("https://hivejam.paolo-vincent.fr:443/");
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+
+const { id } = Astro.params;
+
+const post = await getPostPage(id);
+console.log(post.comment[0]);
+---
+
+<Layout>
+    <div class="flex flex-col gap-8 p-10 mx-30">
+        <a class="btn-light w-fit" href="javascript:history.back()"
+            >Retour au forum</a
+        >
+        <article
+            class="flex flex-col gap-4 px-2 py-4 border-y-1 border-dark-gray"
+        >
+            <div class="flex gap-2 items-center">
+                {
+                    !(post.expand.user.image_URL.length == 0) ? (
+                        <img class="h-8 w-8" src={post.expand.user.image_URL} />
+                    ) : (
+                        <span class="bg-secondary-2 h-8 w-8 rounded-md" />
+                    )
+                }
+                <p class="tiny">{post.expand.user.name}</p>
+            </div>
+            <header>
+                <h4 class="font-semibold text-xl">{post.title}</h4>
+            </header>
+            <p>{post.text}</p>
+            {
+                post.image_URL ? (
+                    <img
+                        class="max-h-200 object-contain"
+                        src={post.image_URL}
+                        alt="Image du post"
+                        loading="lazy"
+                    />
+                ) : (
+                    ""
+                )
+            }
+            <div class="flex gap-1 items-center self-end *:h-6">
+                {post.comment_NB}
+                <Comment />
+            </div>
+        </article>
+        <div class="rounded-full border-1 border-dark-gray p-4">
+            Ajouter un commentaire
+        </div>
+        <div class="flex flex-col">
+            {post.comment.map((comment) => <CommentCard {comment} />)}
+        </div>
+    </div>
+</Layout>
