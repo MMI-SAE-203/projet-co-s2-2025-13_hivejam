@@ -359,6 +359,7 @@ export async function getPostPage(id) {
     try {
         let post = await getPost(id);
         post.comment = await getCommentTree(post.comment);
+        post.comment_NB = await getPostCommentNB(post.id);
         return post;
     } catch (error) {
         console.log('Une erreur est survenue en lisant des entrées dans la collection POST');

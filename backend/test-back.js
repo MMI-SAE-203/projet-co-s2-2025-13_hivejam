@@ -20,8 +20,8 @@ import { getAllArticle, getAllJamFiltered, getArticle, getCommentTree, getGame, 
 // const records = await getTask('g9hzk4emyk9ikl7');
 // console.log(JSON.stringify(records,null,2));
 
-const records = await getArticle('3mtxep6tja37816');
-console.log(JSON.stringify(records,null,2));
+// const records = await getArticle('3mtxep6tja37816');
+// console.log(JSON.stringify(records,null,2));
 
 // const records = await getUserTeams('8x7n9a6bo63hz29');
 // console.log(JSON.stringify(records,null,2));
@@ -69,8 +69,8 @@ console.log(JSON.stringify(records,null,2));
 // const records = await getRecentComment('8x7n9a6bo63hz29');
 // console.log(JSON.stringify(records,null,2));
 
-// const records = await getPostPage('8lms3915i3u0jsk');
-// console.log(JSON.stringify(records,null,2));
+const records = await getPostPage('8lms3915i3u0jsk');
+console.log(JSON.stringify(records,null,2));
 
 // const records = await getCommentTree(['21l50k3v91i5s24']);
 // console.log(JSON.stringify(records,null,2));

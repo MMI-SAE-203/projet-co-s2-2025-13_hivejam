@@ -8,7 +8,6 @@ import Post from "../../components/Card/Forum/Post.astro";
 import Pocketbase from "pocketbase";
 import { getSomePost } from "../../../backend/backend.mjs";
 import { getRecentComment } from "../../../backend/backend.mjs";
-import { directive } from "alpinejs";
 const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
 
 const cookies = Astro.cookies;
@@ -38,7 +37,7 @@ console.log(posts)
 
 <Layout>
     <div class="grid grid-cols-4 gap-10 p-10">
-        <div class="space-y-12 col-start-1 col-end-4">
+        <div class="space-y-12 col-start-1 col-span-3">
             <h1>Forum</h1>
             <h2>Discussions récentes</h2>
             <section class="border-b-1 border-dark-gray">
@@ -55,7 +54,7 @@ console.log(posts)
             </div>
         </div>
 
-        <div class="space-y-10">
+        <div class="space-y-10 col-span-1">
             <section
                 class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md"
             >

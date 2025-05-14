@@ -44,7 +44,7 @@ const posts = await getSomePost(1,5);
 
 <Layout>
     <div class="grid grid-cols-4 gap-10 p-10">
-        <div class="space-y-10 col-start-1 col-end-4">
+        <div class="space-y-10 col-start-1 col-span-3">
             {
                 user ? (
                     <section class="flex flex-col gap-10">
@@ -100,7 +100,7 @@ const posts = await getSomePost(1,5);
                 <div class="flex justify-between">
                     <h2>Discussions récentes</h2>
                     <div class="flex gap-2">
-                        <a href="/forum" class="btn-light">Aller au forum</a>
+                        <a href=`/forum/${1}` class="btn-light">Aller au forum</a>
                     </div>
                 </div>
 

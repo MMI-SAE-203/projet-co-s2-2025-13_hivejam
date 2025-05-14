@@ -4,8 +4,13 @@ const { ...comment } = Astro.props;
 
 <a href="" class="flex flex-col gap-2 p-2 border-t border-dark-gray">
     <div class="flex items-center gap-2">
-        <span class="bg-secondary-2 h-8 w-8"></span>
-        <p>{comment.expand.user.name}</p>
+        {!(comment.expand.user.image_URL.length == 0) ? (
+                    <img class="h-8 w-8" src={comment.expand.user.image_URL}/>
+                ) : (
+                    <span class="bg-secondary-2 h-8 w-8 rounded-md"></span>
+                )
+            }
+        <p class="tiny">{comment.expand.user.name}</p>
     </div>
     <p class="line-clamp-2">
         {comment.text}
