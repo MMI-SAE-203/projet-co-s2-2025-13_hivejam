@@ -13,8 +13,9 @@ const { ...post } = Astro.props;
         <h4 class="font-semibold text-xl">{post.title}</h4>
     </header>
     <p>{post.text}</p>
-    <a href="" class="flex gap-1 items-center self-end *:h-6">
+    {post.image_URL ? <img class="h-100" src={post.image_URL} alt="Image du post" loading="lazy"> : ""}
+    <div class="flex gap-1 items-center self-end *:h-6">
         {post.comment_NB}
         <Comment />
-    </a>
+    </div>
 </article>
