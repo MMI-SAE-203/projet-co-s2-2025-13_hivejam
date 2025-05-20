@@ -1,0 +1,61 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import Team_medium from "../../components/Card/Team/Team_medium.astro";
+import Prev from "../../assets/svg/Prev.svg";
+import Next from "../../assets/svg/Next.svg";
+
+import { getUser, getUserTeams } from "../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+const user = await getUser(id);
+const userTeams = await getUserTeams(id);
+---
+
+<Layout>
+    <div>
+        <section class="flex justify-center items-center gap-20">
+            <img src={user?.image_URL} alt="" />
+            <h1>{user?.name}</h1>
+        </section>
+        <section>
+            <h2>Biographie</h2>
+            {
+                user?.bio ? (
+                    <p>{user?.bio}</p>
+                ) : (
+                    <p>Cette utilisateur n'a pas de biographie</p>
+                )
+            }
+        </section>
+        <section class="flex flex-col gap-10">
+            <div class="flex">
+                <h2>Jam Participer</h2>
+            </div>
+            {
+                Object.keys(userTeams.past).length > 0 ? (
+                    <div class="flex flex-col">
+                        <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
+                            {userTeams?.past.map((team) => (
+                                <Team_medium {...team} />
+                            ))}
+                        </div>
+                        <div class="flex justify-center gap-10">
+                            <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                <Prev />
+                            </button>
+                            <button class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer">
+                                <Next />
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <div class="text-center">
+                        <p>Cette utilisateur n'a jamais participer a une Jam</p>
+                    </div>
+                )
+            }
+        </section>
+        
+    </div>
+</Layout>

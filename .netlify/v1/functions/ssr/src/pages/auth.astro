@@ -1,0 +1,182 @@
+---
+import "../styles/global.css";
+
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
+
+let error = "";
+let message = "";
+const cookies = Astro.cookies;
+
+// Donné user si connecter
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+  pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+  await pb.collection("users").authRefresh();
+  user = pb.authStore.model;
+}
+
+// Récupération formulaire
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const formType = formData.get("formType");
+
+  const email = formData.get("email");
+  const password = formData.get("password");
+  console.log(email);
+
+  try {
+    if (formType === "register") {
+      const data = {
+        "email": formData.get("email"),
+        "password": formData.get("password"),
+        "passwordConfirm": formData.get("passwordConfirm"),
+        "name": formData.get("name"),
+        "subscription": "free"
+      }
+      console.log(data)
+      await pb.collection("users").create(data);
+      message = "✅ Compte créé. Connectez-vous.";
+    }
+
+    if (formType === "login") {
+      const authData = await pb
+        .collection("users")
+        .authWithPassword(email, password);
+      Astro.cookies.set("pb_auth", pb.authStore.token, {
+        path: "/",
+        httpOnly: true,
+      });
+      return Astro.redirect("/");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+console.log(pb.authStore.isValid);
+console.log(pb.authStore.record?.id);
+console.log(user?.name);
+
+if (!pb.authStore.isValid) {
+  error = "L'adresse e-mail ou le mot de passe est incorrect."
+}
+---
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Document</title>
+  </head>
+  <body>
+    {
+      user ? (
+        <>
+          <p>
+            Bienvenue, <strong>{user.name || user.email}</strong> 👋
+            <a href="/logout">Logout</a>
+          </p>
+        </>
+      ) : (
+        <>
+          <div class="flex absolute inset-0">
+            <form
+              method="POST"
+              class="flex flex-col justify-center items-center gap-12.5 w-full"
+            >
+              <h1>Connecte toi !</h1>
+              <input type="hidden" name="formType" value="login" />
+
+              {error && <p class=" text-negative">{error}</p>}
+              {message && <p class="">{message}</p>}
+              <div class="space-y-5">
+                <div>
+                  <label for="email">Votre email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    required
+                    class="btn-light normal-case"
+                  />
+                </div>
+                <div>
+                  <label for="email">Votre mot de passe</label>
+                  <input
+                    name="password"
+                    type="password"
+                    placeholder="Mot de passe"
+                    required
+                    class="btn-light normal-case"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn-full bg-black cursor-pointer">
+                Se connecter
+              </button>
+            </form>
+
+            <form
+              method="POST"
+              class="flex flex-col justify-center items-center bg-secondary-1 w-full gap-12.5"
+            >
+              <h1>Nouveaux ?</h1>
+              <input type="hidden" name="formType" value="register" />
+              <div class="space-y-5">
+                <div>
+                  <label for="">Votre pseudo</label>
+                  <input
+                    name="name"
+                    type="text"
+                    placeholder="Pseudo"
+                    required
+                    class="btn-light normal-case border-white text-black"
+                  />
+                </div>
+                <div>
+                  <label for="">Votre email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    required
+                    class="btn-light normal-case border-white text-black"
+                  />
+                </div>
+                <div>
+                  <label for="">Votre mot de passe</label>
+                  <input
+                    name="password"
+                    type="password"
+                    placeholder="Mot de passe"
+                    required
+                    class="btn-light normal-case border-white text-black"
+                  />
+                </div>
+                <div>
+                  <label for="">Confirmer votre mot de passe</label>
+                  <input
+                    name="passwordConfirm"
+                    type="password"
+                    placeholder="Confirmer"
+                    required
+                    class="btn-light normal-case border-white text-black"
+                  />
+                </div>
+              </div>
+              <button type="submit" class="btn-full bg-black cursor-pointer">
+                Creer un compte
+              </button>
+            </form>
+          </div>
+        </>
+      )
+    }
+  </body>
+</html>

@@ -1,0 +1,76 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import Reponses from "../../components/Card/Forum/Reponses.astro";
+import Post from "../../components/Card/Forum/Post.astro";
+
+// Cécupération des donné utilisateur
+import Pocketbase from "pocketbase";
+import { getSomePost } from "../../../backend/backend.mjs";
+import { getRecentComment } from "../../../backend/backend.mjs";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+
+const pageParam = Astro.params;
+const page = parseInt(pageParam.page);
+
+let posts = await getSomePost(page, 2);
+let comments
+if (user) {
+    comments = await getRecentComment(user.id);
+}
+console.log(posts)
+---
+
+<Layout>
+    <div class="grid grid-cols-4 gap-10 p-10">
+        <div class="space-y-12 col-start-1 col-span-3">
+            <h1>Forum</h1>
+            <h2>Discussions récentes</h2>
+            <section class="border-b-1 border-dark-gray">
+                {posts.posts?.map((post) => <Post {...post} />)}
+            </section>
+            <div class="flex gap-4 justify-center">
+                <div class="w-full flex justify-end">
+                    {(page > 1) ? (<a href={`/forum/${page-1}`}>&lt; page précédente</a>) : ''}
+                </div>
+                <p class="rounded-full min-w-7 bg-brand-1 font-medium text-white text-xl text-center">{page}</p>
+                <div class="w-full flex">
+                    {(page < posts?.totalPages) ? (<a href={`/forum/${page+1}`}>page suivante &gt;</a>) : ''}
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-10 col-span-1">
+            <section
+                class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md"
+            >
+                <h2>Réponses</h2>
+                {
+                    user ? (
+                        <div class="border-b border-dark-gray">
+                            {comments?.map((comment) => <Reponses {...comment} />)}
+                        </div>
+                    ) : (
+                        <div class="space-y-4 col-start-1 col-end-4 display flex flex-col justify-center items-center">
+                            <h4>Vous n'êtes pas connecté</h4>
+                        </div>
+                    )
+                }
+            </section>
+        </div>
+    </div>
+</Layout>

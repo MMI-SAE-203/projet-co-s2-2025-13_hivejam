@@ -1,0 +1,13 @@
+---
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
+
+const cookies = Astro.cookies;
+
+// Supprime l'auth
+pb.authStore.clear();
+cookies.delete('pb_auth', { path: '/' });
+
+// Redirection vers la home ou login
+return Astro.redirect('/');
+---

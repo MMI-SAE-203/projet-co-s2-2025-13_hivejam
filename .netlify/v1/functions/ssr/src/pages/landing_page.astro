@@ -1,0 +1,182 @@
+---
+import "../styles/global.css";
+
+import Logo from "../assets/svg/logo.svg";
+import Facebook from "../assets/svg/icon_facebook.svg";
+import Insta from "../assets/svg/icon_insta.svg";
+import Tiktok from "../assets/svg/icon_tiktok.svg";
+import X from "../assets/svg/icon_twitter.svg";
+
+import Hexagone from "../assets/img/landing_page/hexagon_hero.png";
+import Free from "../assets/img/abeille_free.png";
+import Premium from "../assets/img/abeille_premium.png";
+import Royal from "../assets/img/abeille_royal.png";
+
+import Contact from "../assets/svg/landing_page/icon_contact.svg";
+import Offer from "../assets/svg/landing_page/icon_tickets.svg";
+import Pourquoi from "../assets/svg/landing_page/icon_interogation.svg";
+import Fonction from "../assets/svg/landing_page/icon_fonctionalite.svg";
+import Info from "../assets/svg/landing_page/icon_info.svg";
+
+import Pen from "../assets/svg/landing_page/icon_pen.svg";
+import Partage from "../assets/svg/landing_page/icon_partage.svg";
+import Code from "../assets/svg/landing_page/icon_code.svg";
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Landing Page</title>
+
+        <script>
+            // On cible les éléments à modifier
+            const toggle = document.querySelector("#menu-btn");
+            const nav = document.querySelector("#menu");
+            const page = document.body;
+
+            // Vérifier si les éléments existent avant d'ajouter l'événement
+            if (toggle && nav) {
+                toggle.addEventListener("click", () => {
+                    const isOpen = toggle.ariaExpanded === "true";
+                    const isClosed = !isOpen;
+                    // Mise à jour des attributs ARIA pour accessibilité
+                    toggle.ariaExpanded = String(isClosed);
+                    nav.ariaHidden = String(isOpen);
+                    page.classList.toggle("noscroll", isClosed);
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <header
+            class="flex justify-between items-center px-5 py-2.5"
+            x-data="{open: false}"
+        >
+            <a href="/landing_page" class="z-30" aria-label="Logo">
+                <Logo />
+            </a>
+            <button
+                class="group relative z-30 flex h-6 w-8 flex-col justify-between *:h-[2px] *:w-full *:bg-black *:transition-all *:duration-300 *:ease"
+                id="menu-btn"
+                aria-label="Menu"
+                aria-controls="menu"
+                :aria-expanded="open"
+            >
+                <span
+                    class="group-aria-expanded:translate-y-[10.5px] group-aria-expanded:rotate-225"
+                ></span>
+                <span class="group-aria-expanded:opacity-0"></span>
+                <span
+                    class="group-aria-expanded:-translate-y-[10.5px] group-aria-expanded:rotate-135"
+                ></span>
+            </button>
+
+            <nav
+                class="visible px-5 pt-30 fixed z-20 inset-0 bg-white text-base font-bold text-black opacity-100 transition-all duration-300 ease-in-out aria-hidden:invisible aria-hidden:opacity-0"
+                id="menu"
+                :aria-hidden="!open"
+            >
+                <div class="flex flex-col gap-7">
+                    <a href="" class="flex gap-5">
+                        <Pourquoi />
+                        Pourquoi utiliser Hive Jam
+                    </a>
+                    <span class="bg-brand-1 h-0.5 w-full"></span>
+                    <a href="" class="flex gap-5">
+                        <Offer />
+                        Offres
+                    </a>
+                    <span class="bg-brand-1 h-0.5 w-full"></span>
+                    <a href="" class="flex gap-5">
+                        <Fonction />
+                        Fonctionnalités
+                    </a>
+                    <span class="bg-brand-1 h-0.5 w-full"></span>
+                    <a href="" class="flex gap-5">
+                        <Info />
+                        À Propos
+                    </a>
+                    <span class="bg-brand-1 h-0.5 w-full"></span>
+                    <a href="" class="flex gap-5">
+                        <Contact />
+                        Contact
+                    </a>
+                </div>
+                <div
+                    class="flex justify-between px-5 absolute left-5 right-5 bottom-5"
+                >
+                    <Facebook />
+                    <Insta />
+                    <Tiktok />
+                    <X />
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero -->
+        <div class="relative overflow-hidden bg-[url(../assets/img/landing_page/fond_hero.png)] bg-dark bg-blend-multiply bg-cover bg-no-repeat bg-center px-5 py-10 text-white flex flex-col gap-6">
+            <h1 class="text-4xl z-10">Hive Jam</h1>
+            <p class="text-base font-normal z-10">
+                Envie de rejoindre ou de créer une Game Jam ? <br> Rejoignez une
+                communauté active, défiez vos compétences et apprenez avec Hive
+                Jam !
+            </p>
+            <a href="/login" class="text-brand-1 border-2 rounded-2xl px-2.5 py-1.25 self-end">Sign Up</a>
+            <img src={Hexagone.src} alt="Décoration en forme d'héxagone orange" class="absolute left-0 top-2.5" width="200px">
+        </div>
+
+        <!-- Fonctionalité -->
+        <section class="flex flex-col px-18 py-5 gap-14">
+            <div class="flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+                <Pen />
+                <h2 class="text-xl font-bold self-start">Créer</h2>  
+                <p class="self-start">votre propre Jam</p>
+            </div>
+            <div class="self-end flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+                <Partage />
+                <h2 class="text-xl font-bold self-start">Partager</h2>  
+                <p class="self-start">vos créations</p>
+            </div>
+            <div class="flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+                <Code />
+                <h2 class="text-xl font-bold self-start">Jamer</h2>  
+                <p class="self-start">et tester vos compétences</p>
+            </div>
+        </section>
+
+        <!-- Offres -->
+        <section class="flex flex-col gap-12.5 p-7.5 bg-drak-gray">
+            <div class="text-white flex gap-10 items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
+                    <img src={Free.src} alt="Abeille" width="100px">
+                </div>
+                <p>Crée des Jams et inviter jusqu'à 5 de vos amies</p>
+            </div>
+            <div class="text-white flex gap-10 items-center">
+                <p>Pouvoir générer des thèmes à l'infini</p>
+                <div>
+                    <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
+                    <img src={Premium.src} alt="Abeille" width="100px">
+                </div>
+            </div>
+            <div class="text-white flex gap-10 items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
+                    <img src={Royal.src} alt="Abeille" width="100px">
+                </div>
+                <p>Inviter plus de 50 personnes par Jam</p>
+            </div>
+        </section>
+
+        <!-- Projets -->
+        <section class="px-10 py-9">
+            <h2 class="font-bold">Quelque projet</h2>
+            <div>
+                <div></div>
+            </div>
+        </section>
+    </body>
+</html>

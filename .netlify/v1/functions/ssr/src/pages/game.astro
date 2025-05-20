@@ -1,0 +1,30 @@
+---
+import { addGame } from "../../backend/backend.mjs";
+
+if (Astro.request.method === "POST") {
+    // Vérifie si la méthode de la requête est POST
+    const data = await Astro.request.formData(); // Récupère les données du formulaire de la requête
+    console.log(data); // Affiche les données du formulaire dans la console
+    await addGame(data);
+}
+---
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Add a Game</title>
+    </head>
+
+    <body>
+        <h1>Add a Game</h1>
+        <form action="/game" method="POST" enctype="multipart/form-data">
+            <input type="text" name="name" />
+            <input type="file" name="file_web" />
+            <input type="submit" value="Ajouter" />
+        </form>
+
+        <iframe src="https://hivejam-games.paolo-vincent.fr/web/"></iframe>
+
+    </body>
+</html>
