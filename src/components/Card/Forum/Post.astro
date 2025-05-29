@@ -8,9 +8,9 @@ const { ...post } = Astro.props;
     <article class="flex flex-col gap-4 px-2 py-4 border-t-1 border-dark-gray">
         <div class="flex gap-2 items-center">
             {!(post.expand.user.image_URL.length == 0) ? (
-                    <img class="h-8 w-8" src={post.expand.user.image_URL}/>
+                    <img class="hexagon w-10.5 h-12 object-center -z-30" src={post.expand.user.image_URL}/>
                 ) : (
-                    <span class="bg-secondary-2 h-8 w-8 rounded-md"></span>
+                    <span class="bg-secondary-2 hexagon w-10.5 h-12 object-center -z-30"></span>
                 )
             }
             <p class="tiny">{post.expand.user.name}</p>
