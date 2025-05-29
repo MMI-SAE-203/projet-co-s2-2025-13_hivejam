@@ -7,10 +7,10 @@ const article = Astro.props;
 ---
 
 <a href=`/actu/${article.id}` class="h-fit">
-    <article class="space-y-2.5 h-fit">
+    <article class="space-y-2.5 h-fit min-w-60">
         <img src={article.image_URL} alt="Illustration de l'article" class="h-40 w-full">
         <h4 class="line-clamp-2">{article?.title}</h4>
-        <div class="flex gap-2.5 items-center tiny">
+        <div class="flex gap-2.5 items-center justify-between tiny">
             <p class="border rounded-md px-2.5 py-1">{article.topic}</p>
             <p>{article.date}</p>
             <span class="bg-dark-gray w-0.25 h-3"></span>
