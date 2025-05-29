@@ -124,6 +124,32 @@ export async function addJam(data, username, userid) {
     }
 }
 
+export async function joinJam(jamname, game_jam, username, userid) {
+    try {
+        const name = "Équipe de " + username + " - " + jamname;
+        const team = await pb.collection("TEAM").create({
+            name,
+            game_jam,
+            "users": userid
+        });
+
+        const userRecord = await pb.collection("users").getOne(userid);
+        await pb.collection("users").update(userid, { team: [...userRecord.team, team.id] });
+
+        return {
+            success: true,
+            message: "La Jam a bien été créer.",
+            redirect: `/mes_jams/${team.id}`
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors de la création de la team : " + error,
+            redirect: `/toutes_les_jams/${jamid}?error`
+        }
+    }
+}
+
 export async function addTask(data, teamid) {
     try {
         

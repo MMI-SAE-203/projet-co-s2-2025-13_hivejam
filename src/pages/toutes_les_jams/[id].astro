@@ -6,17 +6,45 @@ import Game from "../../components/Card/Game/Game.astro";
 import Next from "../../assets/svg/Next.svg";
 import Prev from "../../assets/svg/Prev.svg";
 
+// Récupération des donné utilisateur
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+
 const { id } = Astro.params;
-import { getJamPage } from "../../../backend/backend.mjs";
+import { getJamPage, joinJam } from "../../../backend/backend.mjs";
 const jam = await getJamPage(id);
 console.log(jam);
+
+if (Astro.request.method == "POST") {
+    const data = await Astro.request.formData();
+    console.log(data);
+    const message = await joinJam(jam?.name, jam?.id, user?.name, user?.id)
+    console.log(message);
+    return Astro.redirect(message.redirect)
+}
 ---
 
 <Layout>
     <div class="px-10 py-20 space-y-10">
         <section class="flex justify-between items-center">
             <h1>{jam?.name}</h1>
-            <a href="" class="btn-full">Rejoindre</a>
+            <form method="post">
+                <button type="submit" class="btn-full">Rejoindre</a>
+            </form>
         </section>
         <section class="grid grid-cols-2 gap-10">
             <img src={jam?.image_URL} alt="" class="col-start-1" />
