@@ -10,10 +10,11 @@ import { getUser, getUserTeams } from "../../../backend/backend.mjs";
 const { id } = Astro.params;
 const user = await getUser(id);
 const userTeams = await getUserTeams(id);
+
+console.log(userTeams.past)
 ---
 
 <Layout>
-    <div>
         <section class="flex justify-center items-center gap-20">
             <img src={user?.image_URL} alt="" />
             <h1>{user?.name}</h1>
@@ -56,6 +57,4 @@ const userTeams = await getUserTeams(id);
                 )
             }
         </section>
-        
-    </div>
 </Layout>
