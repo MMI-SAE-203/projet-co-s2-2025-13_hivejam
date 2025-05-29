@@ -53,10 +53,10 @@ if (Astro.request.method == "POST") {
                     <h2>Compte à rebours</h2>
                     <div>
                         {
-                            jam.time == "present" ? (
+                            jam?.time == "present" ? (
                                 <p class="CD text-3xl">{jam.time_info}</p>
                             ) : (
-                                <p class="tiny">{jam.time_info}</p>
+                                <p class="tiny">{jam?.time_info}</p>
                             )
                         }
                     </div>
