@@ -59,7 +59,7 @@ const posts = await getSomePost(1,5);
                                 </a>
                             </div>
                         </div>
-                        {Object.keys(userTeams.present).length > 0 ? (
+                        {userTeams?.present ? (
                             <div class="flex flex-col">
                                 <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
                                     {userTeams?.present.map((team) => (
