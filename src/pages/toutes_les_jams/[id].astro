@@ -25,14 +25,14 @@ if (!user && pb.authStore.isValid) {
 }
 
 const { id } = Astro.params;
-import { getJamPage, joinJam } from "../../../backend/backend.mjs";
+import { getJamPage, createTeamForJam } from "../../../backend/backend.mjs";
 const jam = await getJamPage(id);
 console.log(jam);
 
 if (Astro.request.method == "POST") {
     const data = await Astro.request.formData();
     console.log(data);
-    const message = await joinJam(jam?.name, jam?.id, user?.name, user?.id)
+    const message = await createTeamForJam(jam?.name, jam?.id, user?.name, user?.id)
     console.log(message);
     return Astro.redirect(message.redirect)
 }
