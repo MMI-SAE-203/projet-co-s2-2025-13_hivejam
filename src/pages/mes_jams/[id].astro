@@ -16,10 +16,9 @@ if (Astro.request.method == "POST") {
     return Astro.redirect(message.redirect);
 }
 ---
-
 <Layout>
     <div class="px-10 py-20">
-        <section class="flex justify-between items-center">
+        <section x-data="{invite: false}"  class="flex justify-between items-center">
             <div class="flex gap-10 items-center">
                 <p>{team?.name}</p>
                 <div class="flex items-center gap-2">
@@ -33,10 +32,10 @@ if (Astro.request.method == "POST") {
                     }
                 </div>
             </div>
-            <a href="" class="btn-light">
+            <button id="copy-btn" data-link=`http://localhost:4321/join/${team?.id}` class="btn-light">
                 <User />
                 Inviter
-            </a>
+            </button>
         </section>
         <section class="space-y-10">
             <div class="flex justify-between items-center">
@@ -143,4 +142,15 @@ if (Astro.request.method == "POST") {
     }
 
     setInterval(count, 1000);
+</script>
+
+<script is:client>
+      document.getElementById('copy-btn')?.addEventListener('click', () => {
+        const link = document.getElementById('copy-btn').dataset.link;
+        if (!link) return;
+
+        navigator.clipboard.writeText(link)
+          .then(() => alert('Lien copié dans le presse-papier !'))
+          .catch((err) => alert('Erreur lors de la copie : ' + err));
+      });
 </script>

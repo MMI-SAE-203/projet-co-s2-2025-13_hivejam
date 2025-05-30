@@ -196,6 +196,16 @@ export async function addTask(data, teamid) {
     }
 }
 
+// fonction copier un text
+export  function copyLienIvite(teamid) {
+    let btn = document.getElementById("copy-btn");
+
+    btn?.addEventListener('click', () => {
+        navigator.clipboard.writeText(`http://localhost:4321/mes_jams/${teamid}`);
+        alert("Lien d'invitation copier")
+    })
+}
+
 //_______________________________________________________Fonctions spécifiques_____________________________________________
 
 //Fonction pour récupérer les teams de l'utilisateurs donc ses participations aux jams
