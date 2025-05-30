@@ -24,6 +24,6 @@ if (user) {
     const message = await joinJam(id, user.id);
     return Astro.redirect(message.redirect);
 } else {
-    return Astro.redirect("/auth" );
+    return Astro.redirect(`/auth?from=/join/${id}`);
 }
 ---
