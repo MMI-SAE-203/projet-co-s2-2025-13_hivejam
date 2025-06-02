@@ -10,12 +10,13 @@ import { getUser, getUserTeams } from "../../../backend/backend.mjs";
 const { id } = Astro.params;
 const user = await getUser(id);
 const userTeams = await getUserTeams(id);
+
+console.log(userTeams?.past)
 ---
 
 <Layout>
-    <div>
         <section class="flex justify-center items-center gap-20">
-            <img src={user?.image_URL} alt="" />
+            <img src={user?.image_URL} alt="" class="w-1/4"/>
             <h1>{user?.name}</h1>
         </section>
         <section>
@@ -33,7 +34,7 @@ const userTeams = await getUserTeams(id);
                 <h2>Jam Participer</h2>
             </div>
             {
-                Object.keys(userTeams.past).length > 0 ? (
+                userTeams?.past ? (
                     <div class="flex flex-col">
                         <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
                             {userTeams?.past.map((team) => (
@@ -56,6 +57,4 @@ const userTeams = await getUserTeams(id);
                 )
             }
         </section>
-        
-    </div>
 </Layout>

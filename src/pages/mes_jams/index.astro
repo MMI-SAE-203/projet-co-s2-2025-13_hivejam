@@ -50,7 +50,7 @@ const jamsPopulaire = await getPopularJam();
                                 </a>
                             </div>
                         </div>
-                        {Object.keys(userTeams.present).length > 0 ? (
+                        {userTeams?.present ? (
                             <div class="flex flex-col">
                                 <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
                                     {userTeams?.present.map((team) => (
@@ -77,7 +77,7 @@ const jamsPopulaire = await getPopularJam();
                         <div class="flex">
                             <h2>À venir</h2>
                         </div>
-                        {Object.keys(userTeams.future).length > 0 ? (
+                        {userTeams?.future ? (
                             <div class="flex flex-col">
                                 <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
                                     {userTeams?.future.map((team) => (
@@ -104,7 +104,7 @@ const jamsPopulaire = await getPopularJam();
                         <div class="flex">
                             <h2>Terminée</h2>
                         </div>
-                        {Object.keys(userTeams.past).length > 0 ? (
+                        {userTeams?.past ? (
                         <div class="flex flex-col">
                             <div class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2">
                                 {userTeams?.past.map((team) => (

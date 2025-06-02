@@ -7,6 +7,7 @@ const { id } = Astro.params;
 import { getTeamBoard, addTask } from "../../../backend/backend.mjs";
 import Tache from "../../components/Card/Team/Tache.astro";
 const team = await getTeamBoard(id);
+const teamID = team?.id;
 console.log(team?.expand?.users);
 
 if (Astro.request.method == "POST") {
@@ -15,10 +16,9 @@ if (Astro.request.method == "POST") {
     return Astro.redirect(message.redirect);
 }
 ---
-
 <Layout>
     <div class="px-10 py-20">
-        <section class="flex justify-between items-center">
+        <section x-data="{invite: false}"  class="flex justify-between items-center">
             <div class="flex gap-10 items-center">
                 <p>{team?.name}</p>
                 <div class="flex items-center gap-2">
@@ -32,10 +32,10 @@ if (Astro.request.method == "POST") {
                     }
                 </div>
             </div>
-            <a href="" class="btn-light">
+            <button id="copy-btn" data-link=`http://localhost:4321/mes_jams/${team?.id}` class="btn-light">
                 <User />
                 Inviter
-            </a>
+            </button>
         </section>
         <section class="space-y-10">
             <div class="flex justify-between items-center">
@@ -82,7 +82,7 @@ if (Astro.request.method == "POST") {
             </div>
             <div class="flex flex-col gap-3">
                 {
-                    team?.task.map((record) => <Tache {...record}/>)
+                    team?.task.map((record) => <Tache {...record} {teamID} />)
                 }
             </div>
             <div class="bg-white fixed border-2 rounded w-70 top-40 bottom-40 right-1/3" id="menu" :aria-hidden="!open" x-show="open">
@@ -142,4 +142,15 @@ if (Astro.request.method == "POST") {
     }
 
     setInterval(count, 1000);
+</script>
+
+<script is:client>
+      document.getElementById('copy-btn')?.addEventListener('click', () => {
+        const link = document.getElementById('copy-btn').dataset.link;
+        if (!link) return;
+
+        navigator.clipboard.writeText(link)
+          .then(() => alert('Lien copié dans le presse-papier !'))
+          .catch((err) => alert('Erreur lors de la copie : ' + err));
+      });
 </script>

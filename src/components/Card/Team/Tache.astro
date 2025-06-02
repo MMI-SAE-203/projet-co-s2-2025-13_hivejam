@@ -3,10 +3,32 @@ import PP from "../../../assets/img/Rectangle_4.png";
 import Dots from "../../../assets/svg/Dots.svg";
 
 const tache = Astro.props;
-console.log(tache)
+console.log(tache);
+
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
+
+console.log(tache.teamID);
+
+if (Astro.request.method === "POST") {
+    const data = await Astro.request.formData();
+    const action = data.get("action");
+    try {
+        if (action == "modifier") {
+            const record = await pb.collection('TASK').update(tache.id, data);
+            return Astro.redirect(`/mes_jams/${tache.teamID}`);
+        }
+        if (action == "supprimer") {
+            await pb.collection('TASK').delete(tache.id);
+            return Astro.redirect(`/mes_jams/${tache.teamID}`);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
 ---
 
-<div class="grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-1 h-15 *:bg-light-gray *:flex *:items-center *:py-2 *:px-3 *:rounded-md">
+<div x-data="{open: false}" class="relative grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-1 h-15 *:bg-light-gray *:flex *:items-center *:py-2 *:px-3 *:rounded-md">
     <div class="border-l-4 border-brand-1">
         {tache.name}
     </div>
@@ -14,23 +36,6 @@ console.log(tache)
         {tache.description}
     </div>
     <div class="gap-4">
-
-        <!-- {
-            tache?.expand?.user.map((user) => (
-                <a href=`/profile/${user.id}` class="flex items-center gap-2">
-                    {user.image ? (
-                        <img
-                            src={user.image_URL}
-                            alt=""
-                            height="40px"
-                            width="40px"
-                        />
-                    ) : (
-                        <img src={PP.src} alt="" height="40px" width="40px" />
-                    )}
-                </a>
-            ))
-        } -->
 
         {
             Object.keys(tache.user).length > 0 ? (
@@ -58,9 +63,19 @@ console.log(tache)
     <div>
         <p class="uppercase">{tache.state}</p>
     </div>
-    <div class="items-center justify-center cursor-pointer">
-        <button>
-            <Dots />
-        </button>
+    <button @click="open = !open" class="items-center justify-center cursor-pointer">
+        <Dots />
+    </button>
+    <div x-show="open" class="absolute inset-0 border-l-4 border-brand-1">
+        <form action="POST" class="grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-2 w-full items-center">
+            <input type="text" name="name" placeholder={tache.name} class="border-1 rounded">
+            <input type="text" name="description" placeholder="Description" class="border-1 rounded">
+            <p>Pas encor fonctionnel :(</p>
+            <input type="text" name="state" placeholder="Statut" class="border-1 rounded">
+            <div class="flex flex-col">
+                <button type="submit" name="action" value="modifier" class="cursor-pointer justify-self-center">Modifier</button>
+                <button type="submit" name="action" value="supprimer" class="cursor-pointer justify-self-center text-negative">Suprimer</button>
+            </div>
+        </form>
     </div>
 </div>

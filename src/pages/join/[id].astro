@@ -1,0 +1,29 @@
+---
+// Récupération des donné utilisateur
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/')
+
+const cookies = Astro.cookies;
+const token = cookies.get("pb_auth")?.value;
+
+if (token) {
+    pb.authStore.save(token);
+}
+
+let user = pb.authStore.model;
+
+if (!user && pb.authStore.isValid) {
+    await pb.collection("users").authRefresh();
+    user = pb.authStore.model;
+}
+
+const { id } = Astro.params;
+import {joinJam } from "../../../backend/backend.mjs";
+
+if (user) {
+    const message = await joinJam(id, user.id);
+    return Astro.redirect(message.redirect);
+} else {
+    return Astro.redirect(`/auth?from=/join/${id}`);
+}
+---

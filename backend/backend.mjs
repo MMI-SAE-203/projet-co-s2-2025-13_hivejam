@@ -95,6 +95,7 @@ export async function getArticle(id) {
     }
 }
 
+// Fonction de création de record avec méthod Post
 export async function addJam(data, username, userid) {
     try {
         const jam = await pb.collection("GAME_JAM").create(data);
@@ -124,6 +125,55 @@ export async function addJam(data, username, userid) {
     }
 }
 
+export async function joinJam(teamid, userid) {
+    try {
+
+        const teamRecord = await pb.collection("TEAM").getOne(teamid);
+        await pb.collection("TEAM").update(teamid, { users: [...teamRecord.users, userid] });
+
+        const userRecord = await pb.collection("users").getOne(userid);
+        await pb.collection("users").update(userid, { team: [...userRecord.team, teamid] });
+
+        return {
+            success: true,
+            message: "Vous avez rejoins la Team.",
+            redirect: `/mes_jams/${teamid}`
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors de l'invitation dans la team : " + error,
+            redirect: `/?error`
+        }
+    }
+}
+
+export async function createTeamForJam(jamname, game_jam, username, userid) {
+    try {
+        const name = "Équipe de " + username + " - " + jamname;
+        const team = await pb.collection("TEAM").create({
+            name,
+            game_jam,
+            "users": userid
+        });
+
+        const userRecord = await pb.collection("users").getOne(userid);
+        await pb.collection("users").update(userid, { team: [...userRecord.team, team.id] });
+
+        return {
+            success: true,
+            message: "La Team a bien été créer.",
+            redirect: `/mes_jams/${team.id}`
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors de la création de la team : " + error,
+            redirect: `/toutes_les_jams/${jamid}?error`
+        }
+    }
+}
+
 export async function addTask(data, teamid) {
     try {
         
@@ -144,6 +194,16 @@ export async function addTask(data, teamid) {
             redirect: `/mes_jams/${teamid}?error`
         }
     }
+}
+
+// fonction copier un text
+export  function copyLienIvite(teamid) {
+    let btn = document.getElementById("copy-btn");
+
+    btn?.addEventListener('click', () => {
+        navigator.clipboard.writeText(`http://localhost:4321/mes_jams/${teamid}`);
+        alert("Lien d'invitation copier")
+    })
 }
 
 //_______________________________________________________Fonctions spécifiques_____________________________________________
