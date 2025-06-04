@@ -4,8 +4,6 @@ import "../styles/global.css";
 import Pocketbase from "pocketbase";
 const pb = new Pocketbase("https://hivejam.paolo-vincent.fr:443/");
 
-let error = "";
-let message = "";
 const cookies = Astro.cookies;
 
 // Donné user si connecter
@@ -23,7 +21,10 @@ if (!user && pb.authStore.isValid) {
 }
 
 // Récupération formulaire
+let message = "";
+let errMessage = "";
 if (Astro.request.method === "POST") {
+
   const formData = await Astro.request.formData();
   const formType = formData.get("formType");
 
@@ -55,17 +56,17 @@ if (Astro.request.method === "POST") {
       });
       return Astro.redirect("/");
     }
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    if (err.response?.data?.name?.message) {
+      errMessage = "Le nom d'utilisateur est déjà utiliser";
+    } else if (err.response?.data?.email?.message) {
+      errMessage = "L'adresse Email est déjà utiliser";
+    }
   }
 }
 console.log(pb.authStore.isValid);
 console.log(pb.authStore.record?.id);
 console.log(user?.name);
-
-if (!pb.authStore.isValid) {
-  error = "L'adresse e-mail ou le mot de passe est incorrect.";
-}
 ---
 
 <html lang="fr">
@@ -94,8 +95,6 @@ if (!pb.authStore.isValid) {
               <h1>Connecte toi !</h1>
               <input type="hidden" name="formType" value="login" />
 
-              {error && <p class=" text-negative">{error}</p>}
-              {message && <p class="">{message}</p>}
               <div class="space-y-5">
                 <div>
                   <label for="email">Votre email</label>
@@ -128,10 +127,12 @@ if (!pb.authStore.isValid) {
               class="flex flex-col justify-center items-center bg-secondary-1 w-full gap-12.5"
             >
               <h1>Nouveaux ?</h1>
+              {errMessage && <p class="text-negative">{errMessage}</p>}
+              {message && <p class="text-negative">{message}</p>}
               <input type="hidden" name="formType" value="register" />
               <div class="space-y-5">
                 <div>
-                  <label for="">Votre pseudo</label>
+                  S<label for="">Votre pseudo</label>
                   <input
                     name="name"
                     type="text"
