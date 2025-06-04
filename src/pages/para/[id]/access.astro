@@ -6,15 +6,70 @@ import Abeille from "../../../assets/svg/Abeille.svg";
 import Card from "../../../assets/svg/Card.svg";
 import Pen from "../../../assets/svg/Pen.svg";
 
+import PP from "../../../assets/img/Rectangle_4.png";
+
 import { getUser } from "../../../../backend/backend.mjs";
 
 const { id } = Astro.params;
 const user = await getUser(id);
+
+import Pocketbase from "pocketbase";
+const pb = new Pocketbase("https://hivejam.paolo-vincent.fr:443/");
+
+let errMessage = "";
+if (Astro.request.method === "POST") {
+    const fomData = await Astro.request.formData();
+    const formType = fomData.get("formType");
+
+    try {
+        if (formType === "Nom") {
+            const data = {
+                name: fomData.get("name"),
+            };
+            await pb.collection("users").update(id, data);
+            return Astro.redirect(`/para/${user?.id}/profile`);
+        }
+        if (formType === "Pp") {
+            const data = {
+                image: fomData.get("image"),
+            };
+            await pb.collection("users").update(id, data);
+            return Astro.redirect(`/para/${user?.id}/profile`);
+        }
+        if (formType === "Bio") {
+            const data = {
+                bio: fomData.get("bio"),
+            };
+            await pb.collection("users").update(id, data);
+            return Astro.redirect(`/para/${user?.id}/profile`);
+        }
+    } catch (error) {
+        if (error.response?.data?.name?.message) {
+            errMessage = "Le nom d'utilisateur est déjà utiliser";
+        } else {
+            console.error(error);
+            return Astro.redirect(`/para/${user?.id}/profile?error`);
+        }
+    }
+}
 ---
 
 <Layout>
     <section class="flex justify-center items-center gap-20">
-        <img src={user?.image_URL} alt="" class="w-1/4" />
+        {
+            user?.image ? (
+                <img
+                    src={user?.image_URL}
+                    alt={"photo de profile de " + user?.name}
+                    class="w-1/4"
+                />
+            ) : (
+                <img
+                    src={PP.src}
+                    alt={"photo de profile de " + user?.name}
+                />
+            )
+        }
         <h1>{user?.name}</h1>
     </section>
 
@@ -52,27 +107,21 @@ const user = await getUser(id);
                 <p class="w-full">Accessibilité</p></a
             >
         </div>
-        <div class="border-l-3 border-brand-1 px-10 py-5">
-            <div class="flex items-center gap-5">
-                <img src={user?.image_URL} alt="" class="hexagon" />
-                <h2>{user?.name}</h2>
-            </div>
-        </div>
     </section>
 </Layout>
 
 <script>
-  // Sauvegarder la position de scroll avant de quitter la page
-  window.addEventListener('beforeunload', () => {
-    sessionStorage.setItem('scrollPosition', window.scrollY);
-  });
+    // Sauvegarder la position de scroll avant de quitter la page
+    window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem("scrollPosition", window.scrollY);
+    });
 
-  // Restaurer la position au chargement
-  window.addEventListener('DOMContentLoaded', () => {
-    const scrollY = sessionStorage.getItem('scrollPosition');
-    if (scrollY !== null) {
-      window.scrollTo(0, parseInt(scrollY));
-      sessionStorage.removeItem('scrollPosition');
-    }
-  });
+    // Restaurer la position au chargement
+    window.addEventListener("DOMContentLoaded", () => {
+        const scrollY = sessionStorage.getItem("scrollPosition");
+        if (scrollY !== null) {
+            window.scrollTo(0, parseInt(scrollY));
+            sessionStorage.removeItem("scrollPosition");
+        }
+    });
 </script>

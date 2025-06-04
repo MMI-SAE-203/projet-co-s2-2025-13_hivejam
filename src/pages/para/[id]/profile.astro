@@ -57,16 +57,16 @@ if (Astro.request.method === "POST") {
 <Layout>
     <section class="flex justify-center items-center gap-20">
         {
-            user.image ? (
+            user?.image ? (
                 <img
-                    src={user.image_URL}
-                    alt={"photo de profile de " + user.name}
+                    src={user?.image_URL}
+                    alt={"photo de profile de " + user?.name}
                     class="w-1/4"
                 />
             ) : (
                 <img
                     src={PP.src}
-                    alt={"photo de profile de " + user.name}
+                    alt={"photo de profile de " + user?.name}
                 />
             )
         }
@@ -115,16 +115,16 @@ if (Astro.request.method === "POST") {
                 <p class="font-bold">Aperssus</p>
                 <div class="flex items-center gap-5">
                     {
-                        user.image ? (
+                        user?.image ? (
                             <img
-                                src={user.image_URL}
-                                alt={"photo de profile de " + user.name}
+                                src={user?.image_URL}
+                                alt={"photo de profile de " + user?.name}
                                 class="hexagon"
                             />
                         ) : (
                             <img
                                 src={PP.src}
-                                alt={"photo de profile de " + user.name}
+                                alt={"photo de profile de " + user?.name}
                                 class="hexagon"
                             />
                         )

@@ -1,0 +1,17 @@
+---
+const { ...abonnement } = Astro.props;
+---
+
+<a href="#" class="border-3 border-brand-1 rounded-2xl px-8 py-5 w-90 flex flex-col gap-5">
+    <div class="flex justify-between items-center">
+        <p class="text-4xl font-bold">{abonnement.name}</p>
+        <div>
+            <p class="text-3xl font-bold">{abonnement.price} €</p>
+            <p>/mois</p>
+        </div>
+    </div>
+    <div class="flex justify-between items-center gap-5">
+        <img src={abonnement.image} alt=`Image d'illsustration de l'abonnement ${abonnement.name}` class="w-1/2">
+        <p>{abonnement.description}</p>
+    </div>
+</a>
