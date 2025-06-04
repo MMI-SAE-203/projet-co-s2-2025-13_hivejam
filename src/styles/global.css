@@ -64,6 +64,10 @@
         @apply font-text text-sm font-light
     }
 
+    .active {
+         @apply bg-light-gray rounded-2xl
+    }
+
     .hexagon {
         -webkit-mask-image: url(../assets/svg/Hexagon.svg);
         mask-image: url(../assets/svg/Hexagon.svg);

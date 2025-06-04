@@ -1,0 +1,77 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+
+import User from "../../../assets/svg/User.svg";
+import Abeille from "../../../assets/svg/Abeille.svg";
+import Card from "../../../assets/svg/Card.svg";
+import Pen from "../../../assets/svg/Pen.svg";
+
+import { getUser } from "../../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+const user = await getUser(id);
+---
+
+<Layout>
+    <section class="flex justify-center items-center gap-20">
+        <img src={user?.image_URL} alt="" class="w-1/4" />
+        <h1>{user?.name}</h1>
+    </section>
+
+    <section class="grid grid-cols-4 gap-5">
+        <div class="flex flex-col col-start-1 col-end-2 gap-5 py-5">
+            <a
+                href=`/para/${user?.id}/profile`
+                class="flex gap-5 font-bold text-xl items-center text-center px-3 active"
+            >
+                <User />
+                <p class="w-full">Personnalisez votre profil</p></a
+            >
+            <span class="bg-brand-1 h-1"></span>
+            <a
+                href=`/para/${user?.id}/abonnement`
+                class="flex gap-5 font-bold text-xl items-center text-center px-3"
+            >
+                <Abeille />
+                <p class="w-full">Gérez votre abonnement</p></a
+            >
+            <span class="bg-brand-1 h-1"></span>
+            <a
+                href=`/para/${user?.id}/paiment`
+                class="flex gap-5 font-bold text-xl items-center text-center px-3"
+            >
+                <Card />
+                <p class="w-full">Méthode de paiment</p></a
+            >
+            <span class="bg-brand-1 h-1"></span>
+            <a
+                href=`/para/${user?.id}/access`
+                class="flex gap-5 font-bold text-xl items-center text-center px-3"
+            >
+                <Pen />
+                <p class="w-full">Accessibilité</p></a
+            >
+        </div>
+        <div class="border-l-3 border-brand-1 px-10 py-5">
+            <div class="flex items-center gap-5">
+                <img src={user?.image_URL} alt="" class="hexagon" />
+                <h2>{user?.name}</h2>
+            </div>
+        </div>
+    </section>
+</Layout>
+<script>
+  // Sauvegarder la position de scroll avant de quitter la page
+  window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('scrollPosition', window.scrollY);
+  });
+
+  // Restaurer la position au chargement
+  window.addEventListener('DOMContentLoaded', () => {
+    const scrollY = sessionStorage.getItem('scrollPosition');
+    if (scrollY !== null) {
+      window.scrollTo(0, parseInt(scrollY));
+      sessionStorage.removeItem('scrollPosition');
+    }
+  });
+</script>

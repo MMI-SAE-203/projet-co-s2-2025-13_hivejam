@@ -73,7 +73,7 @@ if (!user && pb.authStore.isValid) {
             class=" aria-hidden:hidden absolute top-20 right-10 w-40 flex flex-col gap-2 justify-between bg-dark-gray text-white p-5 rounded-md">
                 <a href=`/profile/${user.id}`>Profile</a>
                 <span class="bg-white h-0.5 w-full"></span>
-                <a href="/para">Parametre</a>
+                <a href=`/para/${user.id}/profile`>Parametre</a>
                 <span class="bg-white h-0.5 w-full"></span>
                 <a href="/logout">Se déconnecter</a>
             </nav>
