@@ -52,14 +52,39 @@ const user = await getUser(id);
                 <p class="w-full">Accessibilité</p></a
             >
         </div>
-        <div class="border-l-3 border-brand-1 px-10 py-5">
-            <div class="flex items-center gap-5">
-                <img src={user?.image_URL} alt="" class="hexagon" />
-                <h2>{user?.name}</h2>
+        <div class="border-l-3 border-brand-1 px-10 py-5 col-start-2 col-end-5 flex flex-col gap-5">
+            <div class="flex flex-col">
+                <p class="font-bold">Aperssus</p>
+                <div class="flex items-center gap-5">
+                    <img src={user?.image_URL} alt="" class="hexagon" />
+                    <h2>{user?.name}</h2>
+                </div>
             </div>
+            <form method="post" class="flex flex-col gap-2">
+                <label class="font-bold">Changer le nom d'ultilisateur</label>
+                <div class="flex gap-2">
+                    <input type="text" placeholder="Nouveaux nom" class="btn-light w-1/2">
+                    <button type="submit" class="btn-full">Changer</button>
+                </div>
+            </form>
+            <form method="post" class="flex flex-col gap-2">
+                <label class="font-bold">Changer la photo de profile</label>
+                <div class="flex gap-2">
+                    <input type="file" placeholder="Nouveaux nom" accept="image/png, image/jpeg, image/jpg" class="btn-light w-1/2">
+                    <button type="submit" class="btn-full">Changer</button>
+                </div>
+            </form>
+            <form method="post" class="flex flex-col gap-2">
+                <label class="font-bold">Changer la photo de profile</label>
+                <div class="flex gap-2">
+                    <textarea class="btn-light w-2/3 min-h-25"></textarea>
+                    <button type="submit" class="btn-full self-center">Changer</button>
+                </div>
+            </form>
         </div>
     </section>
 </Layout>
+
 <script>
   // Sauvegarder la position de scroll avant de quitter la page
   window.addEventListener('beforeunload', () => {
