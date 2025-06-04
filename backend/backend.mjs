@@ -148,9 +148,9 @@ export async function joinJam(teamid, userid) {
     }
 }
 
-export async function createTeamForJam(game_jam, username, userid) {
+export async function createTeamForJam(jamename, game_jam, username, userid) {
     try {
-        const name = "Équipe de " + username;
+        const name = "Équipe de " + username + " - " + jamename;
         const team = await pb.collection("TEAM").create({
             name,
             game_jam,
@@ -166,17 +166,25 @@ export async function createTeamForJam(game_jam, username, userid) {
             redirect: `/mes_jams/${team.id}`
         }
     } catch (error) {
-        return {
-            success: false,
-            message: "Il y a eu un problème lors de la création de la team : " + error,
-            redirect: `/toutes_les_jams/${jamid}?error`
+        if (error.response?.data?.name?.message) {
+            return {
+                success: true,
+                message: "Cette team était déjà créer",
+                redirect: `/mes_jams`
+            }
+        } else {
+            return {
+                success: false,
+                message: "Il y a eu un problème lors de la création de la team : " + error,
+                redirect: `/toutes_les_jams/${game_jam}?error`
+            }
         }
     }
 }
 
 export async function addTask(data, teamid) {
     try {
-        
+
         const task = await pb.collection('TASK').create(data);
 
         const teamRecord = await pb.collection("TEAM").getOne(teamid);
@@ -197,7 +205,7 @@ export async function addTask(data, teamid) {
 }
 
 // fonction copier un text
-export  function copyLienIvite(teamid) {
+export function copyLienIvite(teamid) {
     let btn = document.getElementById("copy-btn");
 
     btn?.addEventListener('click', () => {
@@ -404,7 +412,7 @@ export async function getSomePost(currentpage, nbrOfPost) {
         for (let post of posts) {
             post.comment_NB = await getPostCommentNB(post.id);
         }
-        return {"posts" : posts, "totalPages": postsList.totalPages};
+        return { "posts": posts, "totalPages": postsList.totalPages };
     } catch (error) {
         console.log('Une erreur est survenue en lisant des entrées dans la collection POST');
         return null;
