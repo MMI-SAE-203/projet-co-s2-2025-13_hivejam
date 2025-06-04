@@ -33,6 +33,7 @@ if (Astro.request.method === "POST") {
             const data = {
                 image: fomData.get("image"),
             };
+            console.log(data);
             await pb.collection("users").update(id, data);
             return Astro.redirect(`/para/${user?.id}/profile`);
         }

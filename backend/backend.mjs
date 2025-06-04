@@ -100,7 +100,7 @@ export async function addJam(data, username, userid) {
     try {
         const jam = await pb.collection("GAME_JAM").create(data);
 
-        const name = "Équipe de " + username;
+        const name = "Équipe de " + username + " - " + jam.name;
         const game_jam = jam.id;
         const team = await pb.collection("TEAM").create({
             name,
@@ -120,7 +120,7 @@ export async function addJam(data, username, userid) {
         return {
             success: false,
             message: "Il y a eu un problème lors de la création de la jam : " + error,
-            redirect: `/creer?error}`
+            redirect: `/creer?error`
         }
     }
 }
