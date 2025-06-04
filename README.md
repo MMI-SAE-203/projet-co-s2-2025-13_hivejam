@@ -5,8 +5,8 @@
 
 - [ ] Nom du projet : Hive Jam
 - [ ] URL de la landing page : 
-- [ ] URL de l'application finale :
-- [ ] URL de connexion au back office :
+- [ ] URL de l'application finale : https://hive-jam.paolo-vincent.fr
+- [ ] URL de connexion au back office : https://hivejam.paolo-vincent.fr/_/
 - [ ] Identifiant de connexion au backoffice :
 - [ ] Mot de passe de connexion au backoffice :
 - [ ] URL de la maquette FIGMA : https://www.figma.com/design/C2MFquLHMwbAf3uWM1tYB7/Maquette-application-Hive-Jam?node-id=1-3&t=j3V9J1Okv2gOmB8n-1

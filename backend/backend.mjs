@@ -148,9 +148,9 @@ export async function joinJam(teamid, userid) {
     }
 }
 
-export async function createTeamForJam(jamname, game_jam, username, userid) {
+export async function createTeamForJam(game_jam, username, userid) {
     try {
-        const name = "Équipe de " + username + " - " + jamname;
+        const name = "Équipe de " + username;
         const team = await pb.collection("TEAM").create({
             name,
             game_jam,

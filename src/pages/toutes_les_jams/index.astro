@@ -29,79 +29,76 @@ if (Astro.request.method === "POST") {
         <h1>Toutes les jams</h1>
         <section class="space-y-5">
             <h2 class="normal-case">Trier par</h2>
-            <div class="flex gap-4">
-                <button class="btn-light cursor-pointer">
-                    Popularité
+            <div x-data="{open: false}" class="flex flex-col gap-4">
+                <button
+                    @click="open = !open"
+                    class="btn-light cursor-pointer self-start"
+                >
+                    Filtre
                     <span
+                        !aria-expanded="open"
                         class="border-t-2 border-r-2 border-brand-1 h-3 w-3 rotate-135 relative bottom-1 left-1"
                     ></span>
                 </button>
-                <button class="btn-light cursor-pointer">
-                    Satut
-                    <span
-                        class="border-t-2 border-r-2 border-brand-1 h-3 w-3 rotate-135 relative bottom-1 left-1"
-                    ></span>
-                </button>
-                <div>
-                    <form method="POST" class="flex gap-8">
-                        <div>
-                            <div>
-                                <label for="status">Past</label>
-                                <input
-                                    type="radio"
-                                    name="status"
-                                    id="past"
-                                    value="past"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label for="status">Present</label>
-                                <input
-                                    type="radio"
-                                    name="status"
-                                    id="present"
-                                    value="present"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label for="status">Future</label>
-                                <input
-                                    type="radio"
-                                    name="status"
-                                    id="future"
-                                    value="future"
-                                    required
-                                />
-                            </div>
+                <form x-show="open" method="POST" class="flex border-2 border-brand-1 rounded-2xl px-5 py-1 self-start gap-8">
+                    <div>
+                        <p class="font-bold">Trier par Statut</p>
+                        <div class="flex justify-between">
+                            <label for="status">Past</label>
+                            <input
+                                type="radio"
+                                name="status"
+                                id="past"
+                                value="past"
+                                required
+                            />
                         </div>
-                        <div>
-                            <p>Trièe par popularité</p>
-                            <div>
-                                <label for="popular">Croissante</label>
-                                <input
-                                    type="radio"
-                                    name="popular"
-                                    id="yes"
-                                    value="true"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label for="popular">Décroissante</label>
-                                <input
-                                    type="radio"
-                                    name="popular"
-                                    id="yes"
-                                    value="false"
-                                    required
-                                />
-                            </div>
+                        <div class="flex justify-between">
+                            <label for="status">Present</label>
+                            <input
+                                type="radio"
+                                name="status"
+                                id="present"
+                                value="present"
+                                required
+                            />
                         </div>
-                        <button type="submit">Send</button>
-                    </form>
-                </div>
+                        <div class="flex justify-between">
+                            <label for="status">Future</label>
+                            <input
+                                type="radio"
+                                name="status"
+                                id="future"
+                                value="future"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-bold">Trièe par popularité</p>
+                        <div class="flex justify-between">
+                            <label for="popular">Croissante</label>
+                            <input
+                                type="radio"
+                                name="popular"
+                                id="yes"
+                                value="true"
+                                required
+                            />
+                        </div>
+                        <div class="flex justify-between">
+                            <label for="popular">Décroissante</label>
+                            <input
+                                type="radio"
+                                name="popular"
+                                id="yes"
+                                value="false"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-full self-center">Send</button>
+                </form>
             </div>
         </section>
         <section class="grid grid-cols-4 gap-6">
