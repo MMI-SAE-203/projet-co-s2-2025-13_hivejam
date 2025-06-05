@@ -191,17 +191,53 @@ export async function addTask(data, teamid) {
 
         return {
             success: true,
-            message: "La Jam a bien été créer.",
+            message: "La Task a bien été créer.",
             redirect: `/mes_jams/${teamid}`
         }
     } catch (error) {
         return {
             success: false,
-            message: "Il y a eu un problème lors de la création de la jam : " + error,
+            message: "Il y a eu un problème lors de la création de la Task : " + error,
             redirect: `/mes_jams/${teamid}?error`
         }
     }
 }
+export async function updateTask(data, taskid, teamid) {
+    try {
+        await pb.collection("TASK").update(taskid, data)
+
+        return {
+            success: true,
+            message: "La Task a bien été suprimmer.",
+            redirect: `/mes_jams/${teamid}`
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors de la supression de la Task : " + error,
+            redirect: `/mes_jams/${teamid}?error`
+        }
+    }
+}
+
+export async function deleteTask(taskid, teamid) {
+    try {
+        await pb.collection("TASK").delete(taskid)
+
+        return {
+            success: true,
+            message: "La Task a bien été suprimmer.",
+            redirect: `/mes_jams/${teamid}`
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors de la supression de la Task : " + error,
+            redirect: `/mes_jams/${teamid}?error`
+        }
+    }
+}
+
 
 export async function addCommentPost(texte, userid, postid) {
     try {

@@ -4,16 +4,48 @@ import Layout from "../../layouts/Layout.astro";
 import User from "../../assets/svg/User_orange.svg";
 
 const { id } = Astro.params;
-import { getTeamBoard, addTask } from "../../../backend/backend.mjs";
+import { getTeamBoard, addTask, deleteTask, updateTask } from "../../../backend/backend.mjs";
 import Tache from "../../components/Card/Team/Tache.astro";
+import { getTask } from "../../../backend/backend.mjs";
 const team = await getTeamBoard(id);
 const teamID = team?.id;
-console.log(team?.expand?.users);
 
-if (Astro.request.method == "POST") {
-    const data = await Astro.request.formData();
-    const message = await addTask(data, team?.id);
-    return Astro.redirect(message.redirect);
+if (Astro.request.method === "POST") {
+    try {
+        const formData = await Astro.request.formData();
+        const formType = formData.get('formType');
+
+        if (formType === 'AddTask') {
+            const data = {
+                name: formData.get('name'),
+                description: formData.get('description'),
+                state: formData.get('state'),
+                user: formData.get('user')
+            }
+            const message = await addTask(data, team?.id);
+            return Astro.redirect(message.redirect);
+        }
+        if (formType === 'UpdateTask') {
+            const taskid = formData.get('taskid');
+            const task = await getTask(taskid)
+            const data = {
+                name: formData.get("name"),
+                description: formData.get("description"),
+                state: formData.get("state")
+            }
+            console.log(data);
+            const message = await updateTask(data, taskid, team?.id);
+            return Astro.redirect(message.redirect);
+        }
+        if (formType === 'DeleteTask') {
+            const taskid = formData.get('taskid');
+            console.log(taskid)
+            const message = await deleteTask(taskid, team?.id);
+            return Astro.redirect(message.redirect);
+        }
+    } catch (error) {
+        console.error(error)
+    }
 }
 ---
 <Layout>
@@ -85,10 +117,11 @@ if (Astro.request.method == "POST") {
                     team?.task.map((record) => <Tache {...record} {teamID} />)
                 }
             </div>
-            <div class="bg-white fixed border-2 rounded w-70 top-40 bottom-40 right-1/3" id="menu" :aria-hidden="!open" x-show="open">
-                <form method="POST">
-                    <input type="text" placeholder="Titre" name="name" required>
-                    <input type="text" placeholder="Description" name="description">
+            <div class="bg-white fixed border-2 border-brand-1 rounded-2xl rounded w-70 top-30 bottom-40 right-1/3" id="menu" :aria-hidden="!open" x-show="open">
+                <form method="POST" class="flex flex-col px-2 py-1 gap-3">
+                    <input type="hidden" name="formType" value="AddTask">
+                    <input type="text" placeholder="Titre" name="name" required class="btn-light text-black border-brand-1 normal-case">
+                    <input type="text" placeholder="Description" name="description" class="btn-light text-black border-brand-1 normal-case">
                     <div>
                         {
                             team?.expand?.users.map((user) => (
@@ -100,12 +133,12 @@ if (Astro.request.method == "POST") {
                             ))
                         }
                     </div>
-                    <select name="state">
+                    <select name="state" class="btn-light text-black border-brand-1 normal-case">
                         <option value="pas commencé">pas commencé</option>
                         <option value="en cours">en cours</option>
                         <option value="terminé">terminé</option>
                     </select>
-                    <button type="submit">Créer</button>
+                    <button type="submit" class="btn-full">Créer</button>
                 </form>
             </div>
         </section>

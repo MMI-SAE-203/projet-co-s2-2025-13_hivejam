@@ -3,29 +3,11 @@ import PP from "../../../assets/img/Rectangle_4.png";
 import Dots from "../../../assets/svg/Dots.svg";
 
 const tache = Astro.props;
-console.log(tache);
+
 
 import Pocketbase from "pocketbase";
 const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
 
-console.log(tache.teamID);
-
-if (Astro.request.method === "POST") {
-    const data = await Astro.request.formData();
-    const formType = data.get("formType");
-    try {
-        if (formType === "modifier") {
-            const record = await pb.collection('TASK').update(tache.id, data);
-            return Astro.redirect(`/mes_jams/${tache.teamID}`);
-        }
-        if (formType === "supprimer") {
-            await pb.collection('TASK').delete(tache.id);
-            return Astro.redirect(`/mes_jams/${tache.teamID}`);
-        }
-    } catch (e) {
-        console.error(e);
-    }
-}
 ---
 
 <div x-data="{open: false}" class="relative grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-1 h-15 *:bg-light-gray *:flex *:items-center *:py-2 *:px-3 *:rounded-md">
@@ -67,17 +49,25 @@ if (Astro.request.method === "POST") {
         <Dots />
     </button>
     <div x-show="open" class="absolute inset-0 border-l-4 border-brand-1">
-        <form action="POST" class="grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-2 w-full items-center">
+        <form method="POST" class="grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-2 w-full items-center">
+            <input type="hidden" name="formType" value="UpdateTask">
+            <input type="hidden" name="taskid" value={tache.id}>
             <input type="text" name="name" placeholder={tache.name} class="border-1 rounded">
             <input type="text" name="description" placeholder="Description" class="border-1 rounded">
             <p>Pas encor fonctionnel :(</p>
-            <input type="text" name="state" placeholder="Statut" class="border-1 rounded">
+            <select name="state" class="btn-light text-black border-1 normal-case">
+                        <option value="pas commencé">pas commencé</option>
+                        <option value="en cours">en cours</option>
+                        <option value="terminé">terminé</option>
+            </select>
             <div class="flex flex-col">
-                <button type="submit" name="formType" value="modifier" class="cursor-pointer justify-self-center">Modifier</button>
+                <button type="submit" class="cursor-pointer justify-self-center">Modifier</button>
             </div>
         </form>
         <form method="POST">
-            <button type="submit" name="formType" value="supprimer" class="cursor-pointer justify-self-center text-negative">Suprimer</button>
+            <input type="hidden" name="formType" value="DeleteTask">
+            <input type="hidden" name="taskid" value={tache.id}>
+            <button type="submit" class="cursor-pointer justify-self-center text-negative">Suprimer</button>
         </form>
     </div>
 </div>
