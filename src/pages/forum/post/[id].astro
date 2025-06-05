@@ -32,7 +32,8 @@ const post = await getPostPage(id);
 import { addComment } from "../../../../backend/backend.mjs";
 
 if (Astro.request.method === "POST") {
-    const text = await Astro.request.formData();
+    const formData = await Astro.request.formData();
+    const text = formData.get('text');
     const message = await addComment(text, user?.id, post?.id);
     console.error(message.message)
     return Astro.redirect(message.redirect)

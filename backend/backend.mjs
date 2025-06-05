@@ -1,5 +1,4 @@
 //Dépendences
-import { data } from 'alpinejs';
 import fs from 'fs';
 import path from 'path';
 
@@ -208,11 +207,14 @@ export async function addComment(texte, userid, postid) {
     try {
         const data = {
             "text": texte,
-            "pots": postid,
             "user": userid
         }
+        console.log(data);
 
         const comment = await pb.collection("COMMENT").create(data);
+
+        const postRecord = await pb.collection("POST").getOne(postid);
+        await pb.collection("POST").update(postid, { comment: [...postRecord.comment, comment.id] });
 
         return {
             success: true,
