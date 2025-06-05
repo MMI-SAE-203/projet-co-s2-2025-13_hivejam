@@ -7,11 +7,12 @@ import Next from "../../assets/svg/Next.svg";
 import Prev from "../../assets/svg/Prev.svg";
 
 const { id } = Astro.params;
-import { getTeamBoard, addTask, deleteTask, updateTask } from "../../../backend/backend.mjs";
+import { getTeamBoard, addTask, deleteTask, updateTask, getJamPage } from "../../../backend/backend.mjs";
 import Tache from "../../components/Card/Team/Tache.astro";
 import { getTask } from "../../../backend/backend.mjs";
 const team = await getTeamBoard(id);
 const teamID = team?.id;
+const jam = await getJamPage(team?.expand?.game_jam.id);
 console.log(team?.expand?.game_jame?.game)
 
 if (Astro.request.method === "POST") {
@@ -149,6 +150,11 @@ if (Astro.request.method === "POST") {
                 <div
                     class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2"
                 >
+                {
+                jam?.expand?.games.map((game) => (
+                        <Game {...game}/>
+                    ))
+                }
                 </div>
                 <div class="flex justify-center gap-10">
                     <button

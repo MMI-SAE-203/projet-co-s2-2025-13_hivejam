@@ -10,7 +10,7 @@ const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
 
 ---
 
-<div x-data="{open: false}" class="-z-10 relative grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-1 h-15 *:bg-light-gray *:flex *:items-center *:py-2 *:px-3 *:rounded-md">
+<div x-data="{open: false}" class=" relative grid grid-cols-[1fr_1fr_1fr_1fr_75px] gap-1 h-15 *:bg-light-gray *:flex *:items-center *:py-2 *:px-3 *:rounded-md">
     <div class="border-l-4 border-brand-1">
         {tache.name}
     </div>
@@ -54,7 +54,7 @@ const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
             <input type="hidden" name="taskid" value={tache.id}>
             <input type="text" name="name" placeholder={tache.name} class="border-1 rounded">
             <input type="text" name="description" placeholder="Description" class="border-1 rounded">
-            <p>Pas encor fonctionnel :(</p>
+            <p class="justify-self-center">Non fonctionelle</p>
             <select name="state" class="btn-light text-black border-1 normal-case">
                         <option value="pas commencé">pas commencé</option>
                         <option value="en cours">en cours</option>
