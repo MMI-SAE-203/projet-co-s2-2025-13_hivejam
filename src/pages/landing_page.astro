@@ -116,42 +116,59 @@ import Code from "../assets/svg/landing_page/icon_code.svg";
         </header>
 
         <!-- Hero -->
-        <div class="relative overflow-hidden bg-[url(../assets/img/landing_page/fond_hero.png)] bg-dark bg-blend-multiply bg-cover bg-no-repeat bg-center px-5 py-10 text-white flex flex-col gap-6">
+        <div
+            class="relative overflow-hidden bg-[url(../assets/img/landing_page/fond_hero.png)] bg-dark bg-blend-multiply bg-cover bg-no-repeat bg-center px-5 py-10 text-white flex flex-col gap-6"
+        >
             <h1 class="text-4xl z-10">Hive Jam</h1>
             <p class="text-base font-normal z-10">
-                Envie de rejoindre ou de créer une Game Jam ? <br> Rejoignez une
-                communauté active, défiez vos compétences et apprenez avec Hive
-                Jam !
+                Envie de rejoindre ou de créer une Game Jam ? <br /> Rejoignez une
+                communauté active, défiez vos compétences et apprenez avec Hive Jam
+                !
             </p>
-            <a href="/login" class="text-brand-1 border-2 rounded-2xl px-2.5 py-1.25 self-end">Sign Up</a>
-            <img src={Hexagone.src} alt="Décoration en forme d'héxagone orange" class="absolute left-0 top-2.5" width="200px">
+            <a
+                href="/login"
+                class="text-brand-1 border-2 rounded-2xl px-2.5 py-1.25 self-end"
+                >Sign Up</a
+            >
+            <img
+                src={Hexagone.src}
+                alt="Décoration en forme d'héxagone orange"
+                class="absolute left-0 top-2.5"
+                width="200px"
+            />
         </div>
 
         <!-- Fonctionalité -->
         <section class="flex flex-col px-18 py-5 gap-14">
-            <div class="flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+            <div
+                class="flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1"
+            >
                 <Pen />
-                <h2 class="text-xl font-bold self-start">Créer</h2>  
+                <h2 class="text-xl font-bold self-start">Créer</h2>
                 <p class="self-start">votre propre Jam</p>
             </div>
-            <div class="self-end flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+            <div
+                class="self-end flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1"
+            >
                 <Partage />
-                <h2 class="text-xl font-bold self-start">Partager</h2>  
+                <h2 class="text-xl font-bold self-start">Partager</h2>
                 <p class="self-start">vos créations</p>
             </div>
-            <div class="flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1">
+            <div
+                class="flex flex-col gap-1.25 p-2.5 w-39 items-center border-2 rounded-2xl border-brand-1"
+            >
                 <Code />
-                <h2 class="text-xl font-bold self-start">Jamer</h2>  
+                <h2 class="text-xl font-bold self-start">Jamer</h2>
                 <p class="self-start">et tester vos compétences</p>
             </div>
         </section>
 
         <!-- Offres -->
-        <section class="flex flex-col gap-12.5 p-7.5 bg-drak-gray">
+        <section class="flex flex-col gap-12.5 p-7.5 bg-dark-gray">
             <div class="text-white flex gap-10 items-center">
                 <div>
                     <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
-                    <img src={Free.src} alt="Abeille" width="100px">
+                    <img src={Free.src} alt="Abeille" width="100px" />
                 </div>
                 <p>Crée des Jams et inviter jusqu'à 5 de vos amies</p>
             </div>
@@ -159,23 +176,128 @@ import Code from "../assets/svg/landing_page/icon_code.svg";
                 <p>Pouvoir générer des thèmes à l'infini</p>
                 <div>
                     <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
-                    <img src={Premium.src} alt="Abeille" width="100px">
+                    <img src={Premium.src} alt="Abeille" width="100px" />
                 </div>
             </div>
             <div class="text-white flex gap-10 items-center">
                 <div>
                     <h2 class="text-xl font-bold text-brand-3">Gratuite</h2>
-                    <img src={Royal.src} alt="Abeille" width="100px">
+                    <img src={Royal.src} alt="Abeille" width="100px" />
                 </div>
                 <p>Inviter plus de 50 personnes par Jam</p>
             </div>
         </section>
 
         <!-- Projets -->
-        <section class="px-10 py-9">
+        <section class="px-10 py-9 space-y-5">
             <h2 class="font-bold">Quelque projet</h2>
-            <div>
-                <div></div>
+            <div class="flex flex-col gap-5 lg:flex-row lg:justify-between">
+                <a
+                    href="https://hive-jam.paolo-vincent.fr/toutes_les_jams/mkb053aya6f5dlm"
+                >
+                    <div class="border-2 border-brand-1 px-2 py-1 rounded-2xl lg:h-50 lg:w-80">
+                        <div class="flex items-center gap-5">
+                            <img
+                                src="https://hivejam.paolo-vincent.fr/api/files/pbc_3371280457/mkb053aya6f5dlm/one_minute_jam_fsiixptsdh.png"
+                                alt="Image de présentation de la Jam One Minute Jam"
+                                width="70px"
+                            />
+                            <div class="flex flex-col">
+                                <h3>One minute Jam</h3>
+                                <p class="font-bold">
+                                    60 secondes pour tout faire
+                                </p>
+                            </div>
+                        </div>
+                        <p class="line-clamp-3">
+                            Le temps est compté. Dans cette jam, chaque partie
+                            doit tenir en 60 secondes chrono. Un défi où
+                            l’urgence est reine : raconter une histoire, relever
+                            un défi, vivre une émotion… tout ça en un claquement
+                            de doigts. C’est un appel aux créateurs·rices qui
+                            savent faire rimer intensité et simplicité, rythme
+                            et efficacité. Comment capturer l’attention,
+                            surprendre, amuser ou émouvoir en un temps ultra
+                            court ? C’est là que la magie opère. Que tu crées un
+                            mini-jeu frénétique, une boucle narrative éclair ou
+                            un moment suspendu, l’essentiel est clair : impact
+                            immédiat, gameplay express, sensations fortes. Et si
+                            chaque seconde comptait vraiment ?
+                        </p>
+                    </div>
+                </a>
+                <a
+                    href="https://hive-jam.paolo-vincent.fr/toutes_les_jams/18i6f5w52j5v331"
+                >
+                    <div class="border-2 border-brand-1 px-2 py-1 rounded-2xl lg:h-50 lg:w-80">
+                        <div class="flex items-center gap-5">
+                            <img
+                                src="https://hivejam.paolo-vincent.fr/api/files/pbc_3371280457/18i6f5w52j5v331/micro_world_jam_vjm28iz2gm.png"
+                                alt="Image de présentation de la Jam Micro World Jam"
+                                width="70px"
+                            />
+                            <div class="flex flex-col">
+                                <h3>Micro World Jam</h3>
+                                <p class="font-bold">Tout petit</p>
+                            </div>
+                        </div>
+                        <p class="line-clamp-3">
+                            Ici, tout est réduit : les décors, les mécaniques…
+                            même toi. Pour cette jam, tu dois créer un jeu qui
+                            se déroule à l’échelle d’un insecte, d’une cellule,
+                            d’un grain de poussière ou d’un électron paumé dans
+                            un circuit imprimé. Le monde que tu vas imaginer
+                            n’est pas petit, il est immense mais vu d’en bas. Ce
+                            changement d’échelle transforme tout : la moindre
+                            goutte devient un océan, un bouton devient une
+                            montagne, une feuille morte devient une île. À toi
+                            de jouer avec cette perception renversée. Tu peux
+                            explorer la navigation dans un monde gigantesque,
+                            des puzzles basés sur la physique à micro-échelle,
+                            ou raconter une aventure sensible dans un recoin
+                            oublié. Cette jam est faite pour celles et ceux qui
+                            aiment jouer avec la perspective, tordre la réalité
+                            et donner de la poésie à ce qui passe souvent
+                            inaperçu. Tu n’es pas petit·e. C’est le monde qui
+                            est trop grand.
+                        </p>
+                    </div>
+                </a>
+                <a
+                    href="https://hive-jam.paolo-vincent.fr/toutes_les_jams/08kw78w730oz3bw"
+                >
+                    <div class="border-2 border-brand-1 px-2 py-1 rounded-2xl lg:h-50 lg:w-80">
+                        <div class="flex items-center gap-5">
+                            <img
+                                src="https://hivejam.paolo-vincent.fr/api/files/pbc_3371280457/08kw78w730oz3bw/sound_first_jam_2bi0pyy0la.png"
+                                alt="Image de présentation de la Jam One Minute Jam"
+                                width="70px"
+                            />
+                            <div class="flex flex-col">
+                                <h3>Sound First Jam</h3>
+                                <p class="font-bold">
+                                    Le son guide le gameplay
+                                </p>
+                            </div>
+                        </div>
+                        <p class="line-clamp-3">
+                            Ici, le son n’est pas un simple accessoire, c’est le
+                            moteur principal de ton jeu. Que ce soit un rythme
+                            hypnotique, des voix mystérieuses, des échos ou des
+                            bruitages déclencheurs d’actions, chaque son façonne
+                            l’expérience, guide le joueur et crée une connexion
+                            unique avec le gameplay. Ton défi : inventer un
+                            univers où l’ouïe prend le pas sur la vue. Propose
+                            une mécanique où écouter devient comprendre, où le
+                            moindre bruit ouvre une porte, déclenche un puzzle
+                            ou raconte une histoire. C’est une invitation à
+                            explorer la créativité auditive, à jouer avec les
+                            ambiances, les silences, les fréquences. Pas besoin
+                            d’être musicien·ne ou sound designer expert·e, juste
+                            prêt·e à expérimenter.
+                        </p>
+                    </div>
+                </a>
             </div>
         </section>
     </body>
