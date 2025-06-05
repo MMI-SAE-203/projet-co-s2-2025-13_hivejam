@@ -3,21 +3,14 @@ import Layout from "../../layouts/Layout.astro";
 import { addGame, getTeamBoard } from "../../../backend/backend.mjs";
 import { cookieParse } from "pocketbase";
 
-// if (Astro.request.method === "POST") {
-//     // Vérifie si la méthode de la requête est POST
-//     const data = await Astro.request.formData(); // Récupère les données du formulaire de la requête
-//     console.log(data); // Affiche les données du formulaire dans la console
-//     await addGame(data);
-// }
-
-const {id} = Astro.params;
+const { id } = Astro.params;
 const team = await getTeamBoard(id);
 
 if (Astro.request.method === "POST") {
     const data = await Astro.request.formData();
     console.log(data);
     const message = await addGame(data, team?.expand?.game_jam.id, team?.id);
-    console.log(message.message)
+    console.log(message.message);
     return Astro.redirect(message.redirect);
 }
 ---
@@ -29,6 +22,7 @@ if (Astro.request.method === "POST") {
         enctype="multipart/form-data"
         class="grid grid-cols-6 gap-7"
     >
+        <input />
         <div class="col-start-2 col-end-4">
             <label for="name" class="text-xl font-medium"
                 >Nom de votre jeu</label
@@ -65,6 +59,17 @@ if (Astro.request.method === "POST") {
                 class="btn-light text-black border-brand-1 normal-case w-full"
             />
         </div>
+        <div class="col-start-3 col-end-5">
+            <label for="image" class="text-xl font-medium"
+                >Fichier Web de votre jeu</label
+            >
+            <input
+                type="file"
+                name="file_web"
+                placeholder="Thème de la jam"
+                class="btn-light text-black border-brand-1 normal-case w-full"
+            />
+        </div>
         <div class="col-start-2 col-end-6">
             <label for="description" class="text-xl font-medium"
                 >Décriver votre Jeu</label
@@ -75,7 +80,7 @@ if (Astro.request.method === "POST") {
                 class="btn-light text-black border-brand-1 normal-case min-h-30 w-full"
             ></textarea>
         </div>
-        
+
         <button type="submit" class="btn-full col-start-3 col-end-5"
             >Créer</button
         >

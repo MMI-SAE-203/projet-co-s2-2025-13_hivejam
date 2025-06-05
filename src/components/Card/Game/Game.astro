@@ -2,7 +2,7 @@
 const {...game} = Astro.props;
 ---
 
-<a href=`/toutes_les_jams/${game.id}`>
+<a href=`/games/${game.id}`>
     <article class="border-1 border-drak-gray p-3 flex flex-col justify-between gap-2 w-80 rounded-md">
         <img src={game.image_URL} alt="">
         <h3>{game.name}</h3>

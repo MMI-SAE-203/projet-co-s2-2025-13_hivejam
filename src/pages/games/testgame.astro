@@ -1,7 +1,7 @@
 ---
 import { getGame } from "../../../backend/backend.mjs";
 
-const game = await getGame('iu743xr63tdf9ua');
+const game = await getGame('9c45s7o794p6kmj');
 console.log(game);
 ---
 
@@ -15,7 +15,7 @@ console.log(game);
 <body>
     <h1>This is a game</h1>
     <iframe
-    src={game.file_path}
+    src={game?.file_web}
     width="100%"
     height="600"
     style="border: none;"

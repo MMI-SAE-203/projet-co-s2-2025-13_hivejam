@@ -3,14 +3,14 @@
 
 Éléménts à renseigner pour la soutenance :
 
-- [ ] Nom du projet : Hive Jam
+- [X] Nom du projet : Hive Jam
 - [ ] URL de la landing page : 
-- [ ] URL de l'application finale : https://hive-jam.paolo-vincent.fr
-- [ ] URL de connexion au back office : https://hivejam.paolo-vincent.fr/_/
-- [ ] Identifiant de connexion au backoffice :
-- [ ] Mot de passe de connexion au backoffice :
-- [ ] URL de la maquette FIGMA : https://www.figma.com/design/C2MFquLHMwbAf3uWM1tYB7/Maquette-application-Hive-Jam?node-id=1-3&t=j3V9J1Okv2gOmB8n-1
-- [ ] Description du projet : Hive Jam est une plateforme communautaire sur laquelle n'importe qui peut créer et participer à des game jams.
+- [X] URL de l'application finale : https://hive-jam.paolo-vincent.fr
+- [X] URL de connexion au back office : https://hivejam.paolo-vincent.fr/_/
+- [X] Identifiant de connexion au backoffice : paolo.vincent@edu.univ-fcomte.fr
+- [X] Mot de passe de connexion au backoffice : totototototo
+- [X] URL de la maquette FIGMA : https://www.figma.com/design/C2MFquLHMwbAf3uWM1tYB7/Maquette-application-Hive-Jam?node-id=1-3&t=j3V9J1Okv2gOmB8n-1
+- [X] Description du projet : Hive Jam est une plateforme communautaire sur laquelle n'importe qui peut créer et participer à des game jams.
 
 ## 🚀 Équipe
 

@@ -1,0 +1,21 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getGame } from "../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+
+const game = await getGame(id);
+console.log(game);
+---
+
+
+<Layout>
+    <h1>This is a game</h1>
+    <iframe
+    src={game?.web_URL}
+    width="100%"
+    height="600"
+    style="border: none;"
+    allowfullscreen
+    />   
+</Layout>
