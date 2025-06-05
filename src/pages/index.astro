@@ -87,10 +87,10 @@ const posts = await getSomePost(1,5);
                         <h3>Vous n'êtes pas connectez</h3>
                         <div class="flex items-center gap-2.5">
                             <a href="/auth" class="btn-light">
-                                Login
+                                Connection
                             </a>
                             <a href="/auth" class="btn-full">
-                                Sign Up
+                                Inscription
                             </a>
                         </div>
                     </div>
@@ -112,10 +112,10 @@ const posts = await getSomePost(1,5);
 
         <div class="space-y-10">
             <section
-                class="flex flex-col gap-4 border-1 border-dark-gray p-4 rounded-md"
+                class="flex flex-col gap-4 w-full border-1 border-dark-gray p-4 rounded-md"
             >
                 <h2>Jams Populaires</h2>
-                <div class="border-b border-dark-gray">
+                <div class="border-b border-dark-gray w-full">
                     {jamsPopulaire?.map((jam) => <Jam_Mini {...jam} />)}
                 </div>
                 <a href="/toutes_les_jams" class="btn-light self-end"
