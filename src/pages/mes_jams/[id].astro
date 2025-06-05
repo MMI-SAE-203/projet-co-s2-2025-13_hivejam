@@ -64,7 +64,7 @@ if (Astro.request.method === "POST") {
                     }
                 </div>
             </div>
-            <button id="copy-btn" data-link=`http://localhost:4321/mes_jams/${team?.id}` class="btn-light">
+            <button id="copy-btn" data-link=`http://localhost:4321/join/${team?.id}` class="btn-light">
                 <User />
                 Inviter
             </button>
@@ -76,19 +76,13 @@ if (Astro.request.method === "POST") {
             </div>
             <div class="grid grid-cols-2 gap-10">
                 <article class="flex flex-col gap-4 items-center border-1 py-10 rounded-md">
-                    {
-                        team?.past ? (
-                        <header>
-                            <h2>Compte à rebours</h2>
-                        </header>
-                            <div>
-                                <p>Se termine dans ...</p>
-                                <p class="CD font-black text-negative text-6xl">{team.time_info}</p>
-                            </div>
-                        ) : (
-                            <p class="text-2xl">{team?.time_info}</p>
-                        )
-                    }
+                {
+                team?.time == "present" ? (
+                    <p class="CD font-black text-negative text-4xl self-center">{team.time_info}</p>
+                ) : (
+                    <p class="tiny">{team?.time_info}</p>
+                )
+            }
                 </article>
                 <article class="flex flex-col items-center justify-center gap-4">
                     <header>
