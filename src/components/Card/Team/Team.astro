@@ -27,7 +27,7 @@ if (!user && pb.authStore.isValid) {
         class="border-1 border-drak-gray p-3 flex flex-col justify-between w-110 h-62 rounded-md"
     >
         <div class="flex gap-2">
-            <img src={team.image_URL} alt="" class="h-28" />
+            <img src={team.image_URL} alt=`Image d'illustration de la team ${team.name}` class="h-28" />
             <div class="flex flex-col gap-2">
                 <h3>{team.expand.game_jam?.name}</h3>
                 <p class="tiny line-clamp-2">

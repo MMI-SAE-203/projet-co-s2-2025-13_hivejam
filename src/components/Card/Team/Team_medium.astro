@@ -26,7 +26,7 @@ if (!user && pb.authStore.isValid) {
 <a href=`/mes_jams/${team.id}`>
     <article class="border-1 border-drak-gray p-3 flex flex-col justify-between gap-2 w-80 rounded-md">
         <div class="flex gap-2">
-            <img src={team.image_URL} alt="" class="h-24"/>
+            <img src={team.image_URL} alt=`Image d'illustration de la team ${team.name}` class="h-24"/>
             <div class="flex flex-col gap-2">
                 <h3>{team.expand.game_jam?.name}</h3>
                 <p class="tiny line-clamp-2">{team.expand.game_jam?.description}</p>

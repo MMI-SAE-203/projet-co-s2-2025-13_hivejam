@@ -47,7 +47,7 @@ if (Astro.request.method == "POST") {
             </form>
         </section>
         <section class="grid grid-cols-2 gap-10">
-            <img src={jam?.image_URL} alt="" class="col-start-1" />
+            <img src={jam?.image_URL} alt=`Image d'illustration de la jam ${jam?.name}` class="col-start-1" />
             <div class="flex flex-col justify-between py-11">
                 <div class="flex flex-col justify-center items-center gap-4">
                     <h2>Compte à rebours</h2>

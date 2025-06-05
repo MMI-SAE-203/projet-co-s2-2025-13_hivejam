@@ -14,7 +14,7 @@ const similarArticle = await getSimilarArticle(article?.topic);
 <Layout>
     <div class="px-10 py-20 space-y-20">
         <section class="grid grid-cols-2 gap-8">
-            <img src={article?.image_URL} alt="" class="max-h-100 justify-self-center" />
+            <img src={article?.image_URL} alt=`Image d'illustration de l'article ${article?.name}` class="max-h-100 justify-self-center" />
             <div class="flex flex-col justify-center items-center gap-8">
                 <h1 class="text-center">{article?.title}</h1>
                 <div class="flex items-center gap-8">

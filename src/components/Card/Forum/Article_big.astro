@@ -6,7 +6,7 @@ const article = Astro.props;
 
 <a href=`/actu/${article.id}` class="col-start-1 col-end-3 row-start-1 row-end-3">
     <article class="flex flex-col gap-2 h-full">
-        <img src={article.image_URL} alt="" class="h-160">
+        <img src={article.image_URL} alt=`Image d'illustration de l'article ${article.name}` class="h-160">
         <div class="space-y-2.5">
             <h3>{article.title}</h3>
             <div class="flex gap-2.5 items-center tiny">

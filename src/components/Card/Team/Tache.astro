@@ -27,12 +27,12 @@ const pb = new Pocketbase('https://hivejam.paolo-vincent.fr:443/');
                     {user.image ? (
                         <img
                             src={user.image_URL}
-                            alt=""
+                            alt=`photo de profile de ${user.name}`
                             height="40px"
                             width="40px"
                         />
                     ) : (
-                        <img src={PP.src} alt="" height="40px" width="40px" />
+                        <img src={PP.src} alt=`photo de profile de ${user.name}` height="40px" width="40px" />
                     )}
                 </a>
             ))

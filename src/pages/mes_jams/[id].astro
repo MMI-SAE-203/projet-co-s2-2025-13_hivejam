@@ -61,7 +61,7 @@ if (Astro.request.method === "POST") {
                     {
                             team?.expand?.users.map((user) => (
                             <a href=`/profile/${user.id}` class="flex gap-2 items-center">
-                                <img src={user.image_URL} alt="" width="30px" height="30px"/>
+                                <img src={user.image_URL} alt=`Photo de profile de ${user?.name}` width="30px" height="30px"/>
                                 <p>{user.name}</p>
                             </a>
                         ))
@@ -125,7 +125,7 @@ if (Astro.request.method === "POST") {
                             team?.expand?.users.map((user) => (
                                 <div class="flex gap-2">
                                     <input type="checkbox" name="user" value={user.id} />
-                                    <img src={user.image_URL} alt="" width="40px" />
+                                    <img src={user.image_URL} alt=`Photo de profile de ${user?.name}` width="40px" />
                                     <p>{user.name}</p>
                                 </div>
                             ))

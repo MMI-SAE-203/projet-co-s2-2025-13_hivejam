@@ -3,7 +3,7 @@ const jam = Astro.props;
 ---
 
 <a href=`/toutes_les_jams/${jam.id}` class="flex items-center gap-2 border-t border-dark-gray p-2">
-    <img src={jam.image_URL} alt="" class="hexagon w-10.5 h-12 object-center -z-30">
+    <img src={jam.image_URL} alt=`Image d'illustration de la jam ${jam.name}` class="hexagon w-10.5 h-12 object-center -z-30">
     <div>
         <h4>{jam.name}</h4>
         <div set:html={jam.description} class="tiny line-clamp-1"></div>
