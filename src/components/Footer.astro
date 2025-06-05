@@ -7,11 +7,11 @@ import TikTok from "../assets/svg/icon_tiktok.svg";
 import Twitter from "../assets/svg/icon_twitter.svg";
 ---
 
-<footer class="px-28.75 grid grid-cols-5 grid-rows-3 raw bg-secondary-2">
+<footer class="lg:px-28.75 grid lg:grid-cols-5 lg:grid-rows-3 lg:raw bg-secondary-2 grid-cols-2 px-10 gap-10 py-10">
     <a href="/" class="flex items-center">
         <Logo width={82} height={60}/>
     </a>
-    <div class="space-y-6 col-start-2 row-start-2">
+    <div class="space-y-6 col-start-1 lg:col-start-2 lg:row-start-2">
         <h4>Navigation</h4>
         <div class="flex flex-col gap-3 tiny">
             <a href="/">Accueil</a>
@@ -22,21 +22,21 @@ import Twitter from "../assets/svg/icon_twitter.svg";
             <a href="/a_propos">À propos</a>
         </div>
     </div>
-    <div class="space-y-6 col-start-3 row-start-2">
+    <div class="space-y-6 col-start-2 lg:col-start-3 lg:row-start-2">
         <h4>Compte</h4>
         <div class="flex flex-col gap-3 tiny">
             <a href="/profile">Gérer mon compte</a>
             <a href="/parametre">Grer mon abonnement</a>
         </div>
     </div>
-    <div class="space-y-6 col-start-4 row-start-2">
+    <div class="space-y-6 col-start-1 lg:col-start-4 lg:row-start-2">
         <h4>Mentions</h4>
         <div class="flex flex-col gap-3 tiny">
             <a href="/mentions_legals">Mentions légales</a>
             <a href="/cgv">Conditions générales de vente</a>
         </div>
     </div>
-    <div class="space-y-6 col-start-5 row-start-2">
+    <div class="space-y-6 col-start-2 lg:col-start-5 lg:row-start-2">
         <h4>Contacts</h4>
         <div class="flex flex-col gap-3 tiny">
             <a href="/contact">Formulaire de contacte</a>
@@ -46,7 +46,7 @@ import Twitter from "../assets/svg/icon_twitter.svg";
     </div>
     <div class="flex flex-col gap-7.5 justify-center items-center col-start-1 col-end-6">
         <span class="bg-black h-0.25 w-full"></span>
-        <div class="flex  gap-36 *:cursor-pointer">
+        <div class="flex justify-around w-full  lg:gap-36 *:cursor-pointer">
             <Insta width={40} height={40}/>
             <Facebook width={40} height={40}/>
             <TikTok width={40} height={40}/>
