@@ -113,7 +113,7 @@ if (Astro.request.method === "POST") {
         >
             {errMessage && <p class="text-negative">{errMessage}</p>}
             <div class="flex flex-col">
-                <p class="font-bold">Aperssus</p>
+                <p class="font-bold">Aperçu</p>
                 <div class="flex items-center gap-5">
                     {
                         user?.image ? (
@@ -142,7 +142,7 @@ if (Astro.request.method === "POST") {
             </div>
             <form method="POST" class="flex flex-col gap-2">
                 <input type="hidden" name="formType" value="Nom" />
-                <label class="font-bold">Changer le nom d'ultilisateur</label>
+                <label class="font-bold">Changer votre nom d'ultilisateur</label>
                 <div class="flex gap-2">
                     <input
                         type="text"
@@ -159,7 +159,7 @@ if (Astro.request.method === "POST") {
                 class="flex flex-col gap-2"
             >
                 <input type="hidden" name="formType" value="Pp" />
-                <label class="font-bold">Changer la photo de profile</label>
+                <label class="font-bold">Changer votre photo de profile</label>
                 <div class="flex gap-2">
                     <input
                         name="image"
@@ -172,7 +172,7 @@ if (Astro.request.method === "POST") {
             </form>
             <form method="POST" class="flex flex-col gap-2">
                 <input type="hidden" name="formType" value="Bio" />
-                <label class="font-bold">Changer la photo de profile</label>
+                <label class="font-bold">Changer votre biographie</label>
                 <div class="flex gap-2">
                     <textarea
                         name="bio"

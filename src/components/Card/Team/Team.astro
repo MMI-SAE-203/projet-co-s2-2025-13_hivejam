@@ -30,9 +30,7 @@ if (!user && pb.authStore.isValid) {
             <img src={team.image_URL} alt=`Image d'illustration de la team ${team.name}` class="h-28" />
             <div class="flex flex-col gap-2">
                 <h3>{team.expand.game_jam?.name}</h3>
-                <p class="tiny line-clamp-2">
-                    {team.expand.game_jam?.description}
-                </p>
+                <div set:html={team.expand.game_jam?.description} class="tiny line-clamp-2"></div>
             </div>
         </div>
         <div class="flex flex-col">
