@@ -203,7 +203,7 @@ export async function addTask(data, teamid) {
     }
 }
 
-export async function addComment(texte, userid, postid) {
+export async function addCommentPost(texte, userid, postid) {
     try {
         const data = {
             "text": texte,
@@ -215,6 +215,33 @@ export async function addComment(texte, userid, postid) {
 
         const postRecord = await pb.collection("POST").getOne(postid);
         await pb.collection("POST").update(postid, { comment: [...postRecord.comment, comment.id] });
+
+        return {
+            success: true,
+            message: "Commentaire poster.",
+            redirect: `/forum/post/${postid}`
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors du post du commentaire : " + error,
+            redirect: `/forum/post/${postid}?error`
+        }
+    }
+}
+
+export async function addCommentComment(texte, userid, commentid, postid) {
+    try {
+        const data = {
+            "text": texte,
+            "user": userid
+        }
+        console.log(data);
+
+        const comment = await pb.collection("COMMENT").create(data);
+
+        const postRecord = await pb.collection("Comment").getOne(commentid);
+        await pb.collection("Comment").update(commentid, { comment: [...postRecord.comment, comment.id] });
 
         return {
             success: true,

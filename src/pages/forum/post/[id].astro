@@ -6,7 +6,7 @@ import CommentCard from "../../../components/Card/Forum/CommentCard.astro";
 import Send from "../../../assets/svg/Send.svg";
 
 // Cécupération des donné utilisateur
-import Pocketbase from "pocketbase";
+import Pocketbase, { cookieParse } from "pocketbase";
 import { getPostPage } from "../../../../backend/backend.mjs";
 const pb = new Pocketbase("https://hivejam.paolo-vincent.fr:443/");
 
@@ -29,14 +29,31 @@ const { id } = Astro.params;
 const post = await getPostPage(id);
 // console.log(post?.comment[0]);
 
-import { addComment } from "../../../../backend/backend.mjs";
+import {
+    addCommentPost,
+    addCommentComment,
+} from "../../../../backend/backend.mjs";
 
 if (Astro.request.method === "POST") {
-    const formData = await Astro.request.formData();
-    const text = formData.get('text');
-    const message = await addComment(text, user?.id, post?.id);
-    console.error(message.message)
-    return Astro.redirect(message.redirect)
+    try {
+        const formData = await Astro.request.formData();
+        const formType = formData.get("formType");
+        if (formType === "CommentPost") {
+            const text = formData.get("text");
+            const message = await addCommentPost(text, user?.id, post?.id);
+            console.error(message.message);
+            return Astro.redirect(message.redirect);
+        }
+        if (formType === "CommentComment") {
+            const text = formData.get("text");
+            const commentid = formData.get("commentid");
+            const message = await addCommentComment(text, user?.id, commentid, post?.id);
+            console.error(message.message);
+            return Astro.redirect(message.redirect);
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 ---
 
@@ -51,7 +68,10 @@ if (Astro.request.method === "POST") {
             <div class="flex gap-2 items-center">
                 {
                     !(post?.expand?.user.image_URL.length == 0) ? (
-                        <img class="h-8 w-8" src={post?.expand?.user.image_URL} />
+                        <img
+                            class="h-8 w-8"
+                            src={post?.expand?.user.image_URL}
+                        />
                     ) : (
                         <span class="bg-secondary-2 h-8 w-8 rounded-md" />
                     )
@@ -79,8 +99,17 @@ if (Astro.request.method === "POST") {
                 <Comment />
             </div>
         </article>
-        <form method="POST" class="rounded-full border-1 border-dark-gray p-4 flex items-center justify-between">
-            <input type="text" name="text" placeholder="Ajouter un commentaire" class="w-full">
+        <form
+            method="POST"
+            class="rounded-full border-1 border-dark-gray p-4 flex items-center justify-between"
+        >
+            <input type="hidden" name="formType" value="CommentPost" />
+            <input
+                type="text"
+                name="text"
+                placeholder="Ajouter un commentaire"
+                class="w-full"
+            />
             <button type="submit" class="cursor-pointer">
                 <Send />
             </button>
