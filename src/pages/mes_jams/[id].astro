@@ -1,7 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import Game from "../../components/Card/Game/Game.astro";
 
 import User from "../../assets/svg/User_orange.svg";
+import Next from "../../assets/svg/Next.svg";
+import Prev from "../../assets/svg/Prev.svg";
 
 const { id } = Astro.params;
 import { getTeamBoard, addTask, deleteTask, updateTask } from "../../../backend/backend.mjs";
@@ -9,6 +12,7 @@ import Tache from "../../components/Card/Team/Tache.astro";
 import { getTask } from "../../../backend/backend.mjs";
 const team = await getTeamBoard(id);
 const teamID = team?.id;
+console.log(team?.expand?.game_jame?.game)
 
 if (Astro.request.method === "POST") {
     try {
@@ -49,7 +53,6 @@ if (Astro.request.method === "POST") {
 }
 ---
 <Layout>
-    <div class="px-10 py-20">
         <section x-data="{invite: false}"  class="flex justify-between items-center">
             <div class="flex gap-10 items-center">
                 <p>{team?.name}</p>
@@ -136,7 +139,34 @@ if (Astro.request.method === "POST") {
                 </form>
             </div>
         </section>
-    </div>
+
+        <section class="space-y-10">
+            <div class="flex justify-between">
+                <h2>Jeux Soumis</h2>
+                <a href=`/game/${team?.id}` class="btn-light">Sumettre un jeu</a>
+            </div>
+            <div class="flex flex-col">
+                <div
+                    class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2"
+                >
+                {
+                    team
+                }
+                </div>
+                <div class="flex justify-center gap-10">
+                    <button
+                        class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer"
+                    >
+                        <Prev />
+                    </button>
+                    <button
+                        class="flex justify-center items-center border-2 border-brand-1 rounded-4xl p-2.5 h-10 w-10 cursor-pointer"
+                    >
+                        <Next />
+                    </button>
+                </div>
+            </div>
+        </section>
 </Layout>
 
 <script>

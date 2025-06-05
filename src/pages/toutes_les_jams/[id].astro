@@ -77,6 +77,11 @@ if (Astro.request.method == "POST") {
                 <div
                     class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2"
                 >
+                {
+                jam?.games.map((game) => (
+                        <Game {...game}/>
+                    ))
+                }
                 </div>
                 <div class="flex justify-center gap-10">
                     <button

@@ -724,28 +724,49 @@ export async function getCommentTree(comments) {
 
 //____________________________________upload des jeux en ligne_________________________________________________
 
-export async function addGame(gameData) {
+// export async function addGame(gameData) {
+//     try {
+//         //Création de l'entrée dans PocketBase
+//         const game = await pb.collection("GAME").create(gameData);
+//         //Si une version web a été fournie
+//         if (game.file_web) {
+//             //Appel de l'API custom
+//             const response = await fetch('https://hivejam-games.paolo-vincent.fr/extract', {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify({
+//                     recordId: game.id,
+//                     zipUrl: pb.files.getURL(game, game.file_web)
+//                 })
+//             });
+//             //Ajout de l'url du jeu dans PocketBase
+//             await pb.collection('GAME').update(game.id, { web_URL: `https://hivejam-games.paolo-vincent.fr/${game.id}/` });
+//             console.log(response.text());
+//             return response
+//         }
+//     } catch (error) {
+//         console.error('Une erreur est survenue en ajoutant une entrée dans la collection GAME', error);
+//         return null;
+//     }
+// }
+
+export async function addGame(data, jamid, teamid) {
     try {
-        //Création de l'entrée dans PocketBase
-        const game = await pb.collection("GAME").create(gameData);
-        //Si une version web a été fournie
-        if (game.file_web) {
-            //Appel de l'API custom
-            const response = await fetch('https://hivejam-games.paolo-vincent.fr/extract', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    recordId: game.id,
-                    zipUrl: pb.files.getURL(game, game.file_web)
-                })
-            });
-            //Ajout de l'url du jeu dans PocketBase
-            await pb.collection('GAME').update(game.id, { web_URL: `https://hivejam-games.paolo-vincent.fr/${game.id}/` });
-            console.log(response.text());
-            return response
+        const task = await pb.collection('GAME').create(data);
+
+        const game_jamRecorde = await pb.collection("GAME_JAM").getOne(jamid);
+        await pb.collection("GAME_JAM").update(jamid, { task: [...game_jamRecorde.games, game.id] });
+
+        return {
+            success: true,
+            message: "La Task a bien été créer.",
+            redirect: `/mes_jams/${teamid}`
         }
     } catch (error) {
-        console.error('Une erreur est survenue en ajoutant une entrée dans la collection GAME', error);
-        return null;
+        return {
+            success: false,
+            message: "Il y a eu un problème lors de la création de la Task : " + error,
+            redirect: `/mes_jams/${teamid}?error`
+        }
     }
 }
