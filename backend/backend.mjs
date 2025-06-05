@@ -184,7 +184,6 @@ export async function createTeamForJam(jamename, game_jam, username, userid) {
 
 export async function addTask(data, teamid) {
     try {
-
         const task = await pb.collection('TASK').create(data);
 
         const teamRecord = await pb.collection("TEAM").getOne(teamid);
