@@ -4,7 +4,7 @@
 Éléménts à renseigner pour la soutenance :
 
 - [X] Nom du projet : Hive Jam
-- [ ] URL de la landing page : 
+- [ ] URL de la landing page : https://hive-jam.paolo-vincent.fr/landing_page
 - [X] URL de l'application finale : https://hive-jam.paolo-vincent.fr
 - [X] URL de connexion au back office : https://hivejam.paolo-vincent.fr/_/
 - [X] Identifiant de connexion au backoffice : paolo.vincent@edu.univ-fcomte.fr
