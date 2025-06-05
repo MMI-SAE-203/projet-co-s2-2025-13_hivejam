@@ -27,7 +27,7 @@ if (!user && pb.authStore.isValid) {
 const pageParam = Astro.params;
 const page = parseInt(pageParam.page);
 
-let posts = await getSomePost(page, 2);
+let posts = await getSomePost(page, 10);
 let comments
 if (user) {
     comments = await getRecentComment(user.id);
