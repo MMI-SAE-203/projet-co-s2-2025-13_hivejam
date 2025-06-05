@@ -1,4 +1,5 @@
 //Dépendences
+import { data } from 'alpinejs';
 import fs from 'fs';
 import path from 'path';
 
@@ -199,6 +200,30 @@ export async function addTask(data, teamid) {
             success: false,
             message: "Il y a eu un problème lors de la création de la jam : " + error,
             redirect: `/mes_jams/${teamid}?error`
+        }
+    }
+}
+
+export async function addComment(texte, userid, postid) {
+    try {
+        const data = {
+            "text": texte,
+            "pots": postid,
+            "user": userid
+        }
+
+        const comment = await pb.collection("COMMENT").create(data);
+
+        return {
+            success: true,
+            message: "Commentaire poster.",
+            redirect: `/forum/post/${postid}`
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Il y a eu un problème lors du post du commentaire : " + error,
+            redirect: `/forum/post/${postid}?error`
         }
     }
 }
