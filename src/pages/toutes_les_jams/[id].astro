@@ -73,7 +73,9 @@ if (Astro.request.method == "POST") {
         </section>
         <section>
             <h2>Jeux Soumis</h2>
-            <div class="flex flex-col">
+        {
+            jam?.expand.games ? (
+               <div class="flex flex-col">
                 <div
                     class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2"
                 >
@@ -95,7 +97,12 @@ if (Astro.request.method == "POST") {
                         <Next />
                     </button>
                 </div>
-            </div>
+            </div> 
+            ) : (
+                <p>Aucun jeux n'a encore été soumis</p>
+            )
+        }
+            
         </section>
     </div>
 </Layout>
