@@ -10,6 +10,7 @@ const { id } = Astro.params;
 import { getTeamBoard, addTask, deleteTask, updateTask, getJamPage } from "../../../backend/backend.mjs";
 import Tache from "../../components/Card/Team/Tache.astro";
 import { getTask } from "../../../backend/backend.mjs";
+import { pathHasLocale } from "astro:i18n";
 const team = await getTeamBoard(id);
 const teamID = team?.id;
 const jam = await getJamPage(team?.expand?.game_jam.id);
@@ -59,12 +60,21 @@ if (Astro.request.method === "POST") {
                 <p>{team?.name}</p>
                 <div class="flex items-center gap-2">
                     {
+                        team?.expand?.users ? (
+
                             team?.expand?.users.map((user) => (
                             <a href=`/profile/${user.id}` class="flex gap-2 items-center">
                                 <img src={user.image_URL} alt=`Photo de profile de ${user?.name}` width="30px" height="30px"/>
                                 <p>{user.name}</p>
                             </a>
                         ))
+                        ) : (
+                           <p> Aucune personne ne particie a cette jam</p>
+                        )
+                    }
+
+
+                    {
                     }
                 </div>
             </div>
@@ -122,13 +132,17 @@ if (Astro.request.method === "POST") {
                     <input type="text" placeholder="Description" name="description" class="btn-light text-black border-brand-1 normal-case">
                     <div>
                         {
-                            team?.expand?.users.map((user) => (
+                            team?.expand?.users ? (
+                                team?.expand?.users.map((user) => (
                                 <div class="flex gap-2">
                                     <input type="checkbox" name="user" value={user.id} />
                                     <img src={user.image_URL} alt=`Photo de profile de ${user?.name}` width="40px" />
                                     <p>{user.name}</p>
                                 </div>
                             ))
+                            ) : (
+                                <p>aucun usezrs</p>
+                            )
                         }
                     </div>
                     <select name="state" class="btn-light text-black border-brand-1 normal-case">
@@ -141,12 +155,16 @@ if (Astro.request.method === "POST") {
             </div>
         </section>
 
-        <section class="space-y-10">
+        
+
+        <section>
             <div class="flex justify-between">
                 <h2>Jeux Soumis</h2>
                 <a href=`/game/${team?.id}` class="btn-light">Sumettre un jeu</a>
             </div>
-            <div class="flex flex-col">
+        {
+            jam?.expand?.games ? (
+               <div class="flex flex-col">
                 <div
                     class="flex gap-6 overflow-x-scroll border-l-3 border-r-3 border-brand-1 px-10 py-2"
                 >
@@ -168,7 +186,12 @@ if (Astro.request.method === "POST") {
                         <Next />
                     </button>
                 </div>
-            </div>
+            </div> 
+            ) : (
+                <p>Aucun jeux n'a encore été soumis</p>
+            )
+        }
+            
         </section>
 </Layout>
 
